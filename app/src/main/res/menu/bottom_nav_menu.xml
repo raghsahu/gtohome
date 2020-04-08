@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+<!--    <item-->
+<!--        android:id="@+id/navigation_addas"-->
+<!--        android:icon="@drawable/ic_date_range"-->
+<!--        android:title="@string/addas" />-->
+
+
+<!--    <item-->
+<!--        android:id="@+id/navigation_fav"-->
+<!--        android:icon="@drawable/ic_favorite_"-->
+<!--        android:title="@string/favourates" />-->
+
+<!--    <item-->
+<!--        android:id="@+id/navigation_create"-->
+<!--        android:icon="@drawable/ic_add_circle_outline"-->
+<!--        android:title="@string/create" />-->
+
+<!--    <item-->
+<!--        android:id="@+id/navigation_home"-->
+<!--        android:icon="@drawable/ic_home_black_24dp"-->
+<!--        android:title="@string/home" />-->
+
+<!--    <item-->
+<!--        android:id="@+id/navigation_trending"-->
+<!--        android:icon="@drawable/ic_trending_up_"-->
+<!--        android:title="@string/trending" />-->
+
+</menu>
