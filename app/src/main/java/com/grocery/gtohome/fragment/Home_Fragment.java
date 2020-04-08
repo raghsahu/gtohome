@@ -2,6 +2,9 @@ package com.grocery.gtohome.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,8 +26,11 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
+import com.grocery.gtohome.adapter.FeatureProduct_Adapter;
+import com.grocery.gtohome.adapter.FruitVeg_Adapter;
 import com.grocery.gtohome.adapter.SliderAdapter_range;
 import com.grocery.gtohome.databinding.FragmentHomeBinding;
+import com.grocery.gtohome.model.SampleModel;
 import com.grocery.gtohome.model.SliderModel;
 
 import java.util.ArrayList;
@@ -37,6 +43,9 @@ public class Home_Fragment extends Fragment {
     SliderAdapter_range sliderAdapter_range;
     private int dotsCount;
     private ImageView[] dotes;
+    FruitVeg_Adapter friendsAdapter;
+
+    ArrayList<SampleModel>sampleModels;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -69,10 +78,60 @@ public class Home_Fragment extends Fragment {
         //slider image list
         SliderListArray();
 
+        //side slide bar
         setHorizontalSliderItem();
+
+        getFruitVegList();//fruit veg list
+        getFeaturedProductList();//fruit veg list
+        getPopularBrandList();//popular brand list
+
 
         return root;
 
+    }
+
+    private void getPopularBrandList() {
+        sampleModels=new ArrayList<>();
+        sampleModels.add(new SampleModel("Apple", "20", R.drawable.ashirwad_logo));
+        sampleModels.add(new SampleModel("Apple Gala", "100", R.drawable.brand2));
+        sampleModels.add(new SampleModel("Banana Robest", "50", R.drawable.brand3));
+        sampleModels.add(new SampleModel("Beans", "20", R.drawable.brand4));
+        sampleModels.add(new SampleModel("Beetroot", "20", R.drawable.brand5));
+        sampleModels.add(new SampleModel("Broad Beans", "20", R.drawable.brand6));
+
+        friendsAdapter = new FruitVeg_Adapter(sampleModels,getActivity());
+        binding.setFruitvegAdapter(friendsAdapter);//set databinding adapter
+        friendsAdapter.notifyDataSetChanged();
+
+    }
+
+
+    private void getFeaturedProductList() {
+        ArrayList<SampleModel> sampleModels=new ArrayList<>();
+        sampleModels.add(new SampleModel("Apple", "20", R.drawable.apple));
+        sampleModels.add(new SampleModel("Apple Gala", "100", R.drawable.gala_apple));
+        sampleModels.add(new SampleModel("Banana Robest", "50", R.drawable.banana_robust));
+        sampleModels.add(new SampleModel("Beans", "20", R.drawable.beans_img));
+        sampleModels.add(new SampleModel("Beetroot", "20", R.drawable.beetroot));
+        sampleModels.add(new SampleModel("Broad Beans", "20", R.drawable.broad_beans));
+
+        FeatureProduct_Adapter friendsAdapter = new FeatureProduct_Adapter(sampleModels,getActivity());
+        binding.setFeatureAdapter(friendsAdapter);//set databinding adapter
+        friendsAdapter.notifyDataSetChanged();
+    }
+
+    private void getFruitVegList() {
+        ArrayList<SampleModel> sampleModels=new ArrayList<>();
+        sampleModels.add(new SampleModel("Apple", "20", R.drawable.apple));
+        sampleModels.add(new SampleModel("Apple Gala", "100", R.drawable.gala_apple));
+        sampleModels.add(new SampleModel("Banana Robest", "50", R.drawable.banana_robust));
+        sampleModels.add(new SampleModel("Beans", "20", R.drawable.beans_img));
+        sampleModels.add(new SampleModel("Beetroot", "20", R.drawable.beetroot));
+        sampleModels.add(new SampleModel("Broad Beans", "20", R.drawable.broad_beans));
+
+        FruitVeg_Adapter friendsAdapter = new FruitVeg_Adapter(sampleModels,getActivity());
+        binding.setFruitvegAdapter(friendsAdapter);//set databinding adapter
+        friendsAdapter.notifyDataSetChanged();
     }
 
 
@@ -91,7 +150,6 @@ public class Home_Fragment extends Fragment {
                     .image(listarray.get(i).getSlide_image())
                     .setScaleType(BaseSliderView.ScaleType.Fit);
 
-
             binding.homeImgSlider.addSlider(textSliderView);
 
         }
@@ -101,9 +159,9 @@ public class Home_Fragment extends Fragment {
     private void setHorizontalSliderItem() {
         ArrayList<SliderModel> listarray1 = new ArrayList<>();
 
-        listarray1.add(new SliderModel("Superior fibre",R.drawable.side_baner1));
-        listarray1.add(new SliderModel("Superior fibre",R.drawable.side_baner2));
-        listarray1.add(new SliderModel("Superior fibre",R.drawable.sub_banner3));
+        listarray1.add(new SliderModel("Wide Collection \nRefreshments",R.drawable.side_baner1));
+        listarray1.add(new SliderModel("Break The Chain",R.drawable.side_baner2));
+        listarray1.add(new SliderModel("Get California RED \n @ 12$ \n Shop for $200",R.drawable.sub_banner3));
 
         //**********
         sliderAdapter_range = new SliderAdapter_range(getActivity(),listarray1);

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="model"
+            type="com.grocery.gtohome.model.SampleModel" />
+    </data>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/ll_veg"
+        android:layout_margin="@dimen/_5sdp"
+        android:background="@drawable/rectangle_bg_border"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+
+        <ImageView
+            app:postImage="@{model.image}"
+            android:src="@drawable/placeholder_image"
+            android:layout_width="match_parent"
+            android:scaleType="center"
+            android:layout_height="@dimen/_120sdp"
+            >
+        </ImageView>
+
+        <LinearLayout
+            android:background="@color/colorAccent"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <LinearLayout
+                android:weightSum="1"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+            <TextView
+                android:layout_weight="0.3"
+                style="@style/text_12_black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_5sdp"
+                android:singleLine="true"
+                android:text="@{model.product_name}"
+                android:textAlignment="textStart"
+                android:textStyle="normal">
+            </TextView>
+
+            <TextView
+                android:layout_weight="0.7"
+                android:padding="@dimen/_5sdp"
+                style="@style/text_12_black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{`₹`+ model.price}"
+                android:textAlignment="textStart"
+                android:textStyle="normal">
+            </TextView>
+
+        </LinearLayout>
+
+            <Spinner
+                android:background="@drawable/rectangle_bg_solid_white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_5sdp"
+                android:layout_margin="@dimen/_5sdp"
+                android:entries="@array/weight"
+                >
+            </Spinner>
+
+
+            <LinearLayout
+                android:weightSum="1"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/_5sdp">
+
+                <TextView
+                    android:layout_weight="0.7"
+                    style="@style/text_12_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="Qty"
+                    android:padding="@dimen/_5sdp"
+                    android:textAlignment="textStart"
+                    android:textStyle="normal">
+                </TextView>
+
+                <LinearLayout
+                    android:layout_weight="0.3"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/minus"
+                        android:padding="@dimen/_5sdp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_count_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        android:padding="@dimen/_5sdp"
+                        android:textSize="@dimen/_12sdp"
+                       />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/add"
+                        android:padding="@dimen/_5sdp"
+                        />
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:gravity="center"
+                >
+
+                <TextView
+                    android:layout_margin="@dimen/_5sdp"
+                    android:background="@color/colorPrimary"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    style="@style/textview14white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_5sdp"
+                    android:singleLine="true"
+                    android:text="@string/add"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:drawableStart="@drawable/ic_cart"
+                    android:textAlignment="center"
+                    android:textStyle="normal">
+                </TextView>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
+
+</layout>
