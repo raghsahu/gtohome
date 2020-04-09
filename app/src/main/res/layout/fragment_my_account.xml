@@ -31,10 +31,12 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/colorAccent"></View>
+                    android:background="@color/light_white">
+
+                </View>
 
                 <LinearLayout
-                    android:id="@+id/ll_feedback"
+                    android:id="@+id/ll_edit_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -45,18 +47,21 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/ic_home_black"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                         android:padding="@dimen/_5sdp"
                         android:text="@string/edit_ac_info" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent"></View>
+                        android:background="@color/light_white">
+
+                    </View>
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_change_pw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -67,18 +72,21 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/ic_home_black"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                         android:padding="@dimen/_5sdp"
                         android:text="@string/change_your_pw" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent"></View>
+                        android:background="@color/light_white">
+
+                    </View>
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_modify_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -89,18 +97,21 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/ic_home_black"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                         android:padding="@dimen/_5sdp"
                         android:text="@string/modify_address" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent"></View>
+                        android:background="@color/light_white">
+
+                    </View>
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_modify_wishlist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -111,14 +122,15 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/ic_home_black"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                         android:padding="@dimen/_5sdp"
                         android:text="@string/modify_wishlist" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent"></View>
+                        android:background="@color/light_white">
+                    </View>
 
 
                 </LinearLayout>
@@ -135,10 +147,11 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/colorAccent">
+                    android:background="@color/light_white">
                 </View>
 
                 <LinearLayout
+                    android:id="@+id/ll_order_history"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -149,14 +162,15 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/ic_home_black"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                         android:padding="@dimen/_5sdp"
                         android:text="@string/view_order_history" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent"></View>
+                        android:background="@color/light_white">
+                    </View>
 
                 </LinearLayout>
 
@@ -179,11 +193,12 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent"></View>
+                        android:background="@color/light_white"></View>
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_reward_points"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -194,18 +209,20 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/ic_home_black"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                         android:padding="@dimen/_5sdp"
                         android:text="@string/your_reward_point" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent"></View>
+                        android:background="@color/light_white">
+                    </View>
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_view_return_request"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -216,19 +233,21 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/ic_home_black"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                         android:padding="@dimen/_5sdp"
                         android:text="@string/view_return_request" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent"></View>
+                        android:background="@color/light_white">
+                    </View>
 
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_transaction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -239,14 +258,14 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/ic_home_black"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                         android:padding="@dimen/_5sdp"
                         android:text="@string/your_trnsc" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent">
+                        android:background="@color/light_white">
 
                     </View>
 
@@ -254,6 +273,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_recurring_payment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -264,14 +284,14 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/ic_home_black"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                         android:padding="@dimen/_5sdp"
                         android:text="@string/recurring_payment" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent">
+                        android:background="@color/light_white">
 
                     </View>
 
@@ -290,7 +310,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/colorAccent">
+                    android:background="@color/light_white">
                 </View>
 
                 <LinearLayout
@@ -304,14 +324,14 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/ic_home_black"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                         android:padding="@dimen/_5sdp"
                         android:text="@string/about_us" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent">
+                        android:background="@color/light_white">
                     </View>
 
                 </LinearLayout>
@@ -335,7 +355,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent"></View>
+                        android:background="@color/light_white"></View>
 
                 </LinearLayout>
 
@@ -350,14 +370,14 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/ic_home_black"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                         android:padding="@dimen/_5sdp"
                         android:text="@string/delivery_info" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent">
+                        android:background="@color/light_white">
                     </View>
 
                 </LinearLayout>
@@ -373,14 +393,14 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/ic_home_black"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                         android:padding="@dimen/_5sdp"
                         android:text="@string/privacy_policy" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent">
+                        android:background="@color/light_white">
 
                     </View>
 
@@ -398,14 +418,14 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/ic_home_black"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                         android:padding="@dimen/_5sdp"
                         android:text="@string/term_conditions" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent">
+                        android:background="@color/light_white">
 
                     </View>
 
@@ -413,6 +433,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_return_process"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -423,22 +444,37 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/ic_home_black"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                         android:padding="@dimen/_5sdp"
                         android:text="@string/return_" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorAccent">
+                        android:background="@color/light_white">
 
                     </View>
 
                 </LinearLayout>
 
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/text_16_black"
+                        android:textStyle="bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:padding="@dimen/_5sdp"
+                        android:text="@string/logout" />
 
 
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -31,7 +31,7 @@
         </ImageView>
 
         <LinearLayout
-            android:background="@color/colorAccent"
+            android:background="@color/light_white"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

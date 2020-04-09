@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="model"
+            type="com.grocery.gtohome.model.SampleModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/_4sdp"
+            app:cardElevation="@dimen/_2sdp"
+            android:layout_margin="@dimen/_5sdp"
+            >
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <LinearLayout
+                    android:layout_weight="0.3"
+                    android:padding="@dimen/_5sdp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:text="Raghav sss"
+                        android:padding="@dimen/_2sdp"
+                        style="@style/text_12_black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </TextView>
+
+                    <TextView
+                        android:text="Software"
+                        android:padding="@dimen/_2sdp"
+                        style="@style/text_12_black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </TextView>
+
+                    <TextView
+                        android:text="MIG Colony"
+                        android:padding="@dimen/_2sdp"
+                        style="@style/text_12_black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </TextView>
+
+                    <TextView
+                        android:text="Vijay nagar"
+                        android:padding="@dimen/_2sdp"
+                        style="@style/text_12_black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </TextView>
+
+                    <TextView
+                        android:text="Indore 452010"
+                        android:padding="@dimen/_2sdp"
+                        style="@style/text_12_black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </TextView>
+
+                    <TextView
+                        android:text="MP"
+                        android:padding="@dimen/_2sdp"
+                        style="@style/text_12_black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </TextView>
+
+                    <TextView
+                        android:text="India"
+                        android:padding="@dimen/_2sdp"
+                        style="@style/text_12_black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </TextView>
+
+
+                </LinearLayout>
+
+                <View
+                    android:background="@color/light_white"
+                    android:layout_width="@dimen/_1sdp"
+                    android:layout_height="match_parent"
+                    >
+                </View>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:weightSum="1"
+                    android:layout_weight="0.7"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    >
+
+                    <ImageView
+                        android:layout_weight="0.5"
+                        app:srcCompat="@drawable/ic_edit_black"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        >
+                    </ImageView>
+
+
+                    <ImageView
+                        android:layout_weight="0.5"
+                        app:srcCompat="@drawable/ic_delete"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        >
+                    </ImageView>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+
+
+        </androidx.cardview.widget.CardView>
+
+
+
+
+
+    </LinearLayout>
+</layout>

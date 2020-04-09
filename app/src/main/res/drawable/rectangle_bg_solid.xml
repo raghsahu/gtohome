@@ -14,7 +14,7 @@
 
     </padding>
 
-    <solid android:color="@color/colorAccent">
+    <solid android:color="@color/light_white">
 
     </solid>
 

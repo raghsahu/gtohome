@@ -1,4 +1,4 @@
-package com.grocery.gtohome.fragment;
+package com.grocery.gtohome.fragment.my_orders;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,21 +12,21 @@ import androidx.fragment.app.Fragment;
 
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
-import com.grocery.gtohome.databinding.FragmentHomeBinding;
-import com.grocery.gtohome.databinding.FragmentMyAccountBinding;
+import com.grocery.gtohome.databinding.FragmentReturnRequestBinding;
+import com.grocery.gtohome.databinding.FragmentTranscationBinding;
 
 /**
- * Created by Raghvendra Sahu on 08-Apr-20.
+ * Created by Raghvendra Sahu on 09-Apr-20.
  */
-public class My_Account_Fragment extends Fragment {
-    FragmentMyAccountBinding binding;
+public class Transaction_Fragment extends Fragment {
+    FragmentTranscationBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_account, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_transcation, container, false);
         View root = binding.getRoot();
         try {
-            ((MainActivity) getActivity()).Update_header(getString(R.string.my_account));
+            ((MainActivity) getActivity()).Update_header(getString(R.string.your_transcation));
         } catch (Exception e) {
         }
         //onback press call
@@ -34,7 +34,7 @@ public class My_Account_Fragment extends Fragment {
         if (view instanceof ImageView) {
             ImageView imageView = (ImageView) view;
             //Do your stuff
-            imageView.setVisibility(View.GONE);
+            imageView.setVisibility(View.VISIBLE);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -43,11 +43,7 @@ public class My_Account_Fragment extends Fragment {
             });
         }
 
-
-
-
         return root;
 
     }
-
 }

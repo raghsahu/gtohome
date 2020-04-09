@@ -3,7 +3,8 @@
     <color name="colorPrimary">#84C225</color>
 <!--    <color name="colorPrimaryDark">#033F29</color> -->
     <color name="colorPrimaryDark">#84C225</color>
-    <color name="colorAccent">#DFDDDD</color>
+    <color name="colorAccent">#D9534F</color>
+    <color name="light_white">#DFDDDD</color>
 
     <color name="white">#FFFFFF</color>
     <color name="ivory">#FFFFF0</color>

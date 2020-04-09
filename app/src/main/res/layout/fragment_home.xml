@@ -61,14 +61,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="@dimen/_4sdp"
-                    app:cardBackgroundColor="@color/colorAccent"
+                    app:cardBackgroundColor="@color/light_white"
                     >
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_1sdp"
-                        android:background="@color/colorAccent"
+                        android:background="@color/light_white"
                         android:orientation="vertical">
 
                         <TextView
@@ -257,7 +257,7 @@
                 </TextView>
 
                 <View
-                    android:background="@color/colorAccent"
+                    android:background="@color/light_white"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1sdp">
                 </View>
@@ -280,7 +280,7 @@
                         >
 
                         <TextView
-                            android:background="@color/colorAccent"
+                            android:background="@color/light_white"
                             style="@style/text_14_black"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -313,7 +313,7 @@
                         >
 
                         <TextView
-                            android:background="@color/colorAccent"
+                            android:background="@color/light_white"
                             style="@style/text_14_black"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -360,7 +360,7 @@
                 </TextView>
 
                 <View
-                    android:background="@color/colorAccent"
+                    android:background="@color/light_white"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1sdp">
                 </View>
@@ -432,7 +432,7 @@
                 </TextView>
 
                 <View
-                    android:background="@color/colorAccent"
+                    android:background="@color/light_white"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1sdp">
                 </View>
@@ -482,7 +482,7 @@
                     </TextView>
 
                     <View
-                        android:background="@color/colorAccent"
+                        android:background="@color/light_white"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_1sdp">
                     </View>
@@ -556,7 +556,7 @@
                     </TextView>
 
                     <View
-                        android:background="@color/colorAccent"
+                        android:background="@color/light_white"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_1sdp">
                     </View>

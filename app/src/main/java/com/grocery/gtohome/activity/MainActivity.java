@@ -15,7 +15,7 @@ import com.grocery.gtohome.R;
 import com.grocery.gtohome.fragment.ContactUs_Fragment;
 import com.grocery.gtohome.fragment.Home_Fragment;
 import com.grocery.gtohome.fragment.MyBasket_Fragment;
-import com.grocery.gtohome.fragment.My_Account_Fragment;
+import com.grocery.gtohome.fragment.my_account.My_Account_Fragment;
 import com.grocery.gtohome.fragment.Search_Fragment;
 
 public class MainActivity extends AppCompatActivity {
