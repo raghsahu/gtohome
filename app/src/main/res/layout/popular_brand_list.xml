@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="model"
+            type="com.grocery.gtohome.model.SampleModel" />
+    </data>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/ll_veg"
+            android:layout_margin="@dimen/_5sdp"
+            android:background="@drawable/rectangle_bg_border"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+
+<!--            <TextView-->
+<!--                style="@style/text_14_black"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:padding="@dimen/_5sdp"-->
+<!--                android:text="@{model.product_name}"-->
+<!--                android:textAlignment="center"-->
+<!--                android:textStyle="normal">-->
+
+<!--            </TextView>-->
+
+            <ImageView
+                app:postImage="@{model.image}"
+                android:src="@drawable/placeholder_image"
+                android:layout_width="@dimen/_120sdp"
+                android:scaleType="center"
+                android:layout_height="@dimen/_120sdp"
+                >
+            </ImageView>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

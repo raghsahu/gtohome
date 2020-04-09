@@ -68,16 +68,20 @@
 
         </LinearLayout>
 
-            <Spinner
+            <LinearLayout
                 android:background="@drawable/rectangle_bg_solid_white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/_5sdp"
                 android:layout_margin="@dimen/_5sdp"
-                android:entries="@array/weight"
                 >
-            </Spinner>
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/weight"
+                    >
+                </Spinner>
 
+            </LinearLayout>
 
             <LinearLayout
                 android:weightSum="1"

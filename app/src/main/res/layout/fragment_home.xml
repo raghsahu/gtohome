@@ -8,6 +8,9 @@
     <variable
         name="featureAdapter"
         type="com.grocery.gtohome.adapter.FeatureProduct_Adapter" />
+ <variable
+        name="popularBrandAdapter"
+        type="com.grocery.gtohome.adapter.PopularBrand_Adapter" />
 
 
 </data>
@@ -377,8 +380,7 @@
                         android:layout_margin="@dimen/_5sdp"
                         android:src="@drawable/fruit_an_veg"
                         android:layout_width="match_parent"
-                        android:scaleType="fitXY"
-                        android:layout_height="@dimen/_250sdp"
+                        android:layout_height="@dimen/_280sdp"
                         >
 
                     </ImageView>
@@ -500,8 +502,7 @@
                             android:layout_margin="@dimen/_5sdp"
                             android:src="@drawable/grocery_staples_image"
                             android:layout_width="match_parent"
-                            android:scaleType="fitXY"
-                            android:layout_height="@dimen/_250sdp"
+                            android:layout_height="@dimen/_280sdp"
                             >
 
                         </ImageView>
@@ -564,7 +565,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_popular_brand"
-                    android:adapter="@{fruitvegAdapter}"
+                    android:adapter="@{popularBrandAdapter}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scrollbars="none"
@@ -572,6 +573,13 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     >
                 </androidx.recyclerview.widget.RecyclerView>
+                
+                
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_30sdp">
+                </LinearLayout>
 
             </LinearLayout>
         </ScrollView>

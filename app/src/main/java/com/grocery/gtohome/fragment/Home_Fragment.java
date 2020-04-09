@@ -28,6 +28,7 @@ import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.adapter.FeatureProduct_Adapter;
 import com.grocery.gtohome.adapter.FruitVeg_Adapter;
+import com.grocery.gtohome.adapter.PopularBrand_Adapter;
 import com.grocery.gtohome.adapter.SliderAdapter_range;
 import com.grocery.gtohome.databinding.FragmentHomeBinding;
 import com.grocery.gtohome.model.SampleModel;
@@ -43,7 +44,7 @@ public class Home_Fragment extends Fragment {
     SliderAdapter_range sliderAdapter_range;
     private int dotsCount;
     private ImageView[] dotes;
-    FruitVeg_Adapter friendsAdapter;
+    PopularBrand_Adapter friendsAdapter;
 
     ArrayList<SampleModel>sampleModels;
 
@@ -99,8 +100,8 @@ public class Home_Fragment extends Fragment {
         sampleModels.add(new SampleModel("Beetroot", "20", R.drawable.brand5));
         sampleModels.add(new SampleModel("Broad Beans", "20", R.drawable.brand6));
 
-        friendsAdapter = new FruitVeg_Adapter(sampleModels,getActivity());
-        binding.setFruitvegAdapter(friendsAdapter);//set databinding adapter
+        friendsAdapter = new PopularBrand_Adapter(sampleModels,getActivity());
+        binding.setPopularBrandAdapter(friendsAdapter);//set databinding adapter
         friendsAdapter.notifyDataSetChanged();
 
     }

@@ -13,16 +13,17 @@ import androidx.fragment.app.Fragment;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.databinding.FragmentHomeBinding;
+import com.grocery.gtohome.databinding.FragmentMyAccountBinding;
 
 /**
  * Created by Raghvendra Sahu on 08-Apr-20.
  */
 public class My_Account_Fragment extends Fragment {
-    FragmentHomeBinding binding;
+    FragmentMyAccountBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_account, container, false);
         View root = binding.getRoot();
         try {
             ((MainActivity) getActivity()).Update_header(getString(R.string.my_account));
@@ -41,6 +42,9 @@ public class My_Account_Fragment extends Fragment {
                 }
             });
         }
+
+
+
 
         return root;
 

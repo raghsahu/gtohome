@@ -38,7 +38,7 @@
     <string name="home">Home</string>
     <string name="search">Search</string>
     <string name="my_basket">My Basket</string>
-    <string name="my_account">My account</string>
+    <string name="my_account">My Account</string>
     <string name="contact_us">Contact us</string>
     <string name="why_choose_us">Why Choose Us?</string>
     <string name="on_time_delivery">On time delivery</string>
@@ -54,11 +54,51 @@
     <string name="grocery_staples"><![CDATA[Grocery & Staples]]></string>
     <string name="add">Add</string>
     <string name="our_popular_brand">Our Popular Brands</string>
+    <string name="search_criteria">Search Criteria</string>
+    <string name="keywords">Keywords</string>
+    <string name="search_in_subcategories">Search in subcategories</string>
+    <string name="search_product_desc">Search in product descriptions</string>
+    <string name="product_meet_search_criteria">Products Meeting The Search Criteria</string>
+    <string name="gtohome_address">gtohome \nayanchery(po) \nvalliad \n673512 (pin)</string>
+    <string name="view_google_map">View Google Map</string>
+    <string name="gtohome_telephone">9526300446</string>
+    <string name="opening_time">9 am</string>
+    <string name="contact_form">Contact Form</string>
+    <string name="opening_time_text">Opening Time</string>
+    <string name="your_name">Your Name</string>
+    <string name="enquiry">Enquiry</string>
+    <string name="submit">Submit</string>
+    <string name="contact">Contact</string>
+    <string name="contact_gtohome">GtoHOME \nonline supermarket \nayanchery(po)  \nvalliad  \n\ncontact@gtohome.in \nadmin@gtohome.in \nramshadcn@gmail.com \n(+91) 9526300446</string>
+    <string name="edit_ac_info">Edit your account information</string>
+    <string name="change_your_pw">Change your password</string>
+    <string name="modify_address">Modify your address book entries</string>
+    <string name="modify_wishlist">Modify your wish list</string>
+    <string name="my_order">My Orders</string>
+    <string name="view_order_history">View your order history</string>
+    <string name="downloads">Downloads</string>
+    <string name="your_reward_point">Your Reward Points</string>
+    <string name="view_return_request">View your return requests</string>
+    <string name="your_trnsc">Your Transactions</string>
+    <string name="recurring_payment">Recurring payments</string>
+    <string name="information">Information</string>
+    <string name="about_us">About Us</string>
+    <string name="delivery_info">Delivery Information</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="term_conditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="return_">Returns</string>
 
     <array name="weight">
         <item>1kg</item>
         <item>500gm</item>
         <item>250gm</item>
+    </array>
+
+  <array name="all_category">
+        <item>All Caegories</item>
+        <item>Grocery</item>
+        <item>Fruits</item>
+        <item>Vegetables</item>
     </array>
 
 </resources>

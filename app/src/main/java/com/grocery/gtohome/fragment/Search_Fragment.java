@@ -13,16 +13,17 @@ import androidx.fragment.app.Fragment;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.databinding.FragmentHomeBinding;
+import com.grocery.gtohome.databinding.FragmentSearchBinding;
 
 /**
  * Created by Raghvendra Sahu on 08-Apr-20.
  */
 public class Search_Fragment extends Fragment {
-    FragmentHomeBinding binding;
+    FragmentSearchBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false);
         View root = binding.getRoot();
         try {
             ((MainActivity) getActivity()).Update_header(getString(R.string.search));
@@ -41,6 +42,8 @@ public class Search_Fragment extends Fragment {
                 }
             });
         }
+
+
 
         return root;
 

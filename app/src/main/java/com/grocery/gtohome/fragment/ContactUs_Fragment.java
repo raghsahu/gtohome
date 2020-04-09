@@ -12,17 +12,18 @@ import androidx.fragment.app.Fragment;
 
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
+import com.grocery.gtohome.databinding.FragmentContactUsBinding;
 import com.grocery.gtohome.databinding.FragmentHomeBinding;
 
 /**
  * Created by Raghvendra Sahu on 08-Apr-20.
  */
 public class ContactUs_Fragment extends Fragment {
-    FragmentHomeBinding binding;
+    FragmentContactUsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_us, container, false);
         View root = binding.getRoot();
         try {
             ((MainActivity) getActivity()).Update_header(getString(R.string.contact_us));
@@ -43,6 +44,10 @@ public class ContactUs_Fragment extends Fragment {
         }
 
         return root;
+
+
+
+
 
     }
 }
