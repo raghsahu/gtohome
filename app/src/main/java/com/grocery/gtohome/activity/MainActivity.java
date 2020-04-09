@@ -14,7 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.fragment.ContactUs_Fragment;
 import com.grocery.gtohome.fragment.Home_Fragment;
-import com.grocery.gtohome.fragment.MyBasket_Fragment;
+import com.grocery.gtohome.fragment.my_basket.MyBasket_Fragment;
 import com.grocery.gtohome.fragment.my_account.My_Account_Fragment;
 import com.grocery.gtohome.fragment.Search_Fragment;
 

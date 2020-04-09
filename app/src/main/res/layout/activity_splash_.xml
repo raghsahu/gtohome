@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
+    android:layout_gravity="center"
+    android:gravity="center"
     android:background="@color/white"
     tools:context=".activity.Splash_Activity">
 
@@ -12,8 +13,8 @@
     <ImageView
         android:layout_gravity="center"
         android:id="@+id/splash_logo_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/gtohome_logo" />
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_200sdp"
+        android:src="@drawable/gtohome_logo_png" />
 
 </LinearLayout>

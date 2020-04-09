@@ -131,6 +131,26 @@
     <string name="other_please_supply_details">Other, please supply details</string>
     <string name="reaciving_wrong_item">Received Wrong Item</string>
     <string name="faulty_other_details">Faulty or other details</string>
+    <string name="clear_cart">Clear cart</string>
+    <string name="checkout">Checkout</string>
+    <string name="enter_coopan_here">Enter your coupon here</string>
+    <string name="apply_coopan">Apply Coupon</string>
+    <string name="get_quotes">Get Quotes</string>
+    <string name="enter_gift_certificate">Enter your gift certificate code here</string>
+    <string name="apply_gift_certificate">Apply Gift Certificate</string>
+    <string name="sub_total">Sub-Total:</string>
+    <string name="total_">Total:</string>
+    <string name="select_existing_address">I want to use an existing address</string>
+    <string name="all_new_address">I want to use a new address</string>
+    <string name="free_shipping">Free Shipping</string>
+    <string name="select_shipping_prefer">Please select the preferred shipping method to use on this order.</string>
+    <string name="select_payment_method">Please select the preferred payment method to use on this order.</string>
+    <string name="cash_on_delivery">Cash On Delivery</string>
+    <string name="google_pay">Google Pay</string>
+    <string name="payu_money">PayUMoney</string>
+    <string name="add_comments_about_order">Add Comments About Your Order</string>
+    <string name="comments">Comments</string>
+    <string name="read_agree_terms_conditions"><![CDATA[I have read and agree to the Terms & Conditions]]></string>
 
     <array name="weight">
         <item>1kg</item>
@@ -138,7 +158,7 @@
         <item>250gm</item>
     </array>
 
-  <array name="all_category">
+    <array name="all_category">
         <item>All Caegories</item>
         <item>Grocery</item>
         <item>Fruits</item>
