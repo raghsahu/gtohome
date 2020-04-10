@@ -94,8 +94,10 @@
                             <Spinner
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:entries="@array/all_category"
-                                android:padding="@dimen/_10sdp"></Spinner>
+                                android:entries="@array/country"
+                                android:padding="@dimen/_10sdp">
+
+                            </Spinner>
 
                         </LinearLayout>
 
@@ -123,8 +125,10 @@
                             <Spinner
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:entries="@array/all_category"
-                                android:padding="@dimen/_10sdp"></Spinner>
+                                android:entries="@array/state"
+                                android:padding="@dimen/_10sdp">
+
+                            </Spinner>
 
                         </LinearLayout>
 

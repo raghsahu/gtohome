@@ -165,4 +165,125 @@
         <item>Vegetables</item>
     </array>
 
+    <array name="currency">
+        <item>₹ Ruppes</item>
+        <item>$ US Dollar</item>
+
+    </array>
+
+    <array name="short_by">
+        <item>Default</item>
+        <item>Name (A-Z)</item>
+        <item>Name (Z-A)</item>
+        <item>Price (Low > High)</item>
+        <item>Price (High > Low)</item>
+        <item>Rating (Highest)</item>
+        <item>Rating (Lowest)</item>
+        <item>Model (A > Z)</item>
+        <item>Model (Z > A)</item>
+    </array>
+
+    <array name="country">
+        <item>India</item>
+        <item>USA</item>
+        <item>New Zeeland</item>
+        <item>Nepal</item>
+    </array>
+
+    <array name="state">
+    <item>MP</item>
+    <item>UP</item>
+    <item>Newyork</item>
+    <item>Pana Ji</item>
+    </array>
+
+
+    <string name="action_settings">Settings</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="film_genres">Film genres</string>
+    <string name="website">https://gtohome.in</string>
+    <string name="date">22 jan 2020</string>
+    <string name="selected_item">Selected item</string>
+
+    <string-array name="film_genre">
+        <item>Grocery &amp; Staples</item>
+        <item>Fruits &amp; Vegitables</item>
+        <item>Personal Care</item>
+        <item>Home Needs</item>
+        <item>Dairy &amp; Bakery</item>
+        <item>Fish &amp; Meat</item>
+    </string-array>
+
+    <string-array name="actionFilms">
+        <item>Grains &amp; Grains Products</item>
+        <item>Daal &amp; Pulses</item>
+        <item>Edible Oils</item>
+        <item>Whole Spices &amp; Powders</item>
+        <item>Salt &amp; Sugar &amp; Juggery</item>
+        <item>Tea &amp; Coffee &amp; Milk Powders</item>
+        <item>Dry Fruits &amp; Nuts</item>
+
+    </string-array>
+
+    <string-array name="musicals">
+        <item>Fruits</item>
+        <item>Vegetables</item>
+
+    </string-array>
+
+    <string-array name="dramas">
+        <item>Personal Hygiene</item>
+        <item>Skin Care</item>
+        <item>Oral Care</item>
+        <item>Shaving Needs</item>
+        <item>Hare Care</item>
+        <item>Deos &amp; Perfumes</item>
+        <item>Baby Cares</item>
+    </string-array>
+
+    <string-array name="thrillers">
+        <item>Detergents</item>
+        <item>Cleaning Products</item>
+        <item>House Hold Items</item>
+        <item>Candles &amp; Agarbathi</item>
+        <item>Freshners</item>
+        <item>Electricals &amp; Electronics</item>
+        <item>Repellents</item>
+
+    </string-array>
+
+    <string-array name="comedies">
+        <item>Breakfast &amp; Careal &amp; Mixes</item>
+        <item>Paneer &amp; Curd</item>
+
+    </string-array>
+
+    <string-array name="fishes_meats">
+        <item>Fishes</item>
+        <item>Meats</item>
+
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="movie_title">movie title</string>
+    <string name="action_movies">Action</string>
+    <string name="musical_movies">Musical</string>
+    <string name="drama_movies">Drama</string>
+    <string name="comedy_movies">Comedy</string>
+    <string name="thriller_movies">Thriller</string>
+    <string name="movie_genre">genre</string>
+
+
+
+    <string name="all_products">All Products</string>
+    <string name="product_details">Product Details</string>
+    <string name="product_code_">Product Code:</string>
+    <string name="reward_point_">Reward Points:</string>
+    <string name="description">Description</string>
+    <string name="related_product">Related Products</string>
+    <string name="testimonial">Testimonial</string>
+    <string name="equipro_test1" >Very Nice Product...........!</string>
+
+
 </resources>

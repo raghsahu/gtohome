@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -31,6 +33,7 @@ import com.grocery.gtohome.adapter.FruitVeg_Adapter;
 import com.grocery.gtohome.adapter.PopularBrand_Adapter;
 import com.grocery.gtohome.adapter.SliderAdapter_range;
 import com.grocery.gtohome.databinding.FragmentHomeBinding;
+import com.grocery.gtohome.fragment.my_basket.DeliveryAddressFragment;
 import com.grocery.gtohome.model.SampleModel;
 import com.grocery.gtohome.model.SliderModel;
 
@@ -47,6 +50,16 @@ public class Home_Fragment extends Fragment {
     PopularBrand_Adapter friendsAdapter;
 
     ArrayList<SampleModel>sampleModels;
+
+
+    public static Home_Fragment newInstance(String movieTitle) {
+        Home_Fragment fragmentAction = new Home_Fragment();
+        Bundle args = new Bundle();
+        //args.putString(KEY_MOVIE_TITLE, movieTitle);
+        fragmentAction.setArguments(args);
+
+        return fragmentAction;
+    }
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -85,6 +98,89 @@ public class Home_Fragment extends Fragment {
         getFruitVegList();//fruit veg list
         getFeaturedProductList();//fruit veg list
         getPopularBrandList();//popular brand list
+
+        binding.llFruit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                All_Product_Fragment fragment2 = new All_Product_Fragment();
+                Bundle bundle = new Bundle();
+                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                //   bundle.putString("Title",dataModel.getCategory_name());
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                fragment2.setArguments(bundle);
+            }
+        });
+
+
+        binding.llVeg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                All_Product_Fragment fragment2 = new All_Product_Fragment();
+                Bundle bundle = new Bundle();
+                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                //   bundle.putString("Title",dataModel.getCategory_name());
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                fragment2.setArguments(bundle);
+            }
+        });
+
+
+        binding.tvAllGrocery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                All_Product_Fragment fragment2 = new All_Product_Fragment();
+                Bundle bundle = new Bundle();
+                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                //   bundle.putString("Title",dataModel.getCategory_name());
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                fragment2.setArguments(bundle);
+            }
+        });
+
+        binding.tvViewallFruit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                All_Product_Fragment fragment2 = new All_Product_Fragment();
+                Bundle bundle = new Bundle();
+                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                //   bundle.putString("Title",dataModel.getCategory_name());
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                fragment2.setArguments(bundle);
+            }
+        });
+
+        binding.tvViewAllFeature.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                All_Product_Fragment fragment2 = new All_Product_Fragment();
+                Bundle bundle = new Bundle();
+                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                //   bundle.putString("Title",dataModel.getCategory_name());
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                fragment2.setArguments(bundle);
+            }
+        });
+
 
 
         return root;

@@ -21,6 +21,17 @@ import com.grocery.gtohome.databinding.FragmentSearchBinding;
 public class Search_Fragment extends Fragment {
     FragmentSearchBinding binding;
 
+
+    public static Search_Fragment newInstance(String movieTitle) {
+        Search_Fragment fragmentAction = new Search_Fragment();
+        Bundle args = new Bundle();
+        //args.putString(KEY_MOVIE_TITLE, movieTitle);
+        fragmentAction.setArguments(args);
+
+        return fragmentAction;
+    }
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false);

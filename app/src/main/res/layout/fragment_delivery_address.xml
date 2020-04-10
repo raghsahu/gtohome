@@ -52,7 +52,7 @@
                       <Spinner
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
-                          android:entries="@array/all_category"
+                          android:entries="@array/state"
                           android:padding="@dimen/_10sdp"
                           >
                       </Spinner>
@@ -297,7 +297,7 @@
                           <Spinner
                               android:layout_width="match_parent"
                               android:layout_height="wrap_content"
-                              android:entries="@array/all_category"
+                              android:entries="@array/country"
                               android:padding="@dimen/_10sdp"
                               >
                           </Spinner>
@@ -329,7 +329,7 @@
                           <Spinner
                               android:layout_width="match_parent"
                               android:layout_height="wrap_content"
-                              android:entries="@array/all_category"
+                              android:entries="@array/state"
                               android:padding="@dimen/_10sdp"
                               >
                           </Spinner>

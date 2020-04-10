@@ -271,6 +271,7 @@
                     >
 
                     <LinearLayout
+                        android:id="@+id/ll_fruit"
                         android:layout_margin="@dimen/_5sdp"
                         android:layout_weight="0.5"
                         android:background="@drawable/rectangle_bg_border"
@@ -297,13 +298,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_100sdp"
                             >
-
                         </ImageView>
 
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_veg"
                         android:layout_margin="@dimen/_5sdp"
                         android:layout_weight="0.5"
                         android:background="@drawable/rectangle_bg_border"
@@ -401,6 +402,7 @@
 
 
                 <TextView
+                    android:id="@+id/tv_viewall_fruit"
                     android:background="@drawable/rectangle_bg_solid"
                     android:padding="@dimen/_10sdp"
                     android:layout_margin="@dimen/_10sdp"
@@ -450,6 +452,7 @@
                 </androidx.recyclerview.widget.RecyclerView>
 
                 <TextView
+                    android:id="@+id/tv_view_all_feature"
                     android:background="@drawable/rectangle_bg_solid"
                     android:padding="@dimen/_10sdp"
                     android:layout_margin="@dimen/_10sdp"
@@ -523,7 +526,7 @@
 
 
                 <TextView
-                    android:id="@+id/tv_continue"
+                    android:id="@+id/tv_all_grocery"
                     android:background="@drawable/rectangle_bg_solid"
                     android:padding="@dimen/_10sdp"
                     android:layout_margin="@dimen/_10sdp"

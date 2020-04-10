@@ -1,0 +1,29 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:showIn="@layout/app_bar_activity_navigation"
+    tools:context=".activity.MainActivity">
+
+    <FrameLayout
+        android:layout_marginBottom="50dp"
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"
+        app:itemTextColor="@color/colorPrimary"
+        app:itemIconTint="@color/menu_tint"
+        app:menu="@menu/bottom_nav_menu" />
+    <!--    app:itemBackground="@drawable/bottom_nav_bg"-->
+
+</RelativeLayout>
