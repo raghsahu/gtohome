@@ -21,7 +21,7 @@
             android:id="@+id/filmIcon"
             android:layout_width="@dimen/header_img_size"
             android:layout_height="@dimen/header_img_size"
-            android:src="@drawable/logo"/>
+            android:src="@drawable/user_img"/>
 
         <TextView
             android:visibility="gone"
@@ -53,14 +53,15 @@
 
 
     <LinearLayout
+        android:layout_gravity="center"
         android:layout_margin="@dimen/_5sdp"
         android:background="@drawable/rectangle_bg_solid_white"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         >
 
         <Spinner
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/_200sdp"
             android:layout_height="wrap_content"
             android:entries="@array/currency"
             android:padding="@dimen/_5sdp"

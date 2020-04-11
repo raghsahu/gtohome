@@ -30,7 +30,7 @@
     <string name="read_agree_privacy_policy">I have read and agree to the <b>Privacy Policy</b> </string>
     <string name="register_success_text">Congratulations! Your new account has been successfully created! \n\nYou can now take advantage of member privileges to enhance your online shopping experience with us.  \n\nIf you have ANY questions about the operation of this online shop, please e-mail the store owner.  \n\nA confirmation has been sent to the provided e-mail address. If you have not received it within the hour, please contact us.</string>
     <string name="your_account_hasbeen_created">Your account has been created!</string>
-    <string name="forgotten_pw">Forgotten Password</string>
+    <string name="forgotten_pw">Forgotten Password?</string>
     <string name="forgot_your_pw">" FORGOT YOUR PASSWORD?"</string>
     <string name="forgot_pw_text">Enter the e-mail address associated with your account. Click submit to have a password reset link e-mailed to you.</string>
     <string name="your_email_address">Your E-Mail Address</string>

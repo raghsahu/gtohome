@@ -81,9 +81,9 @@ public class Product_Details_Fragment extends Fragment {
     private void SetTestimonials() {
         ArrayList<SliderModel> listarray1 = new ArrayList<>();
 
-        listarray1.add(new SliderModel(getString(R.string.equipro_test1),R.drawable.logo));
-        listarray1.add(new SliderModel(getString(R.string.equipro_test1),R.drawable.logo));
-        listarray1.add(new SliderModel(getString(R.string.equipro_test1),R.drawable.logo));
+        listarray1.add(new SliderModel(getString(R.string.equipro_test1),R.drawable.user_img));
+        listarray1.add(new SliderModel(getString(R.string.equipro_test1),R.drawable.user_img));
+        listarray1.add(new SliderModel(getString(R.string.equipro_test1),R.drawable.user_img));
 
         //set slider
         //dotesIndicater(0);
