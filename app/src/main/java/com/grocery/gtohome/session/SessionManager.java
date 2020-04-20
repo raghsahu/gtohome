@@ -13,7 +13,7 @@ import com.grocery.gtohome.activity.Splash_Activity;
  */
 public class SessionManager extends Object {
     private static final String TAG = SessionManager.class.getSimpleName();
-    private static final String PREF_NAME = "LiveWirz_pref";
+    private static final String PREF_NAME = "Gtohome_pref";
 
     private static final String IS_LOGGEDIN = "isLoggedIn";
     private static final String Name = "name";

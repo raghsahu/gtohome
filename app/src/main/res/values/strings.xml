@@ -274,8 +274,6 @@
     <string name="thriller_movies">Thriller</string>
     <string name="movie_genre">genre</string>
 
-
-
     <string name="all_products">All Products</string>
     <string name="product_details">Product Details</string>
     <string name="product_code_">Product Code:</string>
@@ -284,6 +282,32 @@
     <string name="related_product">Related Products</string>
     <string name="testimonial">Testimonial</string>
     <string name="equipro_test1" >Very Nice Product...........!</string>
+
+    <string name="validation_title">Whoops!</string>
+    <string name="ok">Ok</string>
+    <!--Validation Message-->
+    <string name="please_enter_email">Please enter your email.</string>
+    <string name="please_enter_valid_email">Please enter valid email.</string>
+    <string name="please_enter_password">Please enter your password.</string>
+    <string name="please_enter_current_password">Please enter your current password.</string>
+    <string name="please_enter_new_password">Please enter your new password.</string>
+    <string name="please_confirm_password">Please confirm the password.</string>
+    <string name="please_enter_valid_password">Password should be between 6-20 characters.</string>
+    <string name="please_enter_confirm_password">Please enter your confirm password.</string>
+    <string name="please_enter_valid_confirm_password">Please enter valid confirm password.</string>
+    <string name="plz_accept_terms_">Please accept the terms and conditions.</string>
+    <string name="your_confirm_pass_doesnot">Your password and confirm password does not match.</string>
+
+    <!--Sign Up Next-->
+    <string name="please_enter_first_name">Please enter your name.</string>
+    <string name="please_enter_last_name">Please enter your last name.</string>
+    <string name="please_enter_mobile_number">Please enter contact number.</string>
+    <string name="please_enter_landline_number">Please enter landline number.</string>
+    <string name="please_enter_address">Please enter address.</string>
+    <string name="please_enter_valid_mobile_number">Mobile number is not valid.</string>
+    <string name="please_enter_county_code">Please enter country code.</string>
+    <string name="please_enter_valid_county_code">Please enter valid country code.</string>
+    <string name="please_check_internet">Please Check Internet</string>
 
 
 </resources>
