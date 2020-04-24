@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+        <import type="android.text.Html"/>
         <variable
             name="model"
-            type="com.grocery.gtohome.model.SampleModel" />
+            type="com.grocery.gtohome.model.category_model.CategoryChild" />
     </data>
 
 <LinearLayout
@@ -22,18 +23,19 @@
         >
 
         <TextView
-            style="@style/text_14_black"
+            style="@style/text_12_black"
+            android:background="@color/light_white1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/_5sdp"
-            android:text="@{model.product_name}"
+            android:text="@{Html.fromHtml(String.format(model.name))}"
             android:textAlignment="center"
             android:textStyle="normal">
 
         </TextView>
 
         <ImageView
-            app:postImage="@{model.image}"
+            app:postImage="@{model.imageFullPath}"
             android:src="@drawable/placeholder_image"
             android:layout_width="match_parent"
             android:scaleType="center"

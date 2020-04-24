@@ -9,13 +9,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -23,25 +28,39 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.grocery.gtohome.CustomExpandableListAdapter;
-import com.grocery.gtohome.ExpandableListDataSource;
 import com.grocery.gtohome.FragmentNavigationManager;
 import com.grocery.gtohome.NavigationManager;
 import com.grocery.gtohome.R;
+import com.grocery.gtohome.api_client.Api_Call;
+import com.grocery.gtohome.api_client.Base_Url;
+import com.grocery.gtohome.api_client.RxApiClient;
+import com.grocery.gtohome.fragment.All_Product_Fragment;
 import com.grocery.gtohome.fragment.ContactUs_Fragment;
 import com.grocery.gtohome.fragment.Home_Fragment;
 import com.grocery.gtohome.fragment.my_basket.MyBasket_Fragment;
 import com.grocery.gtohome.fragment.my_account.My_Account_Fragment;
 import com.grocery.gtohome.fragment.Search_Fragment;
+import com.grocery.gtohome.model.category_model.CategoryModel;
+import com.grocery.gtohome.model.category_model.CategoryName;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.adapter.rxjava2.HttpException;
+
+import static com.grocery.gtohome.api_client.Base_Url.categoriesapi;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public BottomNavigationView navView;
     TextView tv_main_header;
     ImageView iv_drawer;
-
+    //*******************************
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     String mActivityTitle;
@@ -49,10 +68,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private ExpandableListView mExpandableListView;
     private ExpandableListAdapter mExpandableListAdapter;
-    private List<String> mExpandableListTitle;
+     List<String> mExpandableListTitle;
     private NavigationManager mNavigationManager;
 
-    private Map<String, List<String>> mExpandableListData;
+     Map<String, List<String>> mExpandableListData;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -138,18 +157,111 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mExpandableListView.addHeaderView(listHeaderView);
        // mExpandableListView.addFooterView(listHeaderView);
 
-        mExpandableListData = ExpandableListDataSource.getData(this);
-        mExpandableListTitle = new ArrayList(mExpandableListData.keySet());
+        //mExpandableListData = ExpandableListDataSource.getData(this);
+       // mExpandableListTitle = new ArrayList(mExpandableListData.keySet());
 
+        Category_SubCategoryData();
         addDrawerItems();
         setupDrawer();
 
         if (savedInstanceState == null) {
-            //  selectFirstItemAsDefault();
+              //selectFirstItemAsDefault();
         }
 
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setHomeButtonEnabled(true);
+
+
+
+    }
+
+    @SuppressLint("CheckResult")
+    private void Category_SubCategoryData() {
+        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this, R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
+
+        apiInterface.CategoryApi(categoriesapi)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<CategoryModel>() {
+                    @Override
+                    public void onNext(CategoryModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_my_test", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getResult().equalsIgnoreCase("true")) {
+
+                                mExpandableListTitle = new ArrayList<String>();
+                                mExpandableListData = new HashMap<String, List<String>>();
+
+                                for (int i=0; i<response.getCategories().size(); i++){
+                                    mExpandableListTitle.add(response.getCategories().get(i).getName());
+
+                                }
+
+
+                                for (int i=0; i<mExpandableListTitle.size(); i++){
+                                    List<String> colors = new ArrayList<String>();
+                                    for (int j=0; j<response.getCategories().get(i).getChildren().size(); j++){
+                                      colors.add(response.getCategories().get(i).getChildren().get(j).getName());
+
+                                    }
+                                    mExpandableListData.put(mExpandableListTitle.get(i),
+                                            colors);
+
+                                }
+
+                                mExpandableListAdapter = new CustomExpandableListAdapter(MainActivity.this, mExpandableListTitle, mExpandableListData);
+                                mExpandableListView.setAdapter(mExpandableListAdapter);
+
+                            } else {
+                                //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("mr_product_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
 
     }
 
@@ -196,8 +308,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void addDrawerItems() {
-        mExpandableListAdapter = new CustomExpandableListAdapter(this, mExpandableListTitle, mExpandableListData);
-        mExpandableListView.setAdapter(mExpandableListAdapter);
+
         mExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
@@ -267,6 +378,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
+
         mDrawerToggle.syncState();
     }
 
@@ -307,4 +419,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+    public void fn_selectedPosition(int group, int child) {
+
+        All_Product_Fragment homefragment = new All_Product_Fragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.frame, homefragment, "All_Product_Fragment");
+        ft.addToBackStack(null);
+        ft.commit();
+
+
+        mDrawerLayout.closeDrawer(Gravity.LEFT);
+
+    }
+
 }

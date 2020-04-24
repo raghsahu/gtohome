@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
 import com.grocery.gtohome.activity.Splash_Activity;
+import com.grocery.gtohome.model.register_model.RegistrationModelData;
 
 
 /**
@@ -41,22 +43,21 @@ public class SessionManager extends Object {
 
     }
 
-//    public void createSession(LoginModelResponse userInfoData) {
-//        Gson gson = new Gson();
-//        String json = gson.toJson(userInfoData);
-//        editor.putString("user", json);
-//        //editor.putBoolean(IS_LOGGEDIN, true);
-//        editor.putBoolean("IsLogin", true);
-//        editor.apply();
-//    }
-//
-//    public LoginModelResponse getUser() {
-//        Gson gson = new Gson();
-//        String str = mypref.getString("user", "");
-//        if (str.isEmpty())
-//            return null;
-//        return gson.fromJson(str, LoginModelResponse.class);
-//    }
+    public void createSession(RegistrationModelData userInfoData) {
+        Gson gson = new Gson();
+        String json = gson.toJson(userInfoData);
+        editor.putString("user", json);
+        editor.putBoolean("IsLogin", true);
+        editor.apply();
+    }
+
+    public RegistrationModelData getUser() {
+        Gson gson = new Gson();
+        String str = mypref.getString("user", "");
+        if (str.isEmpty())
+            return null;
+        return gson.fromJson(str, RegistrationModelData.class);
+    }
 
 
     public void setName(String name) {

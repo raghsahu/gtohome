@@ -15,9 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.adapter.AddressBook_Adapter;
-import com.grocery.gtohome.adapter.FruitVeg_Adapter;
 import com.grocery.gtohome.databinding.FragmentChangeAddressBinding;
-import com.grocery.gtohome.databinding.FragmentMyAccountBinding;
 import com.grocery.gtohome.model.SampleModel;
 
 import java.util.ArrayList;

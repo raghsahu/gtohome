@@ -2,6 +2,8 @@ package com.grocery.gtohome;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +51,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         }
         TextView expandedListTextView = (TextView) convertView
                 .findViewById(R.id.expandedListItem);
-        expandedListTextView.setText(expandedListText);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            expandedListTextView.setText(Html.fromHtml(expandedListText, Html.FROM_HTML_MODE_COMPACT));
+        } else {
+            expandedListTextView.setText(Html.fromHtml(expandedListText));
+        }
+      //  expandedListTextView.setText(expandedListText);
         return convertView;
     }
 
@@ -84,7 +92,13 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         TextView listTitleTextView = (TextView) convertView
                 .findViewById(R.id.listTitle);
         listTitleTextView.setTypeface(null, Typeface.BOLD);
-        listTitleTextView.setText(listTitle);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            listTitleTextView.setText(Html.fromHtml(listTitle, Html.FROM_HTML_MODE_COMPACT));
+        } else {
+            listTitleTextView.setText(Html.fromHtml(listTitle));
+        }
+      //  listTitleTextView.setText(listTitle);
         return convertView;
     }
 

@@ -21,4 +21,18 @@
         android:dividerHeight="@dimen/_1sdp"
         android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"/>
 
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/left_drawer"-->
+<!--        android:layout_width="240dp"-->
+<!--        android:orientation="vertical"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_gravity="start"-->
+<!--        android:background="#FFFFFF">-->
+
+<!--        <include layout="@layout/menu_layout"></include>-->
+
+<!--    </LinearLayout>-->
+
+
 </androidx.drawerlayout.widget.DrawerLayout>
