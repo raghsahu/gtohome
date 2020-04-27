@@ -12,7 +12,7 @@ public class CategoryModel {
     @SerializedName("categories")
     @Expose
     private List<CategoryName> categories = null;
-    @SerializedName("result")
+    @SerializedName("status")
     @Expose
     private String result;
     @SerializedName("msg")

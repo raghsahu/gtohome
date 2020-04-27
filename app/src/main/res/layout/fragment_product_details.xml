@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="featureAdapter"
             type="com.grocery.gtohome.adapter.FeatureProduct_Adapter" />
+
     </data>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none"
@@ -25,10 +26,11 @@
             >
 
             <ImageView
-                android:background="@drawable/rectangle_bg_border"
-                android:src="@drawable/beetroot"
+                android:id="@+id/iv_product_img"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_200sdp">
+                android:layout_height="@dimen/_200sdp"
+                android:background="@drawable/rectangle_bg_border"
+                android:src="@drawable/placeholder_image">
 
             </ImageView>
 
@@ -40,6 +42,7 @@
                 >
 
                 <TextView
+                    android:id="@+id/tv_pro_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/text_16_black"
@@ -50,6 +53,7 @@
                 </TextView>
 
                 <TextView
+                    android:id="@+id/tv_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/text_16_black"
@@ -220,6 +224,7 @@
                 </View>
 
                 <TextView
+                    android:id="@+id/tv_pro_desc"
                     android:padding="@dimen/_5sdp"
                     style="@style/text_12_black"
                     android:text="@string/register_text"
@@ -232,6 +237,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_margin="@dimen/_10sdp"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -360,7 +366,7 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 

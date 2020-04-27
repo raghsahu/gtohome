@@ -4,7 +4,7 @@
     <data>
     <variable
         name="featureAdapter"
-        type="com.grocery.gtohome.adapter.FeatureProduct_Adapter" />
+        type="com.grocery.gtohome.adapter.CategoryProduct_Adapter" />
     </data>
 
 <LinearLayout
@@ -21,6 +21,7 @@
         >
 
         <LinearLayout
+            android:visibility="gone"
             android:layout_margin="@dimen/_5sdp"
             android:layout_weight="0.5"
             android:background="@drawable/rectangle_bg_solid_white"
@@ -49,10 +50,9 @@
             >
 
             <Spinner
+                android:id="@+id/spinner_filter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:entries="@array/short_by"
-                android:padding="@dimen/_5sdp"
                 >
             </Spinner>
 

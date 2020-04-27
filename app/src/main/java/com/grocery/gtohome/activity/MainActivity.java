@@ -157,9 +157,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mExpandableListView.addHeaderView(listHeaderView);
        // mExpandableListView.addFooterView(listHeaderView);
 
-        //mExpandableListData = ExpandableListDataSource.getData(this);
-       // mExpandableListTitle = new ArrayList(mExpandableListData.keySet());
-
         Category_SubCategoryData();
         addDrawerItems();
         setupDrawer();
@@ -167,9 +164,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (savedInstanceState == null) {
               //selectFirstItemAsDefault();
         }
-
-
-
 
     }
 
@@ -181,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
 
-        apiInterface.CategoryApi(categoriesapi)
+        apiInterface.CategoryApi()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<CategoryModel>() {

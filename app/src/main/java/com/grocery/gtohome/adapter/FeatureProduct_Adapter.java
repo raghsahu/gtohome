@@ -58,16 +58,16 @@ public class FeatureProduct_Adapter extends RecyclerView.Adapter<FeatureProduct_
             @Override
             public void onClick(View v) {
 
-                Product_Details_Fragment fragment2 = new Product_Details_Fragment();
-                Bundle bundle = new Bundle();
-                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
-                // bundle.putString("Type","Photo");
-                FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = manager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame, fragment2);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                fragment2.setArguments(bundle);
+//                Product_Details_Fragment fragment2 = new Product_Details_Fragment();
+//                Bundle bundle = new Bundle();
+//                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+//                // bundle.putString("Type","Photo");
+//                FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+//                fragmentTransaction.replace(R.id.frame, fragment2);
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.commit();
+//                fragment2.setArguments(bundle);
             }
         });
     }

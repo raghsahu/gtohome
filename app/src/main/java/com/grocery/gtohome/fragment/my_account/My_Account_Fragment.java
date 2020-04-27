@@ -1,5 +1,8 @@
 package com.grocery.gtohome.fragment.my_account;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
+import com.grocery.gtohome.activity.Splash_Activity;
 import com.grocery.gtohome.databinding.FragmentHomeBinding;
 import com.grocery.gtohome.databinding.FragmentMyAccountBinding;
 import com.grocery.gtohome.fragment.my_orders.OrderHistory_Fragment;
@@ -23,17 +27,20 @@ import com.grocery.gtohome.fragment.my_orders.ReturnProduct_Fragment;
 import com.grocery.gtohome.fragment.my_orders.ReturnRequest_Fragment;
 import com.grocery.gtohome.fragment.my_orders.RewardPoint_Fragment;
 import com.grocery.gtohome.fragment.my_orders.Transaction_Fragment;
+import com.grocery.gtohome.session.SessionManager;
 
 /**
  * Created by Raghvendra Sahu on 08-Apr-20.
  */
 public class My_Account_Fragment extends Fragment {
     FragmentMyAccountBinding binding;
+    SessionManager sessionManager;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_account, container, false);
         View root = binding.getRoot();
+        sessionManager =new SessionManager(getActivity());
         try {
             ((MainActivity) getActivity()).Update_header(getString(R.string.my_account));
         } catch (Exception e) {
@@ -214,9 +221,40 @@ public class My_Account_Fragment extends Fragment {
             }
         });
 
+        binding.llLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Logout_User();
+
+            }
+        });
 
         return root;
 
+    }
+
+    private void Logout_User() {
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.app_name)
+                .setMessage("Are you sure, you want to logout this app");
+
+        dialog.setNegativeButton("no", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                sessionManager.logout();
+
+            }
+
+        });
+        final AlertDialog alert = dialog.create();
+        alert.show();
     }
 
 }

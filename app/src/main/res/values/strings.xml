@@ -308,6 +308,10 @@
     <string name="please_enter_county_code">Please enter country code.</string>
     <string name="please_enter_valid_county_code">Please enter valid country code.</string>
     <string name="please_check_internet">Please Check Internet</string>
+    <string name="gh_wallet">GH WALLET</string>
+    <string name="gh_offer">GH OFFERS</string>
+    <string name="gh_prime">GH PRIME</string>
+    <string name="gh_blog">GH BLOG</string>
 
 
 </resources>

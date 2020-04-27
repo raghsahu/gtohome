@@ -91,11 +91,6 @@ public class Utilities {
         InputMethodManager inputManager = (InputMethodManager) context
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        // check if no view has focus:
-//        View v = ((Activity) context).getCurrentFocus();
-//        if (v == null)
-//            return;
-
         inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
@@ -105,14 +100,31 @@ public class Utilities {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setTitle("");
         alertDialogBuilder.setMessage(Html.fromHtml(message));
-//        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "Nirmala.ttf");
-//        alertDialogBuilder.setView(new TextView(context));
         alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setPositiveButton(btnText, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (isFinish)
                     ((Activity) context).finish();
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+    }
+
+    public void dialogOKOnBack(final Context context, String title, String message,
+                         String btnText, final boolean onBack) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle("");
+        alertDialogBuilder.setMessage(Html.fromHtml(message));
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton(btnText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (onBack)
+                    ((Activity) context).onBackPressed();
             }
         });
 

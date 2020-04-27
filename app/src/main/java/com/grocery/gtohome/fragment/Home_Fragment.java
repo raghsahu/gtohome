@@ -184,11 +184,12 @@ public class Home_Fragment extends Fragment {
     private void getAllCategory() {
         final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
 
-        apiInterface.CategoryApi(categoriesapi)
+        apiInterface.CategoryApi()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<CategoryModel>() {

@@ -11,12 +11,18 @@ import java.util.List;
  * Created by Raghvendra Sahu on 21-Apr-20.
  */
 public class CategoryName extends BaseObservable {
-    @SerializedName("id")
+    @SerializedName("category_id")
     @Expose
     private String id;
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("thumb")
+    @Expose
+    private String thumb;
+    @SerializedName("icon")
+    @Expose
+    private String icon;
     @SerializedName("children")
     @Expose
     private List<CategoryChild> children = null;

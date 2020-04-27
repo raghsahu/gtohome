@@ -14,22 +14,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.grocery.gtohome.BR;
 import com.grocery.gtohome.R;
-import com.grocery.gtohome.databinding.FruitVegListBinding;
-import com.grocery.gtohome.fragment.All_Product_Fragment;
-import com.grocery.gtohome.model.category_model.CategoryChild;
+import com.grocery.gtohome.databinding.CategoryProductListBinding;
+import com.grocery.gtohome.databinding.FeatureProductListBinding;
+import com.grocery.gtohome.fragment.Product_Details_Fragment;
+import com.grocery.gtohome.model.SampleModel;
+import com.grocery.gtohome.model.category_product_model.CategoryProduct_List;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Raghvendra Sahu on 08-Apr-20.
+ * Created by Raghvendra Sahu on 26-Apr-20.
  */
-public class FruitVeg_Adapter extends RecyclerView.Adapter<FruitVeg_Adapter.ViewHolder> {
+public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduct_Adapter.ViewHolder> {
 
-    private List<CategoryChild> dataModelList;
+    private List<CategoryProduct_List> dataModelList;
     Context context;
 
 
-    public FruitVeg_Adapter(List<CategoryChild> dataModelList, Context ctx) {
+    public CategoryProduct_Adapter(List<CategoryProduct_List> dataModelList, Context ctx) {
         this.dataModelList = dataModelList;
         context = ctx;
 
@@ -38,8 +41,8 @@ public class FruitVeg_Adapter extends RecyclerView.Adapter<FruitVeg_Adapter.View
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        FruitVegListBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
-                R.layout.fruit_veg_list, parent, false);
+        CategoryProductListBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
+                R.layout.category_product_list, parent, false);
 
         return new ViewHolder(binding);
 
@@ -47,19 +50,19 @@ public class FruitVeg_Adapter extends RecyclerView.Adapter<FruitVeg_Adapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final CategoryChild dataModel = dataModelList.get(position);
+        final CategoryProduct_List dataModel = dataModelList.get(position);
         holder.bind(dataModel);
         holder.itemRowBinding.setModel(dataModel);
         // holder.itemRowBinding.setItemClickListener(this);
 
-        holder.itemRowBinding.llVeg.setOnClickListener(new View.OnClickListener() {
+        holder.itemRowBinding.ivImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                All_Product_Fragment fragment2 = new All_Product_Fragment();
+                Product_Details_Fragment fragment2 = new Product_Details_Fragment();
                 Bundle bundle = new Bundle();
                 // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
-                 bundle.putString("SubCategory_Id",dataModel.getCategory_id());
+                 bundle.putString("Product_Id",dataModel.getProductId());
                 FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = manager.beginTransaction();
                 fragmentTransaction.replace(R.id.frame, fragment2);
@@ -76,9 +79,9 @@ public class FruitVeg_Adapter extends RecyclerView.Adapter<FruitVeg_Adapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public FruitVegListBinding itemRowBinding;
+        public CategoryProductListBinding itemRowBinding;
 
-        public ViewHolder(FruitVegListBinding itemRowBinding) {
+        public ViewHolder(CategoryProductListBinding itemRowBinding) {
             super(itemRowBinding.getRoot());
             this.itemRowBinding = itemRowBinding;
         }

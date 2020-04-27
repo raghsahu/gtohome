@@ -15,18 +15,27 @@ import com.grocery.gtohome.R;
  * Created by Raghvendra Sahu on 21-Apr-20.
  */
 public class CategoryChild extends BaseObservable {
+    @SerializedName("category_id")
+    @Expose
+    private String category_id;
     @SerializedName("link")
     @Expose
     private String link;
+
+    public String getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(String category_id) {
+        this.category_id = category_id;
+    }
+
     @SerializedName("name")
     @Expose
     private String name;
     @SerializedName("image")
     @Expose
     private String image;
-    @SerializedName("base_url")
-    @Expose
-    private String baseUrl;
     @SerializedName("product_count")
     @Expose
     private String productCount;
@@ -55,13 +64,6 @@ public class CategoryChild extends BaseObservable {
         this.image = image;
     }
 
-    public String getBaseUrl() {
-        return baseUrl;
-    }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
 
     public String getProductCount() {
         return productCount;
@@ -72,7 +74,7 @@ public class CategoryChild extends BaseObservable {
     }
 
     public String getImageFullPath() {
-        return getBaseUrl()+getImage();
+        return getImage();
     }
 
 

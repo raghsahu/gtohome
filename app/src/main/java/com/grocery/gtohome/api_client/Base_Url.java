@@ -6,12 +6,13 @@ package com.grocery.gtohome.api_client;
 public interface Base_Url {
 
    // String BaseUrl="http://gtohome.in/index.php?route=account/";
-    String BaseUrl="http://gtohome.in/";
+    String BaseUrl="https://gtohome.in/";
 
     String Register="account/registerapi";
     String loginapi="account/loginapi";
     String forgottenapi="account/forgottenapi";
-    String categoriesapi="account/categoriesapi";
+    String categoriesapi="api/category";
+    String category_product="api/product/category_product";
 
 
 }
