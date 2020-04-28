@@ -13,6 +13,9 @@ public class SimpleResultModel {
     @SerializedName("msg")
     @Expose
     private String msg;
+    @SerializedName("status")
+    @Expose
+    private Boolean status;
 
     public String getResult() {
         return result;
@@ -24,6 +27,14 @@ public class SimpleResultModel {
 
     public String getMsg() {
         return msg;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
     public void setMsg(String msg) {

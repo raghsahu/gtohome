@@ -4,7 +4,7 @@
     <data>
         <variable
             name="featureAdapter"
-            type="com.grocery.gtohome.adapter.FeatureProduct_Adapter" />
+            type="com.grocery.gtohome.adapter.CategoryProduct_Adapter" />
 
     </data>
 <LinearLayout
@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     style="@style/text_16_black"
                     android:textStyle="bold"
-                    android:text="Beetroot"
+                    android:text=""
                     android:padding="@dimen/_5sdp"
                     >
                 </TextView>
@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     style="@style/text_16_black"
                     android:textStyle="bold"
-                    android:text="$0.78"
+                    android:text=""
                     android:padding="@dimen/_5sdp"
                     >
                 </TextView>
@@ -78,10 +78,11 @@
                     </TextView>
 
                     <TextView
+                        android:id="@+id/tv_procode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/text_12_black"
-                        android:text="F15"
+                        android:text=" "
                         android:padding="@dimen/_5sdp"
                         >
                     </TextView>
@@ -103,10 +104,11 @@
                     </TextView>
 
                     <TextView
+                        android:id="@+id/tv_reward"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/text_12_black"
-                        android:text="200"
+                        android:text="0"
                         android:padding="@dimen/_5sdp"
                         >
                     </TextView>
@@ -114,6 +116,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/tv_stock_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/text_12_black"
@@ -131,15 +134,16 @@
                 </View>
 
                 <LinearLayout
-                    android:background="@drawable/rectangle_bg_solid_white"
+                    android:id="@+id/ll_spin"
+                    android:background="@drawable/rectangle_border"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
                     >
                     <Spinner
+                        android:id="@+id/spinner_qty"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:entries="@array/weight"
                         android:padding="@dimen/_5sdp"
                         >
                     </Spinner>
@@ -160,6 +164,7 @@
                 >
 
                 <TextView
+                    android:id="@+id/tv_add_cart"
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="0.5"
                     android:background="@color/colorPrimary"
@@ -303,12 +308,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="2"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 >
             </androidx.recyclerview.widget.RecyclerView>
 
         <LinearLayout
+            android:visibility="gone"
             android:layout_margin="@dimen/_10sdp"
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -335,15 +341,17 @@
 
 
             <androidx.viewpager.widget.ViewPager
+                android:visibility="gone"
                 android:layout_margin="@dimen/_5sdp"
                 android:layout_gravity="center"
                 android:id="@+id/slider_pager"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_250sdp"
                 android:background="@drawable/squere_transparent_bg"
-                android:visibility="visible" />
+                 />
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="horizontal"

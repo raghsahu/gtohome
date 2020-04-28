@@ -31,6 +31,7 @@ import com.grocery.gtohome.CustomExpandableListAdapter;
 import com.grocery.gtohome.FragmentNavigationManager;
 import com.grocery.gtohome.NavigationManager;
 import com.grocery.gtohome.R;
+import com.grocery.gtohome.activity.login_signup.Login_Activity;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.Base_Url;
 import com.grocery.gtohome.api_client.RxApiClient;
@@ -40,8 +41,12 @@ import com.grocery.gtohome.fragment.Home_Fragment;
 import com.grocery.gtohome.fragment.my_basket.MyBasket_Fragment;
 import com.grocery.gtohome.fragment.my_account.My_Account_Fragment;
 import com.grocery.gtohome.fragment.Search_Fragment;
+import com.grocery.gtohome.model.category_model.CategoryChild;
 import com.grocery.gtohome.model.category_model.CategoryModel;
 import com.grocery.gtohome.model.category_model.CategoryName;
+import com.grocery.gtohome.session.SessionManager;
+import com.grocery.gtohome.utils.Connectivity;
+import com.grocery.gtohome.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public BottomNavigationView navView;
     TextView tv_main_header;
     ImageView iv_drawer;
+    private Utilities utilities;
     //*******************************
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -70,8 +76,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ExpandableListAdapter mExpandableListAdapter;
      List<String> mExpandableListTitle;
     private NavigationManager mNavigationManager;
+    // Map<String, List<String>> mExpandableListData;
+     Map<String, List<CategoryChild>> mExpandableListData;
 
-     Map<String, List<String>> mExpandableListData;
+    SessionManager session;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -131,15 +139,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        utilities = Utilities.getInstance(this);
         navView = findViewById(R.id.nav_view);
         tv_main_header = findViewById(R.id.tv_main_header);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        session = new SessionManager(MainActivity.this);
         //open default fragmentframe
         setHomeFragment();
         navView.getMenu().findItem(R.id.navigation_home).setChecked(true);
-
 
         //*****************************
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -157,7 +165,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mExpandableListView.addHeaderView(listHeaderView);
        // mExpandableListView.addFooterView(listHeaderView);
 
-        Category_SubCategoryData();
+        if (session.getCategoryData()!=null && !session.getCategoryData().isEmpty()){
+            mExpandableListTitle = new ArrayList<String>();
+            mExpandableListData = new HashMap<String, List<CategoryChild>>();
+
+            for (int i=0; i<session.getCategoryData().size(); i++){
+                mExpandableListTitle.add(session.getCategoryData().get(i).getName());
+
+            }
+
+
+            for (int i=0; i<mExpandableListTitle.size(); i++){
+                // List<String> colors = new ArrayList<String>();
+                List<CategoryChild> colors = new ArrayList<CategoryChild>();
+                for (int j=0; j<session.getCategoryData().get(i).getChildren().size(); j++){
+                    // colors.add(response.getCategories().get(i).getChildren().get(j).getName());
+                    colors=session.getCategoryData().get(i).getChildren();
+
+                }
+                mExpandableListData.put(mExpandableListTitle.get(i),
+                        colors);
+
+            }
+
+            mExpandableListAdapter = new CustomExpandableListAdapter(MainActivity.this, mExpandableListTitle, mExpandableListData);
+            mExpandableListView.setAdapter(mExpandableListAdapter);
+
+        }else {
+            if (Connectivity.isConnected(this)){
+                Category_SubCategoryData();
+            }else {
+                utilities.dialogOK(this, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+            }
+        }
+
+
+
         addDrawerItems();
         setupDrawer();
 
@@ -187,9 +230,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Log.e("result_my_test", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getResult().equalsIgnoreCase("true")) {
+                                session.setCategoryData(response.getCategories());
 
                                 mExpandableListTitle = new ArrayList<String>();
-                                mExpandableListData = new HashMap<String, List<String>>();
+                                mExpandableListData = new HashMap<String, List<CategoryChild>>();
 
                                 for (int i=0; i<response.getCategories().size(); i++){
                                     mExpandableListTitle.add(response.getCategories().get(i).getName());
@@ -198,9 +242,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                 for (int i=0; i<mExpandableListTitle.size(); i++){
-                                    List<String> colors = new ArrayList<String>();
+                                   // List<String> colors = new ArrayList<String>();
+                                    List<CategoryChild> colors = new ArrayList<CategoryChild>();
                                     for (int j=0; j<response.getCategories().get(i).getChildren().size(); j++){
-                                      colors.add(response.getCategories().get(i).getChildren().get(j).getName());
+                                     // colors.add(response.getCategories().get(i).getChildren().get(j).getName());
+                                      colors=response.getCategories().get(i).getChildren();
 
                                     }
                                     mExpandableListData.put(mExpandableListTitle.get(i),
@@ -280,13 +326,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             super.onBackPressed();
         }
 
-
     }
 
     public void Update_header(String title) {
         tv_main_header.setText(title);
     }
-
 
     //**************************************************************************
     private void selectFirstItemAsDefault() {
@@ -323,9 +367,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         int groupPosition, int childPosition, long id) {
                 String selectedItem = ((List) (mExpandableListData.get(mExpandableListTitle.get(groupPosition))))
                         .get(childPosition).toString();
-                //  getSupportActionBar().setTitle(selectedItem);
 
-                mNavigationManager.showFragmentAction(selectedItem);
+                String selectedID =  mExpandableListData.get(mExpandableListTitle.get(groupPosition))
+                        .get(childPosition).getCategory_id();
+
+                mNavigationManager.showFragmentAction(selectedID);
 //                if (items[0].equals(mExpandableListTitle.get(groupPosition))) {
 //                     mNavigationManager.showFragmentAction(selectedItem);
 //                } else if (items[1].equals(mExpandableListTitle.get(groupPosition))) {

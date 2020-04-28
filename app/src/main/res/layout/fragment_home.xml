@@ -71,7 +71,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_1sdp"
-                        android:background="@color/light_white"
+                        android:background="@color/light_white1"
                         android:orientation="vertical">
 
                         <TextView
@@ -107,8 +107,8 @@
                                     app:cardBackgroundColor="@color/colorPrimary"
                                     app:cardCornerRadius="@dimen/_8sdp"
                                     app:cardElevation="@dimen/_2sdp"
-                                    android:layout_width="@dimen/_60sdp"
-                                    android:layout_height="@dimen/_60sdp"
+                                    android:layout_width="@dimen/_50sdp"
+                                    android:layout_height="@dimen/_50sdp"
                                     >
 
                                     <ImageView
@@ -147,8 +147,8 @@
                                     app:cardBackgroundColor="@color/colorPrimary"
                                     app:cardCornerRadius="@dimen/_8sdp"
                                     app:cardElevation="@dimen/_2sdp"
-                                    android:layout_width="@dimen/_60sdp"
-                                    android:layout_height="@dimen/_60sdp"
+                                    android:layout_width="@dimen/_50sdp"
+                                    android:layout_height="@dimen/_50sdp"
                                     >
 
                                     <ImageView
@@ -197,8 +197,8 @@
                                     app:cardBackgroundColor="@color/colorPrimary"
                                     app:cardCornerRadius="@dimen/_8sdp"
                                     app:cardElevation="@dimen/_2sdp"
-                                    android:layout_width="@dimen/_60sdp"
-                                    android:layout_height="@dimen/_60sdp"
+                                    android:layout_width="@dimen/_50sdp"
+                                    android:layout_height="@dimen/_50sdp"
                                     >
 
                                     <ImageView

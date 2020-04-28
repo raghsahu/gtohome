@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import com.grocery.gtohome.model.category_model.CategoryChild;
+
 import java.util.List;
 import java.util.Map;
 
@@ -20,11 +22,11 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context mContext;
     private List<String> mExpandableListTitle;
-    private Map<String, List<String>> mExpandableListDetail;
+    private Map<String, List<CategoryChild>> mExpandableListDetail;
     private LayoutInflater mLayoutInflater;
 
     public CustomExpandableListAdapter(Context context, List<String> expandableListTitle,
-                                       Map<String, List<String>> expandableListDetail) {
+                                       Map<String, List<CategoryChild>> expandableListDetail) {
         mContext = context;
         mExpandableListTitle = expandableListTitle;
         mExpandableListDetail = expandableListDetail;
@@ -34,7 +36,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public Object getChild(int listPosition, int expandedListPosition) {
         return mExpandableListDetail.get(mExpandableListTitle.get(listPosition))
-                .get(expandedListPosition);
+                .get(expandedListPosition).getName();
     }
 
     @Override

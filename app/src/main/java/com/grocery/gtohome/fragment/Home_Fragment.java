@@ -29,6 +29,7 @@ import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
+import com.grocery.gtohome.CustomExpandableListAdapter;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.adapter.CategoryList_Adapter;
@@ -45,10 +46,13 @@ import com.grocery.gtohome.model.SampleModel;
 import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.model.SliderModel;
 import com.grocery.gtohome.model.category_model.CategoryModel;
+import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
@@ -69,6 +73,7 @@ public class Home_Fragment extends Fragment {
     PopularBrand_Adapter friendsAdapter;
     private Utilities utilities;
     ArrayList<SampleModel>sampleModels;
+    SessionManager session;
 
 
     public static Home_Fragment newInstance(String movieTitle) {
@@ -80,12 +85,13 @@ public class Home_Fragment extends Fragment {
         return fragmentAction;
     }
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         View root = binding.getRoot();
         utilities = Utilities.getInstance(getActivity());
+        session = new SessionManager(getActivity());
+
         try {
             ((MainActivity) getActivity()).Update_header(getString(R.string.home));
         } catch (Exception e) {
@@ -119,10 +125,17 @@ public class Home_Fragment extends Fragment {
         getFeaturedProductList();//fruit veg list
         getPopularBrandList();//popular brand list
 
+        if (session.getCategoryData()!=null && !session.getCategoryData().isEmpty()){
+            CategoryList_Adapter friendsAdapter = new CategoryList_Adapter(session.getCategoryData(),getActivity());
+            binding.setCategoryAdapter(friendsAdapter);//set databinding adapter
+            friendsAdapter.notifyDataSetChanged();
+
+        }else {
         if (Connectivity.isConnected(getActivity())){
             getAllCategory();
         }else {
             utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+        }
         }
 
 
@@ -201,6 +214,8 @@ public class Home_Fragment extends Fragment {
                             Log.e("result_my_test", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getResult().equalsIgnoreCase("true")) {
+                                session.setCategoryData(response.getCategories());
+
                                 CategoryList_Adapter friendsAdapter = new CategoryList_Adapter(response.getCategories(),getActivity());
                                 binding.setCategoryAdapter(friendsAdapter);//set databinding adapter
                                 friendsAdapter.notifyDataSetChanged();

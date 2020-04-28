@@ -70,4 +70,8 @@ public interface Api_Call {
 
     @GET("index.php?route=api/filter/sortby")
     Observable<FilterByModel> FilterByApi();
+
+    @FormUrlEncoded
+    @POST("index.php?route=api/cart/add")
+    Observable<SimpleResultModel>  AddCart(@FieldMap HashMap<String, String> map);
 }

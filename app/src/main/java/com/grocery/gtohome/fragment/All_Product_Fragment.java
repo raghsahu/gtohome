@@ -49,10 +49,10 @@ public class All_Product_Fragment extends Fragment {
     List<FilterBy> filterByModelList = new ArrayList<>();
     ArrayList<String> filterName = new ArrayList<>();
 
-    public static All_Product_Fragment newInstance(String movieTitle) {
+    public static All_Product_Fragment newInstance(String SubCategory_Id) {
         All_Product_Fragment fragmentAction = new All_Product_Fragment();
         Bundle args = new Bundle();
-        //args.putString(KEY_MOVIE_TITLE, movieTitle);
+        args.putString("SubCategory_Id", SubCategory_Id);
         fragmentAction.setArguments(args);
 
         return fragmentAction;
@@ -71,6 +71,7 @@ public class All_Product_Fragment extends Fragment {
 
         if (getArguments() != null) {
             SubCategory_Id = getArguments().getString("SubCategory_Id");
+            Log.e("selectedID",SubCategory_Id);
         }
 
         //get product

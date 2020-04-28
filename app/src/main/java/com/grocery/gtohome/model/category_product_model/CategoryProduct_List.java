@@ -3,6 +3,8 @@ package com.grocery.gtohome.model.category_product_model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by Raghvendra Sahu on 26-Apr-20.
  */
@@ -37,6 +39,9 @@ public class CategoryProduct_List {
     @SerializedName("href")
     @Expose
     private String href;
+    @SerializedName("options")
+    @Expose
+    private List<OptionQuantityType> options = null;
 
     public String getProductId() {
         return productId;
@@ -118,4 +123,11 @@ public class CategoryProduct_List {
         this.href = href;
     }
 
+    public List<OptionQuantityType> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<OptionQuantityType> options) {
+        this.options = options;
+    }
 }

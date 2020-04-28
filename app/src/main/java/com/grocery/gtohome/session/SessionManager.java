@@ -6,8 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.grocery.gtohome.activity.Splash_Activity;
+import com.grocery.gtohome.model.category_model.CategoryName;
 import com.grocery.gtohome.model.register_model.RegistrationModelData;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 
 /**
@@ -59,6 +64,24 @@ public class SessionManager extends Object {
         return gson.fromJson(str, RegistrationModelData.class);
     }
 
+
+    public void setCategoryData(List<CategoryName> categoryList) {
+        Gson gson = new Gson();
+        String json = gson.toJson(categoryList);
+        editor.putString(TAG, json);
+        editor.commit();
+        editor.apply();
+    }
+
+    public List<CategoryName> getCategoryData() {
+        Gson gson = new Gson();
+        String str = mypref.getString(TAG, "");
+        if (str.isEmpty())
+            return null;
+        Type type = new TypeToken<List<CategoryName>>() {}.getType();
+        List<CategoryName> arrayList = gson.fromJson(str, type);
+        return arrayList;
+    }
 
     public void setName(String name) {
         editor.putString(Name, name);

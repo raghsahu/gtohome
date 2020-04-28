@@ -55,11 +55,11 @@
                     </TextView>
 
                     <TextView
+                        android:id="@+id/tv_price"
                         android:padding="@dimen/_5sdp"
                         style="@style/text_12_black"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{model.price}"
                         android:textAlignment="textStart"
                         android:textStyle="normal">
                     </TextView>
@@ -67,16 +67,17 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:background="@drawable/rectangle_bg_solid_white"
+                    android:id="@+id/ll_spin"
+                    android:background="@drawable/rectangle_border"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_5sdp"
                     android:layout_marginRight="@dimen/_5sdp"
                     >
                     <Spinner
+                        android:id="@+id/spinner_qty"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:entries="@array/weight"
                         >
                     </Spinner>
 
@@ -115,6 +116,7 @@
                         >
 
                         <ImageView
+                            android:id="@+id/iv_minus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/minus"
@@ -131,6 +133,7 @@
                             />
 
                         <ImageView
+                            android:id="@+id/iv_add"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/add"
@@ -152,6 +155,7 @@
                     >
 
                     <TextView
+                        android:id="@+id/tv_add_cart"
                         android:layout_margin="@dimen/_5sdp"
                         android:background="@color/colorPrimary"
                         android:layout_gravity="center"
