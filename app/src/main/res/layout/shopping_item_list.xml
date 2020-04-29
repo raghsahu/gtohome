@@ -3,7 +3,7 @@
     <data>
         <variable
             name="model"
-            type="com.grocery.gtohome.model.SampleModel" />
+            type="com.grocery.gtohome.model.cart_model.CartProduct" />
 
     </data>
 <LinearLayout
@@ -23,14 +23,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             >
 
             <ImageView
+                app:postImage="@{model.thumb}"
                 android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_100sdp"
+                android:layout_height="@dimen/_90sdp"
                 android:layout_margin="@dimen/_5sdp"
-                android:src="@drawable/banana_robust"/>
+                android:src="@drawable/placeholder_image"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,12 +47,13 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Banana"
+                    android:text="@{model.name}"
                     android:textStyle="bold"
                    style="@style/text_14_black"
                     />
 
                 <TextView
+                    android:id="@+id/tv_gm_qty"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Quantity: 1kg"
@@ -55,7 +63,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Reward Points: 400"
+                    android:text="@{`Reward Points: `+String.valueOf(model.reward)}"
                     style="@style/text_12_light_black"
                     />
 
@@ -63,7 +71,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Model: F15"
+                    android:text="@{`Model: `+model.model}"
                     style="@style/text_12_black"
                     />
 
@@ -78,11 +86,12 @@
                         android:layout_weight="0.5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Price: ₹150.00"
+                        android:text="@{`Price: `+model.price}"
                         style="@style/text_12_black"
                         />
 
                     <ImageView
+                        android:id="@+id/iv_delete"
                         android:layout_weight="0.5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -91,79 +100,115 @@
 
                 </LinearLayout>
 
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:layout_weight="0.6"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" Total: "
+                    android:textStyle="bold"
+                    style="@style/text_14_black"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_total_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{model.total}"
+                    android:textStyle="bold"
+                    style="@style/text_14_black"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:weightSum="1"
+                android:layout_weight="0.4"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
                 <LinearLayout
+                    android:layout_weight="0.5"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="1"
-                    android:layout_marginTop="@dimen/_10sdp">
+                    >
 
-                    <LinearLayout
-                        android:layout_gravity="center"
-                        android:gravity="start"
-                        android:layout_weight="0.5"
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
-
-                    <TextView
+                    <ImageView
+                        android:id="@+id/iv_minus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=" Total: "
-                        android:textStyle="bold"
-                        style="@style/text_14_black"
+                        android:src="@drawable/minus"
+                        android:padding="@dimen/_5sdp"
                         />
 
                     <TextView
+                        android:id="@+id/tv_count_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=" ₹ 200"
-                        android:textStyle="bold"
-                        style="@style/text_14_black"
-                       />
+                        android:text="@{model.quantity}"
+                        android:padding="@dimen/_5sdp"
+                        android:textSize="@dimen/_12sdp"
+                        />
 
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_weight="0.5"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:id="@+id/iv_add"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
+                        android:src="@drawable/add"
+                        android:padding="@dimen/_5sdp"
+                        />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/minus"
-                            android:padding="@dimen/_5sdp"
-                            />
+                </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/tv_count_number"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1"
-                            android:padding="@dimen/_5sdp"
-                            android:textSize="@dimen/_12sdp"
-                            />
+                <LinearLayout
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_weight="0.5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/add"
-                            android:padding="@dimen/_5sdp"
-                            />
-
-                    </LinearLayout>
-
+                    <TextView
+                        android:background="@drawable/rectangle_bg_primary"
+                        android:textAlignment="center"
+                        android:id="@+id/tv_update"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Update"
+                        style="@style/textview12white"
+                        />
 
                 </LinearLayout>
 
             </LinearLayout>
+
+
+        </LinearLayout>
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

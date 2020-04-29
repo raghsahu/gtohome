@@ -2,6 +2,7 @@ package com.grocery.gtohome.api_client;
 
 import com.grocery.gtohome.model.FilterByModel;
 import com.grocery.gtohome.model.SimpleResultModel;
+import com.grocery.gtohome.model.cart_model.CartModel;
 import com.grocery.gtohome.model.category_model.CategoryModel;
 import com.grocery.gtohome.model.category_product_model.CategoryProductModel;
 import com.grocery.gtohome.model.product_details.Product_Details_Model;
@@ -74,4 +75,20 @@ public interface Api_Call {
     @FormUrlEncoded
     @POST("index.php?route=api/cart/add")
     Observable<SimpleResultModel>  AddCart(@FieldMap HashMap<String, String> map);
+
+
+    @FormUrlEncoded
+    @POST("index.php?route=api/cart/view")
+    Observable<CartModel>  CartListApi(@FieldMap HashMap<String, String> map);
+
+    @FormUrlEncoded
+    @POST("index.php?route=api/cart/remove")
+    Observable<SimpleResultModel>  RemoveCartItemApi(@FieldMap HashMap<String, String> map);
+
+    @FormUrlEncoded
+    @POST("index.php?route=api/cart/edit")
+    Observable<SimpleResultModel> UpdateCartItemApi(@FieldMap  HashMap<String, String> map);
+
+    @GET("index.php?route=api/product/featured_products")
+    Observable<CategoryProductModel> FeatureProductApi();
 }

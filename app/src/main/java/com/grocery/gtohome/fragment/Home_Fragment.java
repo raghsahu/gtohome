@@ -33,8 +33,7 @@ import com.grocery.gtohome.CustomExpandableListAdapter;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.adapter.CategoryList_Adapter;
-import com.grocery.gtohome.adapter.FeatureProduct_Adapter;
-import com.grocery.gtohome.adapter.FruitVeg_Adapter;
+import com.grocery.gtohome.adapter.CategoryProduct_Adapter;
 import com.grocery.gtohome.adapter.PopularBrand_Adapter;
 import com.grocery.gtohome.adapter.SliderAdapter_range;
 import com.grocery.gtohome.api_client.Api_Call;
@@ -46,6 +45,8 @@ import com.grocery.gtohome.model.SampleModel;
 import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.model.SliderModel;
 import com.grocery.gtohome.model.category_model.CategoryModel;
+import com.grocery.gtohome.model.category_product_model.CategoryProductModel;
+import com.grocery.gtohome.model.product_details.Product_Details_Model;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
@@ -121,9 +122,8 @@ public class Home_Fragment extends Fragment {
         //side slide bar
         setHorizontalSliderItem();
 
-        getFruitVegList();//fruit veg list
-        getFeaturedProductList();//fruit veg list
         getPopularBrandList();//popular brand list
+        getFeatureProduct();
 
         if (session.getCategoryData()!=null && !session.getCategoryData().isEmpty()){
             CategoryList_Adapter friendsAdapter = new CategoryList_Adapter(session.getCategoryData(),getActivity());
@@ -191,6 +191,79 @@ public class Home_Fragment extends Fragment {
 
         return root;
 
+    }
+
+    @SuppressLint("CheckResult")
+    private void getFeatureProduct() {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
+
+        apiInterface.FeatureProductApi()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<CategoryProductModel>() {
+                    @Override
+                    public void onNext(CategoryProductModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_my_test", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+                               // session.setCategoryData(response.getCategories());
+
+                                CategoryProduct_Adapter friendsAdapter = new CategoryProduct_Adapter(response.getProducts(), getActivity());
+                                binding.setFeatureAdapter(friendsAdapter);//set databinding adapter
+                                friendsAdapter.notifyDataSetChanged();
+
+                            } else {
+                                //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("mr_product_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
     }
 
     @SuppressLint("CheckResult")
@@ -281,36 +354,6 @@ public class Home_Fragment extends Fragment {
         friendsAdapter.notifyDataSetChanged();
 
     }
-
-
-    private void getFeaturedProductList() {
-        ArrayList<SampleModel> sampleModels=new ArrayList<>();
-        sampleModels.add(new SampleModel("Apple", "20", R.drawable.apple));
-        sampleModels.add(new SampleModel("Apple Gala", "100", R.drawable.gala_apple));
-        sampleModels.add(new SampleModel("Banana Robest", "50", R.drawable.banana_robust));
-        sampleModels.add(new SampleModel("Beans", "20", R.drawable.beans_img));
-        sampleModels.add(new SampleModel("Beetroot", "20", R.drawable.beetroot));
-        sampleModels.add(new SampleModel("Broad Beans", "20", R.drawable.broad_beans));
-
-        FeatureProduct_Adapter friendsAdapter = new FeatureProduct_Adapter(sampleModels,getActivity());
-        binding.setFeatureAdapter(friendsAdapter);//set databinding adapter
-        friendsAdapter.notifyDataSetChanged();
-    }
-
-    private void getFruitVegList() {
-        ArrayList<SampleModel> sampleModels=new ArrayList<>();
-        sampleModels.add(new SampleModel("Apple", "20", R.drawable.apple));
-        sampleModels.add(new SampleModel("Apple Gala", "100", R.drawable.gala_apple));
-        sampleModels.add(new SampleModel("Banana Robest", "50", R.drawable.banana_robust));
-        sampleModels.add(new SampleModel("Beans", "20", R.drawable.beans_img));
-        sampleModels.add(new SampleModel("Beetroot", "20", R.drawable.beetroot));
-        sampleModels.add(new SampleModel("Broad Beans", "20", R.drawable.broad_beans));
-
-//        FruitVeg_Adapter friendsAdapter = new FruitVeg_Adapter(sampleModels,getActivity());
-//        binding.setFruitvegAdapter(friendsAdapter);//set databinding adapter
-//        friendsAdapter.notifyDataSetChanged();
-    }
-
 
     private void SliderListArray() {
         // arraylist list variable for store data;

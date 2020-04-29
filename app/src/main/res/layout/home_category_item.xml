@@ -21,6 +21,8 @@
 
     <TextView
         style="@style/text_16_black"
+        android:textColor="@color/white"
+        android:background="@drawable/rectangle_bg_primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/_5sdp"
@@ -30,11 +32,11 @@
 
     </TextView>
 
-    <View
-        android:background="@color/light_white"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_1sdp">
-    </View>
+<!--    <View-->
+<!--        android:background="@color/light_white"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="@dimen/_1sdp">-->
+<!--    </View>-->
 
 
     <androidx.recyclerview.widget.RecyclerView

@@ -13,6 +13,7 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:visibility="gone"
         android:layout_alignParentEnd="true"
         android:id="@+id/tv_clear_cart"
         style="@style/text_12_black"
@@ -27,6 +28,8 @@
     </TextView>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginBottom="@dimen/_50sdp"
+        android:id="@+id/recycler_cart"
         android:layout_below="@+id/tv_clear_cart"
         android:adapter="@{cartlistAdapter}"
         android:layout_width="match_parent"
@@ -35,6 +38,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         >
     </androidx.recyclerview.widget.RecyclerView>
+
 
     <LinearLayout
         android:id="@+id/ll_continue"
