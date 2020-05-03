@@ -40,7 +40,6 @@ import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.Base_Url;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.FragmentHomeBinding;
-import com.grocery.gtohome.fragment.my_basket.DeliveryAddressFragment;
 import com.grocery.gtohome.model.SampleModel;
 import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.model.SliderModel;

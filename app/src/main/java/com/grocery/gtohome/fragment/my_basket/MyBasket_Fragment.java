@@ -90,7 +90,8 @@ public class MyBasket_Fragment extends Fragment {
         binding.tvContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CartCoopanFragment fragment2 = new CartCoopanFragment();
+              //  CartCoopanFragment fragment2 = new CartCoopanFragment();
+                DeliveryAddressFragment fragment2 = new DeliveryAddressFragment();
                 Bundle bundle = new Bundle();
                 // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
                 //   bundle.putString("Title",dataModel.getCategory_name());

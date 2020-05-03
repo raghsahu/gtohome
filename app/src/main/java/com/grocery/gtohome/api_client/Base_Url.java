@@ -11,8 +11,8 @@ public interface Base_Url {
     String Register="account/registerapi";
     String loginapi="account/loginapi";
     String forgottenapi="account/forgottenapi";
-    String categoriesapi="api/category";
-    String category_product="api/product/category_product";
+    String categoriesapi="restapi/category";
+    String category_product="restapi/product/category_product";
 
 
 }
