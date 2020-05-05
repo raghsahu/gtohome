@@ -17,6 +17,8 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.grocery.gtohome.R;
+import com.grocery.gtohome.session.SessionManager;
+import com.grocery.gtohome.utils.Utilities;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
@@ -35,18 +37,18 @@ import java.util.Random;
 @SuppressLint({"AddJavascriptInterface", "SetJavaScriptEnabled", "JavascriptInterface"})
 public class PayUMoneyActivity extends AppCompatActivity {
     WebView webView;
+    private Utilities utilities;
+    private SessionManager sessionManager;
     Handler mHandler = new Handler();
-    String base_url = "https://test.payu.in";
+    //String base_url = "https://test.payu.in";
+    String base_url = " https://secure.payu.in";
     String action1 = "";
     String productInfo = "";
     private String hash = "";
     //******************************************
-    PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
-    //declare paymentParam object
-    PayUmoneySdkInitializer.PaymentParam paymentParam = null;
     String TAG ="PayuMoney_Activity";
-    String txnid ="TXN12345698", amount ="100", phone ="7879014631",
-            prodname ="Grocery", firstname ="rrr", email ="rrr@gmail.com",
+    String txnid ="", amount ="", phone ="7879014631",
+            prodname ="Grocery", firstname ="", email ="rrr@gmail.com",
             merchantId ="5733850", merchantkey="HBzjus8Q", salt="4YxPZIqeAl";
     String SUCCESS_URL="https://www.payumoney.com/mobileapp/payumoney/success.php";
     String Failer_URL="https://www.payumoney.com/mobileapp/payumoney/failure.php";
@@ -59,8 +61,21 @@ public class PayUMoneyActivity extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_pay_u_money);
 
+        utilities = Utilities.getInstance(PayUMoneyActivity.this);
+        sessionManager = new SessionManager(PayUMoneyActivity.this);
+       // phone = sessionManager.getUser().getTelephone();
+        firstname = sessionManager.getUser().getFirstname();
+        email = sessionManager.getUser().getEmail();
         webView=findViewById(R.id.webview);
 
+        if (getIntent()!=null){
+            amount=getIntent().getStringExtra("amount");
+        }
+
+        Random rand = new Random();
+        String rndm = Integer.toString(rand.nextInt())
+                + (System.currentTimeMillis() / 1000L);
+        txnid = hashCal("SHA-256", rndm).substring(0, 20);
 
         JSONObject productInfoObj = new JSONObject();
         JSONArray productPartsArr = new JSONArray();
@@ -71,9 +86,9 @@ public class PayUMoneyActivity extends AppCompatActivity {
         JSONObject paymentPartsObj2 = new JSONObject();
         try {
             // Payment Parts
-            productPartsObj1.put("name", "abc");
-            productPartsObj1.put("description", "abcd");
-            productPartsObj1.put("value", "100");
+            productPartsObj1.put("name", firstname);
+            productPartsObj1.put("description", "grocery product");
+            productPartsObj1.put("value", "1");
             productPartsObj1.put("isRequired", "true");
             productPartsObj1.put("settlementEvent", "EmailConfirmation");
             productPartsArr.put(productPartsObj1);
@@ -81,7 +96,7 @@ public class PayUMoneyActivity extends AppCompatActivity {
 
             // Payment Identifiers
             paymentPartsObj1.put("field", "CompletionDate");
-            paymentPartsObj1.put("value", "31/10/2012");
+            paymentPartsObj1.put("value", "01/01");
             paymentIdentifiersArr.put(paymentPartsObj1);
 
             paymentPartsObj2.put("field", "TxnId");
@@ -99,11 +114,6 @@ public class PayUMoneyActivity extends AppCompatActivity {
         productInfo = productInfoObj.toString();
 
         Log.e("TAG", productInfoObj.toString());
-
-        Random rand = new Random();
-        String rndm = Integer.toString(rand.nextInt())
-                + (System.currentTimeMillis() / 1000L);
-        txnid = hashCal("SHA-256", rndm).substring(0, 20);
 
         hash = hashCal("SHA-512", merchantkey + "|" + txnid + "|" + amount
                 + "|" + productInfo + "|" + firstname + "|" + email
@@ -132,14 +142,11 @@ public class PayUMoneyActivity extends AppCompatActivity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Toast.makeText(PayUMoneyActivity.this, "Page Started! " + url,
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(PayUMoneyActivity.this, "Page Started! " + url,Toast.LENGTH_SHORT).show();
                 if (url.equals(SUCCESS_URL)) {
-                    Toast.makeText(PayUMoneyActivity.this, "Success! " + url,
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayUMoneyActivity.this, "Success! " + url, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(PayUMoneyActivity.this, "Failure! " + url,
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayUMoneyActivity.this, "Failure! " + url, Toast.LENGTH_SHORT).show();
                 }
                 return super.shouldOverrideUrlLoading(view, url);
             }
@@ -170,7 +177,7 @@ public class PayUMoneyActivity extends AppCompatActivity {
         mapParams.put("key", merchantkey);
         mapParams.put("hash", hash);
         mapParams.put("txnid", txnid);
-        mapParams.put("service_provider", "payu_paisa");
+        mapParams.put("service_provider", "GtoHome");
         mapParams.put("amount", amount);
         mapParams.put("firstname", firstname);
         mapParams.put("email", email);
@@ -179,7 +186,7 @@ public class PayUMoneyActivity extends AppCompatActivity {
         mapParams.put("productinfo", productInfo);
         mapParams.put("surl", SUCCESS_URL);
         mapParams.put("furl", Failer_URL);
-        mapParams.put("lastname", "kumar");
+        mapParams.put("lastname", "");
 
         mapParams.put("address1", "");
         mapParams.put("address2", "");
@@ -200,7 +207,6 @@ public class PayUMoneyActivity extends AppCompatActivity {
         webview_ClientPost(webView, action1, mapParams.entrySet());
 
 
-
     }
 
     public String hashCal(String type,String str){
@@ -211,8 +217,6 @@ public class PayUMoneyActivity extends AppCompatActivity {
             algorithm.reset();
             algorithm.update(hashseq);
             byte messageDigest[] = algorithm.digest();
-
-
 
             for (int i=0;i<messageDigest.length;i++) {
                 String hex=Integer.toHexString(0xFF & messageDigest[i]);
@@ -245,6 +249,9 @@ public class PayUMoneyActivity extends AppCompatActivity {
                     mHandler = null;
                     Toast.makeText(PayUMoneyActivity.this, "Success",
                             Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(PayUMoneyActivity.this, OrderSuccess_Activity.class);
+                    intent.putExtra("OrderId","");
+                    startActivity(intent);
                 }
             });
         }

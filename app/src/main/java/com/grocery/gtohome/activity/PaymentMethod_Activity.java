@@ -22,6 +22,7 @@ import com.grocery.gtohome.model.shipping_method.ShippingMethod;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
+import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
@@ -54,7 +55,8 @@ public class PaymentMethod_Activity extends AppCompatActivity implements Shippin
     String TAG ="Payment_Activity";
     String txnid ="", amount ="", phone ="",
             prodname ="Grocery", firstname ="", email ="",
-            merchantId ="5733850", merchantkey="HBzjus8Q", salt="4YxPZIqeAl";
+         merchantId ="5733850", merchantkey="HBzjus8Q", salt="4YxPZIqeAl";
+
     String udf1="",udf2="",udf3="",udf4="",udf5="";
 
     @Override
@@ -181,10 +183,11 @@ public class PaymentMethod_Activity extends AppCompatActivity implements Shippin
                                 }else {
 
                                     Intent intent = new Intent(PaymentMethod_Activity.this, PayUMoneyActivity.class);
-                                    intent.putExtra("OrderId",response.getOrderId().toString());
+                                    //intent.putExtra("OrderId",response.getOrderId().toString());
+                                    intent.putExtra("amount",amount);
                                     startActivity(intent);
 
-                              //  CallPaymentgateway();
+                           // CallPaymentgateway();
                                 }
 
 
@@ -243,6 +246,9 @@ public class PaymentMethod_Activity extends AppCompatActivity implements Shippin
         String rndm = Integer.toString(rand.nextInt())+(System.currentTimeMillis() / 1000L);
         txnid=hashCal("SHA-256",rndm).substring(0,20);
 
+//        PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
+//        payUmoneyConfig.setDoneButtonText("Continue");
+//        payUmoneyConfig.setPayUmoneyActivityTitle("Add Money");
 
         builder.setAmount(amount)                          // Payment amount
                 .setTxnId(txnid)                     // Transaction ID
@@ -262,7 +268,7 @@ public class PaymentMethod_Activity extends AppCompatActivity implements Shippin
                 .setUdf8("")
                 .setUdf9("")
                 .setUdf10("")
-                .setIsDebug(true)                              // Integration environment - true (Debug)/ false(Production)
+                .setIsDebug(false)                              // Integration environment - true (Debug)/ false(Production)
                 .setKey(merchantkey)                        // Merchant key
                 .setMerchantId(merchantId);
 
@@ -301,13 +307,15 @@ public class PaymentMethod_Activity extends AppCompatActivity implements Shippin
     }
 
     private void getHashkey() {
-        String hashSequence = "merchantkey|txnid|amount|prodname|firstname|email|udf1|udf2|udf3|udf4|udf5||||||salt";
-       String hash=hashCal("SHA-512",hashSequence);
+       // String hashSequence = "merchantkey|txnid|amount|prodname|firstname|email|udf1|udf2|udf3|udf4|udf5||||||salt";
+      // String hash=hashCal("SHA-512",hashSequence);
+       String hash= hashCal("SHA-512", merchantkey + "|" + txnid + "|" + amount
+               + "|" + "productInfo" + "|" + firstname + "|" + email
+               + "|||||||||||" + salt);
        Log.e("Hash_checksum",hash);
 
         paymentParam.setMerchantHash(hash);
         // Invoke the following function to open the checkout page.
-        // PayUmoneyFlowManager.startPayUMoneyFlow(paymentParam, StartPaymentActivity.this,-1, true);
         PayUmoneyFlowManager.startPayUMoneyFlow(paymentParam, PaymentMethod_Activity.this, R.style.AppTheme_default,false);
 
     }
