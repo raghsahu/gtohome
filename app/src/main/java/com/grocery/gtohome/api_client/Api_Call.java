@@ -9,8 +9,10 @@ import com.grocery.gtohome.model.address_model.SaveAddressModel;
 import com.grocery.gtohome.model.cart_model.CartModel;
 import com.grocery.gtohome.model.category_model.CategoryModel;
 import com.grocery.gtohome.model.category_product_model.CategoryProductModel;
+import com.grocery.gtohome.model.create_order.CreateOrderModel;
 import com.grocery.gtohome.model.product_details.Product_Details_Model;
 import com.grocery.gtohome.model.register_model.RegistrationModel;
+import com.grocery.gtohome.model.shipping_method.ShippingMethod;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -120,4 +122,17 @@ public interface Api_Call {
             @Query("postcode") String postcode,
             @Query("country_id") String country_id,
             @Query("zone_id") String zone_id);
+
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/shipping/methods")
+    Observable<ShippingMethod>  GetShippingMethod(
+            @Field ("total") String totalPrice,
+            @Field ("country_id")  String countryId,
+            @Field ("zone_id") String zoneId);
+
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/orders/add")
+    Observable<CreateOrderModel>  CreateOrder(@FieldMap HashMap<String, String> map);
 }

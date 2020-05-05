@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+    <data>
+        <variable
+            name="shipinglistAdapter"
+            type="com.grocery.gtohome.adapter.ShippingMethodAdapter" />
 
+    </data>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.PymentMethod_Activity">
+    tools:context=".activity.PaymentMethod_Activity">
 
 
     <include
@@ -49,21 +54,14 @@
                     android:orientation="vertical"
                     android:padding="@dimen/_5sdp">
 
-
-                    <TextView
-                        style="@style/text_14_black"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/free_shipping" />
-
-                    <RadioButton
-                        android:layout_marginTop="@dimen/_8sdp"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:adapter="@{shipinglistAdapter}"
+                        android:scrollbars="none"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Free Shipping - ₹0.00">
-                    </RadioButton>
+                        android:layout_height="wrap_content">
 
+                    </androidx.recyclerview.widget.RecyclerView>
 
                 </LinearLayout>
 
@@ -91,12 +89,14 @@
                     android:padding="@dimen/_5sdp">
 
                     <RadioGroup
+                        android:id="@+id/rg_payment_method"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:orientation="vertical">
 
                         <RadioButton
+                            android:id="@+id/radio_cod"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/cash_on_delivery">
@@ -111,6 +111,7 @@
                         </RadioButton>
 
                         <RadioButton
+                            android:id="@+id/radio_payu"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/payu_money">
@@ -173,6 +174,7 @@
 
 
             <CheckBox
+                android:id="@+id/check_terms"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:padding="@dimen/_5sdp"
                 android:layout_width="match_parent"

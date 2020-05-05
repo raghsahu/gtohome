@@ -53,7 +53,7 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
     private final String Customer_Id;
     private List<CategoryProduct_List> dataModelList;
     Context context;
-    private String QtyOptionValueId;
+    private String QtyOptionValueId="";
     private Utilities utilities;
     SessionManager sessionManager;
     // List<ProductOptionValue> productOptionValueList = new ArrayList<>();
@@ -191,10 +191,19 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
 
                 String product_option_id=null;
                 if (dataModel.getOptions() != null && !dataModel.getOptions().isEmpty()) {
+                    String  spin_selecteditem =  holder.itemRowBinding.spinnerQty.getSelectedItem().toString();
                     for (int k = 0; k < dataModel.getOptions().size(); k++) {
                         product_option_id = dataModel.getOptions().get(k).getProductOptionId();
+                        for (int j=0; j<dataModel.getOptions().get(k).getProductOptionValue().size(); j++){
+                            String QtyName = dataModel.getOptions().get(k).getProductOptionValue().get(j).getName();
 
+                            if (spin_selecteditem.equals(QtyName)){
+                                QtyOptionValueId=dataModel.getOptions().get(k).getProductOptionValue().get(j).getProductOptionValueId();
+                            }
+                        }
                     }
+                }else {
+                    QtyOptionValueId="";
                 }
 
                 String option_key;
@@ -205,7 +214,8 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
                 }
 
                 Log.e("option_key",option_key.toString());
-
+                Log.e("QtyOptionValueId",QtyOptionValueId);
+                //*********************************************
                 if (Connectivity.isConnected(context)) {
                     AddCartProduct(Product_Id, Customer_Id, "0", tvCountNumber,QtyOptionValueId,option_key);
                 } else {
@@ -214,8 +224,6 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
 
             }
         });
-
-
 
     }
 

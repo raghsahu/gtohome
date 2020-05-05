@@ -1,7 +1,6 @@
 package com.grocery.gtohome.fragment.my_basket;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,36 +22,26 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
-import com.grocery.gtohome.activity.PymentMethod_Activity;
-import com.grocery.gtohome.activity.login_signup.Register_Activity;
-import com.grocery.gtohome.activity.login_signup.Register_Success_Activity;
-import com.grocery.gtohome.adapter.Shopping_List_Adapter;
+import com.grocery.gtohome.activity.PaymentMethod_Activity;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.Base_Url;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.FragmentDeliveryAddressBinding;
-import com.grocery.gtohome.databinding.FragmentMyBasketBinding;
 import com.grocery.gtohome.fragment.country_model.CountryData;
 import com.grocery.gtohome.fragment.country_model.CountryModel;
 import com.grocery.gtohome.fragment.state_model.StateModel;
 import com.grocery.gtohome.fragment.state_model.StateZoneData;
-import com.grocery.gtohome.model.FilterBy;
 import com.grocery.gtohome.model.address_model.AddressData;
 import com.grocery.gtohome.model.address_model.AddressModel;
 import com.grocery.gtohome.model.address_model.SaveAddressModel;
-import com.grocery.gtohome.model.cart_model.CartModel;
-import com.grocery.gtohome.model.register_model.RegistrationModel;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -61,7 +50,6 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.adapter.rxjava2.HttpException;
 
 import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
-import static com.grocery.gtohome.api_client.Base_Url.Register;
 
 /**
  * Created by Raghvendra Sahu on 09-Apr-20.
@@ -78,6 +66,7 @@ public class DeliveryAddressFragment extends Fragment {
     List<StateZoneData> stateModelList = new ArrayList<>();
     ArrayList<String> stateName = new ArrayList<>();
     String address_id, country_id, zone_id;
+    private String TotalPrice;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -105,6 +94,11 @@ public class DeliveryAddressFragment extends Fragment {
             });
         }
 
+        //********************************
+        if (getArguments()!=null){
+            TotalPrice=getArguments().getString("TotalPrice");
+        }
+
         //get existing address
         if (Connectivity.isConnected(getActivity())) {
             getExistingAddress(Customer_Id);
@@ -123,7 +117,11 @@ public class DeliveryAddressFragment extends Fragment {
                 } else {
                     if (binding.radioExistAddress.isChecked()) {
                         if (address_id != null && !address_id.isEmpty()) {
-                            Intent intent = new Intent(getActivity(), PymentMethod_Activity.class);
+                            Intent intent = new Intent(getActivity(), PaymentMethod_Activity.class);
+                            intent.putExtra("TotalPrice",TotalPrice);
+                            intent.putExtra("CountryId",country_id);
+                            intent.putExtra("ZoneId",zone_id);
+                            intent.putExtra("AddressId",address_id);
                             startActivity(intent);
                         } else {
                             utilities.dialogOK(getActivity(), getString(R.string.validation_title), "Address not found, Please select address!", getString(R.string.ok), false);
@@ -164,6 +162,8 @@ public class DeliveryAddressFragment extends Fragment {
                 //or this can be also right: selecteditem = level[i];
                 if (AddressModelList != null && !AddressModelList.isEmpty()) {
                     address_id = AddressModelList.get(i).getAddressId();
+                    country_id = AddressModelList.get(i).getCountryId();
+                    zone_id = AddressModelList.get(i).getZoneId();
                 }
             }
 
@@ -255,7 +255,8 @@ public class DeliveryAddressFragment extends Fragment {
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
                                 // Log.e("result_my_test", "" + response.getData().getCustomerId());
-                                OpenDialog(getActivity(), getString(R.string.validation_title), "Save Delivery Address Successful", getString(R.string.ok));
+                                OpenDialog(getActivity(), getString(R.string.validation_title), response.getAddressId(),
+                                        "Save Delivery Address Successful", getString(R.string.ok));
 
                             } else {
                                 Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
@@ -304,7 +305,7 @@ public class DeliveryAddressFragment extends Fragment {
 
     }
 
-    private void OpenDialog(FragmentActivity activity, String string, String save_delivery_address_successful, String ok) {
+    private void OpenDialog(FragmentActivity activity, String string, final Integer addressId, String save_delivery_address_successful, String ok) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle("");
         alertDialogBuilder.setMessage(Html.fromHtml("Save Delivery Address Successful"));
@@ -313,9 +314,12 @@ public class DeliveryAddressFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                Intent intent = new Intent(getActivity(), PymentMethod_Activity.class);
+                Intent intent = new Intent(getActivity(), PaymentMethod_Activity.class);
+                intent.putExtra("TotalPrice",TotalPrice);
+                intent.putExtra("CountryId",country_id);
+                intent.putExtra("ZoneId",zone_id);
+                intent.putExtra("AddressId",addressId.toString());
                 startActivity(intent);
-
 
             }
         });
@@ -357,7 +361,7 @@ public class DeliveryAddressFragment extends Fragment {
 
                             } else {
                                 //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
-                                utilities.dialogOKOnBack(getActivity(), getString(R.string.validation_title),
+                                utilities.dialogOK(getActivity(), getString(R.string.validation_title),
                                         response.getMsg(), getString(R.string.ok), true);
                             }
 
@@ -434,7 +438,7 @@ public class DeliveryAddressFragment extends Fragment {
 
                             } else {
                                 //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
-                                utilities.dialogOKOnBack(getActivity(), getString(R.string.validation_title),
+                                utilities.dialogOK(getActivity(), getString(R.string.validation_title),
                                         response.getMsg(), getString(R.string.ok), true);
                             }
 
@@ -513,8 +517,8 @@ public class DeliveryAddressFragment extends Fragment {
 
                             } else {
                                 //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
-                                utilities.dialogOKOnBack(getActivity(), getString(R.string.validation_title),
-                                        response.getMsg(), getString(R.string.ok), true);
+                                utilities.dialogOK(getActivity(), getString(R.string.validation_title),
+                                        response.getMsg(), getString(R.string.ok), false);
                             }
 
                         } catch (Exception e) {

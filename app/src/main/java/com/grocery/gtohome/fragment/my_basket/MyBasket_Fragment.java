@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -19,22 +18,15 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
-import com.grocery.gtohome.adapter.CategoryProduct_Adapter;
 import com.grocery.gtohome.adapter.Shopping_List_Adapter;
-import com.grocery.gtohome.adapter.WishList_Adapter;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.RxApiClient;
-import com.grocery.gtohome.databinding.FragmentHomeBinding;
 import com.grocery.gtohome.databinding.FragmentMyBasketBinding;
-import com.grocery.gtohome.fragment.my_account.EditInfoFragment;
-import com.grocery.gtohome.model.SampleModel;
 import com.grocery.gtohome.model.cart_model.CartModel;
-import com.grocery.gtohome.model.category_product_model.CategoryProductModel;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -81,7 +73,7 @@ public class MyBasket_Fragment extends Fragment {
 
         //get cart product
         if (Connectivity.isConnected(getActivity())) {
-            getCartItem();
+            getCartItem(false);
         } else {
             //Toast.makeText(getActivity(), "Please check Internet", Toast.LENGTH_SHORT).show();
             utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
@@ -90,17 +82,14 @@ public class MyBasket_Fragment extends Fragment {
         binding.tvContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              //  CartCoopanFragment fragment2 = new CartCoopanFragment();
-                DeliveryAddressFragment fragment2 = new DeliveryAddressFragment();
-                Bundle bundle = new Bundle();
-                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
-                //   bundle.putString("Title",dataModel.getCategory_name());
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = manager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame, fragment2);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                fragment2.setArguments(bundle);
+                //get cart total price
+                if (Connectivity.isConnected(getActivity())) {
+                    getCartItem(true);
+                } else {
+                    //Toast.makeText(getActivity(), "Please check Internet", Toast.LENGTH_SHORT).show();
+                    utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+                }
+
             }
         });
 
@@ -109,7 +98,7 @@ public class MyBasket_Fragment extends Fragment {
     }
 
     @SuppressLint("CheckResult")
-    private void getCartItem() {
+    private void getCartItem(final boolean total) {
         final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         // progressDialog.setCancelable(false);
@@ -132,14 +121,36 @@ public class MyBasket_Fragment extends Fragment {
                             Log.e("result_category_pro", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
-                                Shopping_List_Adapter friendsAdapter = new Shopping_List_Adapter(response.getProducts(),getActivity());
-                                binding.setCartlistAdapter(friendsAdapter);//set databinding adapter
-                                friendsAdapter.notifyDataSetChanged();
+                                if (total){
+                                    String total_amount = "";
+                                    for (int i=0; i<response.getTotals().size(); i++){
+                                        if (response.getTotals().get(i).getTitle().equals("Total")){
+                                            total_amount= response.getTotals().get(i).getText();
+                                        }
+                                    }
+
+                                    //  CartCoopanFragment fragment2 = new CartCoopanFragment();
+                                    DeliveryAddressFragment fragment2 = new DeliveryAddressFragment();
+                                    Bundle bundle = new Bundle();
+                                    // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                                    bundle.putString("TotalPrice",total_amount);
+                                    FragmentManager manager = getActivity().getSupportFragmentManager();
+                                    FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                                    fragmentTransaction.replace(R.id.frame, fragment2);
+                                    fragmentTransaction.addToBackStack(null);
+                                    fragmentTransaction.commit();
+                                    fragment2.setArguments(bundle);
+                                }else {
+                                    Shopping_List_Adapter friendsAdapter = new Shopping_List_Adapter(response.getProducts(),getActivity());
+                                    binding.setCartlistAdapter(friendsAdapter);//set databinding adapter
+                                    friendsAdapter.notifyDataSetChanged();
+                                }
+
 
                             } else {
                                 //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
-                                utilities.dialogOKOnBack(getActivity(), getString(R.string.validation_title),
-                                        response.getMsg(), getString(R.string.ok), true);
+                                utilities.dialogOK(getActivity(), getString(R.string.validation_title),
+                                        response.getMsg(), getString(R.string.ok), false);
                             }
 
                         } catch (Exception e) {

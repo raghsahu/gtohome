@@ -150,8 +150,7 @@
 
                                     <ImageView
                                         android:layout_gravity="center"
-                                        android:rotation="60"
-                                        app:srcCompat="@drawable/ic_local_airport"
+                                        app:srcCompat="@drawable/zeep_icon"
                                         android:layout_width="@dimen/_24sdp"
                                         android:layout_height="@dimen/_24sdp"
                                         >

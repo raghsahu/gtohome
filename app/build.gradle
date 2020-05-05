@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.grocery.gtohome"
-        minSdkVersion 19
+        minSdkVersion 20
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -23,6 +23,10 @@ android {
     }
     dataBinding {
         enabled = true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -73,5 +77,8 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+
+    implementation 'com.payumoney.sdkui:plug-n-play:1.6.0'
+    implementation 'com.payumoney.core:payumoney-sdk:7.6.0'
 
 }

@@ -191,10 +191,10 @@
     </array>
 
     <array name="state">
-    <item>MP</item>
-    <item>UP</item>
-    <item>Newyork</item>
-    <item>Pana Ji</item>
+        <item>MP</item>
+        <item>UP</item>
+        <item>Newyork</item>
+        <item>Pana Ji</item>
     </array>
 
 
@@ -281,7 +281,7 @@
     <string name="description">Description</string>
     <string name="related_product">Related Products</string>
     <string name="testimonial">Testimonial</string>
-    <string name="equipro_test1" >Very Nice Product...........!</string>
+    <string name="equipro_test1">Very Nice Product...........!</string>
 
     <string name="validation_title">Whoops!</string>
     <string name="ok">Ok</string>
