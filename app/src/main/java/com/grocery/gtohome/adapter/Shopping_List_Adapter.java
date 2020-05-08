@@ -3,6 +3,7 @@ package com.grocery.gtohome.adapter;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -75,6 +76,15 @@ public class Shopping_List_Adapter extends RecyclerView.Adapter<Shopping_List_Ad
         holder.bind(dataModel);
         holder.itemRowBinding.setModel(dataModel);
         // holder.itemRowBinding.setItemClickListener(this);
+        if (dataModel.getStock()){
+            holder.itemRowBinding.tvStockStatus.setText("In stock");
+            holder.itemRowBinding.tvStockStatus.setTextColor(Color.parseColor("#84C225"));
+        }else {
+            holder.itemRowBinding.tvStockStatus.setText("Out of stock");
+            holder.itemRowBinding.tvStockStatus.setTextColor(Color.parseColor("#D9534F"));
+        }
+
+
         if (dataModel.getOption() != null && !dataModel.getOption().isEmpty()) {
             for (int i = 0; i < dataModel.getOption().size(); i++) {
                 holder.itemRowBinding.tvGmQty.setText("Quantity: " + dataModel.getOption().get(i).getValue());

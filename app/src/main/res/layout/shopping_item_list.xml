@@ -49,6 +49,7 @@
                     android:layout_height="wrap_content"
                     android:text="@{model.name}"
                     android:textStyle="bold"
+                    android:maxLines="2"
                    style="@style/text_14_black"
                     />
 
@@ -74,6 +75,14 @@
                     android:text="@{`Model: `+model.model}"
                     style="@style/text_12_black"
                     />
+
+                <TextView
+                    android:id="@+id/tv_stock_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/text_12_black"
+                    />
+
 
                 <LinearLayout
                     android:orientation="horizontal"

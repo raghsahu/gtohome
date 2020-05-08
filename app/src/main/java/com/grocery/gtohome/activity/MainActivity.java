@@ -10,7 +10,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -91,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Fragment fragment_home = new Home_Fragment();
                     FragmentTransaction ft_home = getSupportFragmentManager().beginTransaction();
                     ft_home.replace(R.id.frame, fragment_home);
-                    // ft.addToBackStack(null);
+                    ft_home.addToBackStack(null);
                     ft_home.commit();
 
                     return true;
@@ -99,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Fragment fragment_faq = new Search_Fragment();
                     FragmentTransaction ft_faq = getSupportFragmentManager().beginTransaction();
                     ft_faq.replace(R.id.frame, fragment_faq);
-                    // ft.addToBackStack(null);
+                    ft_faq.addToBackStack(null);
                     ft_faq.commit();
 
                     return true;
@@ -107,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Fragment fragment_create = new MyBasket_Fragment();
                     FragmentTransaction ft_create = getSupportFragmentManager().beginTransaction();
                     ft_create.replace(R.id.frame, fragment_create);
-                    // ft.addToBackStack(null);
+                    ft_create.addToBackStack(null);
                     ft_create.commit();
 
                     return true;
@@ -116,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Fragment fragment_privacy = new My_Account_Fragment();
                     FragmentTransaction ft_p = getSupportFragmentManager().beginTransaction();
                     ft_p.replace(R.id.frame, fragment_privacy);
-                    // ft.addToBackStack(null);
+                    ft_p.addToBackStack(null);
                     ft_p.commit();
 
                     return true;
@@ -125,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Fragment fragment = new ContactUs_Fragment();
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.frame, fragment);
-                    // ft.addToBackStack(null);
+                     ft.addToBackStack(null);
                     ft.commit();
 
                     return true;
@@ -173,7 +175,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mExpandableListTitle.add(session.getCategoryData().get(i).getName());
 
             }
-
 
             for (int i=0; i<mExpandableListTitle.size(); i++){
                 // List<String> colors = new ArrayList<String>();
@@ -319,12 +320,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         Home_Fragment myFragment = (Home_Fragment) getSupportFragmentManager().findFragmentByTag("HOME_FRAGMENT");
-        if (myFragment != null && myFragment.isVisible()) {
+
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        }else if (myFragment != null && myFragment.isVisible()) {
             // add your code here
-            finish();
+            //finish();
+            Exit();
         } else {
             super.onBackPressed();
         }
+
+    }
+
+    private void Exit() {
+            new AlertDialog.Builder(this).setTitle(getString(R.string.app_name))
+                    .setMessage("Are you sure you want to exit the app!")
+                    .setIcon((int) R.drawable.logo)
+                    .setPositiveButton(getResources().getString(R.string.yes), new C03424())
+                    .setNegativeButton(getResources().getString(R.string.no), new C03435()).show();
 
     }
 
@@ -474,4 +488,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    class C03424 implements DialogInterface.OnClickListener {
+        C03424() {
+        }
+
+        public void onClick(DialogInterface dialog, int which) {
+            finish();
+        }
+    }
+
+    class C03435 implements DialogInterface.OnClickListener {
+        C03435() {
+        }
+
+        public void onClick(DialogInterface dialog, int which) {
+//            drawer.closeDrawer(GravityCompat.START);
+        }
+    }
 }

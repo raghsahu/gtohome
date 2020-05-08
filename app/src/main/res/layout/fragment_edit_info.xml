@@ -51,7 +51,7 @@
 
 
                 <EditText
-                    android:id="@+id/inward_time"
+                    android:id="@+id/et_firstname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
@@ -78,6 +78,7 @@
 
 
                 <EditText
+                    android:id="@+id/et_lastname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
@@ -104,6 +105,7 @@
 
 
                 <EditText
+                    android:id="@+id/et_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
@@ -130,10 +132,12 @@
 
 
                 <EditText
+                    android:id="@+id/et_mobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
                     android:inputType="number"
+                    android:maxLength="10"
                     android:hint="@string/telephone"
                     android:background="@drawable/edit_text_bg"
                     android:padding="@dimen/_10sdp"

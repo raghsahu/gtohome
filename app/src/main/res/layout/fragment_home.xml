@@ -245,14 +245,21 @@
                     android:orientation="vertical">
 
 
+<!--                    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--                        android:id="@+id/swipeToRefresh"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:visibility="visible">-->
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:adapter="@{categoryAdapter}"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:scrollbars="none"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         >
                     </androidx.recyclerview.widget.RecyclerView>
+<!--                    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
 
 
                     <LinearLayout

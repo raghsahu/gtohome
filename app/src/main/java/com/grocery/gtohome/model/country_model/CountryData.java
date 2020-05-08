@@ -1,4 +1,4 @@
-package com.grocery.gtohome.fragment.country_model;
+package com.grocery.gtohome.model.country_model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

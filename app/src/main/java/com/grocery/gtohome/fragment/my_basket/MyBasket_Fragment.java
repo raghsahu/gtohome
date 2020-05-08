@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
@@ -39,7 +40,7 @@ import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
 /**
  * Created by Raghvendra Sahu on 08-Apr-20.
  */
-public class MyBasket_Fragment extends Fragment {
+public class MyBasket_Fragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     FragmentMyBasketBinding binding;
     private Utilities utilities;
     private SessionManager sessionManager;
@@ -52,6 +53,8 @@ public class MyBasket_Fragment extends Fragment {
         utilities = Utilities.getInstance(getActivity());
         sessionManager = new SessionManager(getActivity());
         Customer_Id = sessionManager.getUser().getCustomerId();
+        binding.swipeToRefresh.setColorSchemeResources(R.color.colorPrimaryDark);
+        binding.swipeToRefresh.setOnRefreshListener(this);
 
         try {
             ((MainActivity) getActivity()).Update_header(getString(R.string.my_basket));
@@ -122,18 +125,22 @@ public class MyBasket_Fragment extends Fragment {
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
                                 if (total){
-                                    String total_amount = "";
+                                    String total_amount = "",sub_total="";
                                     for (int i=0; i<response.getTotals().size(); i++){
                                         if (response.getTotals().get(i).getTitle().equals("Total")){
                                             total_amount= response.getTotals().get(i).getText();
                                         }
+                                        if (response.getTotals().get(i).getTitle().equals("Sub-Total")){
+                                            sub_total= response.getTotals().get(i).getText();
+                                        }
                                     }
 
-                                    //  CartCoopanFragment fragment2 = new CartCoopanFragment();
-                                    DeliveryAddressFragment fragment2 = new DeliveryAddressFragment();
+                                    CartCoopanFragment fragment2 = new CartCoopanFragment();
+                                  //  DeliveryAddressFragment fragment2 = new DeliveryAddressFragment();
                                     Bundle bundle = new Bundle();
                                     // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
                                     bundle.putString("TotalPrice",total_amount);
+                                    bundle.putString("SubTotal",sub_total);
                                     FragmentManager manager = getActivity().getSupportFragmentManager();
                                     FragmentTransaction fragmentTransaction = manager.beginTransaction();
                                     fragmentTransaction.replace(R.id.frame, fragment2);
@@ -146,8 +153,9 @@ public class MyBasket_Fragment extends Fragment {
                                     friendsAdapter.notifyDataSetChanged();
                                 }
 
-
+                                binding.swipeToRefresh.setVisibility(View.VISIBLE);
                             } else {
+                                binding.swipeToRefresh.setVisibility(View.GONE);
                                 //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
                                 utilities.dialogOK(getActivity(), getString(R.string.validation_title),
                                         response.getMsg(), getString(R.string.ok), false);
@@ -196,4 +204,14 @@ public class MyBasket_Fragment extends Fragment {
     }
 
 
+    @Override
+    public void onRefresh() {
+        binding.swipeToRefresh.setRefreshing(false);
+
+        if (Connectivity.isConnected(getActivity())){
+            getCartItem(false);
+        }else {
+            utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+        }
+    }
 }

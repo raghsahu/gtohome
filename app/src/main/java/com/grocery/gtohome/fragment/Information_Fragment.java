@@ -1,7 +1,8 @@
-package com.grocery.gtohome.fragment.my_orders;
+package com.grocery.gtohome.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -9,62 +10,44 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
-import com.grocery.gtohome.adapter.MyOrder_Adapter;
-import com.grocery.gtohome.adapter.Shopping_List_Adapter;
-import com.grocery.gtohome.adapter.WishList_Adapter;
 import com.grocery.gtohome.api_client.Api_Call;
+import com.grocery.gtohome.api_client.Base_Url;
 import com.grocery.gtohome.api_client.RxApiClient;
-import com.grocery.gtohome.databinding.FragmentMyAccountBinding;
-import com.grocery.gtohome.databinding.FragmentMyOrdersBinding;
-import com.grocery.gtohome.model.SampleModel;
-import com.grocery.gtohome.model.cart_model.CartModel;
-import com.grocery.gtohome.model.order_history.OrderHistory;
+import com.grocery.gtohome.databinding.FragmentEditInfoBinding;
+import com.grocery.gtohome.databinding.FragmentInfoBinding;
+import com.grocery.gtohome.model.SimpleResultModel;
+import com.grocery.gtohome.model.company_info_model.Company_infoModel;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.adapter.rxjava2.HttpException;
 
-import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
-
 /**
- * Created by Raghvendra Sahu on 09-Apr-20.
+ * Created by Raghvendra Sahu on 06-May-20.
  */
-public class OrderHistory_Fragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
-    FragmentMyOrdersBinding binding;
+public class Information_Fragment extends Fragment {
+    FragmentInfoBinding binding;
     private Utilities utilities;
-    private SessionManager sessionManager;
-    private String Customer_Id;
+    private String Info;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_orders, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_info, container, false);
         View root = binding.getRoot();
         utilities = Utilities.getInstance(getActivity());
-        sessionManager = new SessionManager(getActivity());
-        Customer_Id = sessionManager.getUser().getCustomerId();
-        binding.swipeToRefresh.setColorSchemeResources(R.color.colorPrimaryDark);
-        binding.swipeToRefresh.setOnRefreshListener(this);
-        try {
-            ((MainActivity) getActivity()).Update_header(getString(R.string.order_history));
-        } catch (Exception e) {
-        }
+
         //onback press call
         View view = getActivity().findViewById(R.id.img_back);
         if (view instanceof ImageView) {
@@ -79,50 +62,74 @@ public class OrderHistory_Fragment extends Fragment implements SwipeRefreshLayou
             });
         }
 
+        if (getArguments() != null) {
+            Info = getArguments().getString("Info");
+            try {
+                ((MainActivity) getActivity()).Update_header(Info);
+            } catch (Exception e) {
+            }
+        }
+
         if (Connectivity.isConnected(getActivity())) {
-            getOrderItem();
+            CallInfoApi(Info);
         } else {
-            //Toast.makeText(getActivity(), "Please check Internet", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(context, getString(R.string.please_check_internet), Toast.LENGTH_SHORT).show();
             utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
         }
-        return root;
 
+
+        return root;
     }
 
+
     @SuppressLint("CheckResult")
-    private void getOrderItem() {
+    private void CallInfoApi(String info) {
         final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        // progressDialog.setCancelable(false);
         progressDialog.show();
 
-        Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
+        Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
 
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put("customer_id", Customer_Id);
-
-        apiInterface.OrderHistoryApi(map)
+        apiInterface.InfoCompany()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<OrderHistory>() {
+                .subscribeWith(new DisposableObserver<Company_infoModel>() {
+                    @SuppressLint("SetJavaScriptEnabled")
                     @Override
-                    public void onNext(OrderHistory response) {
+                    public void onNext(Company_infoModel response) {
                         //Handle logic
                         try {
                             progressDialog.dismiss();
-                            Log.e("result_category_pro", "" + response.getMsg());
+                            Log.e("result_my_test", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
-                                MyOrder_Adapter friendsAdapter = new MyOrder_Adapter(response.getOrders(),getActivity());
-                                binding.setMyOrderAdapter(friendsAdapter);//set databinding adapter
-                                friendsAdapter.notifyDataSetChanged();
+                                binding.webview.getSettings().setJavaScriptEnabled(true);
 
-                                binding.swipeToRefresh.setVisibility(View.VISIBLE);
+                                for (int i = 0; i < response.getInformations().size(); i++) {
+                                    String inform = response.getInformations().get(i).getTitle();
+
+                                    if (info.equals("About Us")) {
+                                        if (inform.equals("About Us")) {
+                                            binding.webview.loadDataWithBaseURL("", response.getInformations().get(i).getDescription(), "text/html", "UTF-8", "");
+                                        }
+                                    }else if (info.equals("Terms")){
+                                        if (inform.equals("Terms &amp; Conditions")) {
+                                            binding.webview.loadDataWithBaseURL("", response.getInformations().get(i).getDescription(), "text/html", "UTF-8", "");
+                                        }
+                                    }else if (info.equals("DeliveryInfo")){
+                                        if (inform.equals("Delivery Information")) {
+                                            binding.webview.loadDataWithBaseURL("", response.getInformations().get(i).getDescription(), "text/html", "UTF-8", "");
+                                        }
+                                     }else if (info.equals("Privacy")){
+                                        if (inform.equals("Privacy Policy")) {
+                                            binding.webview.loadDataWithBaseURL("", response.getInformations().get(i).getDescription(), "text/html", "UTF-8", "");
+                                        }
+                                    }
+
+                                }
+
                             } else {
-                                binding.swipeToRefresh.setVisibility(View.GONE);
-                                //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
-                                utilities.dialogOK(getActivity(), getString(R.string.validation_title),
-                                        response.getMsg(), getString(R.string.ok), false);
+                                Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
                             }
 
                         } catch (Exception e) {
@@ -135,7 +142,7 @@ public class OrderHistory_Fragment extends Fragment implements SwipeRefreshLayou
                     public void onError(Throwable e) {
                         //Handle error
                         progressDialog.dismiss();
-                        Log.e("Categ_product_error", e.toString());
+                        Log.e("mr_product_error", e.toString());
 
                         if (e instanceof HttpException) {
                             int code = ((HttpException) e).code();
@@ -165,15 +172,5 @@ public class OrderHistory_Fragment extends Fragment implements SwipeRefreshLayou
                         progressDialog.dismiss();
                     }
                 });
-    }
-
-
-    @Override
-    public void onRefresh() {
-        if (Connectivity.isConnected(getActivity())){
-            getOrderItem();
-        }else {
-            utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
-        }
     }
 }

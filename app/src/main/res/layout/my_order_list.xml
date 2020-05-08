@@ -5,7 +5,7 @@
 
         <variable
             name="model"
-            type="com.grocery.gtohome.model.SampleModel" />
+            type="com.grocery.gtohome.model.order_history.OrderHistoryData" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -91,38 +91,39 @@
                         style="@style/text_14_black"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="#100"
+                        android:text="@{model.orderId}"
                         android:textStyle="bold" />
 
                     <TextView
                         style="@style/text_14_black"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Rrrr" />
+                        android:text="@{model.name}"
+                         />
 
                     <TextView
                         style="@style/text_14_black"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="1" />
+                        android:text="@{String.valueOf(model.products)}"/>
 
                     <TextView
                         style="@style/text_14_black"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Canceled" />
+                        android:text="@{model.status}"/>
 
                     <TextView
                         style="@style/text_14_black"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="₹ 500" />
+                        android:text="@{model.total}" />
 
                     <TextView
                         style="@style/text_14_black"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="09/04/2020" />
+                        android:text="@{model.dateAdded}" />
 
 
                 </LinearLayout>
@@ -138,6 +139,7 @@
             </View>
 
             <LinearLayout
+                android:id="@+id/ll_order_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

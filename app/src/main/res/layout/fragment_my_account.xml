@@ -247,6 +247,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/ll_transaction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -273,6 +274,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/ll_recurring_payment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -314,6 +316,7 @@
                 </View>
 
                 <LinearLayout
+                    android:id="@+id/ll_aboutus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -360,6 +363,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_delivery_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -383,6 +387,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_privacy"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -408,6 +413,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_terms"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">

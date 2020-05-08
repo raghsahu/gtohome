@@ -312,6 +312,12 @@
     <string name="gh_offer">GH OFFERS</string>
     <string name="gh_prime">GH PRIME</string>
     <string name="gh_blog">GH BLOG</string>
+    <string name="order_details">Order Details</string>
+    <string name="billing_details">Billing Details</string>
+    <string name="delivery_details">Delivery Details</string>
+    <string name="delivery_method">Delivery Method</string>
+    <string name="select_delivery_date">Please select the delivery date for this order.</string>
+    <string name="payment_method">Payment Method</string>
 
 
 </resources>

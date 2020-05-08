@@ -13,7 +13,6 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:visibility="gone"
         android:layout_alignParentEnd="true"
         android:id="@+id/tv_clear_cart"
         style="@style/text_12_black"
@@ -27,6 +26,13 @@
         android:text="@string/clear_cart">
     </TextView>
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_below="@+id/tv_clear_cart"
+        android:id="@+id/swipeToRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginBottom="@dimen/_50sdp"
         android:id="@+id/recycler_cart"
@@ -38,7 +44,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         >
     </androidx.recyclerview.widget.RecyclerView>
-
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/ll_continue"

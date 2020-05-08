@@ -63,7 +63,7 @@ public class PayUMoneyActivity extends AppCompatActivity {
 
         utilities = Utilities.getInstance(PayUMoneyActivity.this);
         sessionManager = new SessionManager(PayUMoneyActivity.this);
-       // phone = sessionManager.getUser().getTelephone();
+        phone = sessionManager.getUser().getTelephone();
         firstname = sessionManager.getUser().getFirstname();
         email = sessionManager.getUser().getEmail();
         webView=findViewById(R.id.webview);
@@ -96,7 +96,7 @@ public class PayUMoneyActivity extends AppCompatActivity {
 
             // Payment Identifiers
             paymentPartsObj1.put("field", "CompletionDate");
-            paymentPartsObj1.put("value", "01/01");
+            paymentPartsObj1.put("value", "01/01/2020");
             paymentIdentifiersArr.put(paymentPartsObj1);
 
             paymentPartsObj2.put("field", "TxnId");
@@ -177,7 +177,7 @@ public class PayUMoneyActivity extends AppCompatActivity {
         mapParams.put("key", merchantkey);
         mapParams.put("hash", hash);
         mapParams.put("txnid", txnid);
-        mapParams.put("service_provider", "GtoHome");
+        mapParams.put("service_provider", "payu_paisa");
         mapParams.put("amount", amount);
         mapParams.put("firstname", firstname);
         mapParams.put("email", email);

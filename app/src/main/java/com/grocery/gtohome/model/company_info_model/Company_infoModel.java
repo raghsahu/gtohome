@@ -1,4 +1,4 @@
-package com.grocery.gtohome.fragment.country_model;
+package com.grocery.gtohome.model.company_info_model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -6,18 +6,19 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by Raghvendra Sahu on 03-May-20.
+ * Created by Raghvendra Sahu on 06-May-20.
  */
-public class CountryModel {
+public class Company_infoModel {
+
     @SerializedName("status")
     @Expose
     private Boolean status;
     @SerializedName("msg")
     @Expose
     private String msg;
-    @SerializedName("countries")
+    @SerializedName("informations")
     @Expose
-    private List<CountryData> countries = null;
+    private List<InformationCompany> informations = null;
 
     public Boolean getStatus() {
         return status;
@@ -35,11 +36,11 @@ public class CountryModel {
         this.msg = msg;
     }
 
-    public List<CountryData> getCountries() {
-        return countries;
+    public List<InformationCompany> getInformations() {
+        return informations;
     }
 
-    public void setCountries(List<CountryData> countries) {
-        this.countries = countries;
+    public void setInformations(List<InformationCompany> informations) {
+        this.informations = informations;
     }
 }

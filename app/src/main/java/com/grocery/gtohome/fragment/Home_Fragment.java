@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.ToxicBakery.viewpager.transforms.ZoomOutSlideTransformer;
@@ -65,7 +66,7 @@ import static com.grocery.gtohome.api_client.Base_Url.forgottenapi;
 /**
  * Created by Raghvendra Sahu on 08-Apr-20.
  */
-public class Home_Fragment extends Fragment {
+public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     FragmentHomeBinding binding;
     SliderAdapter_range sliderAdapter_range;
     private int dotsCount;
@@ -85,12 +86,21 @@ public class Home_Fragment extends Fragment {
         return fragmentAction;
     }
 
+//    @Override
+//    public void onViewCreated(View view, Bundle savedInstanceState) {
+//
+//        binding.swipeToRefresh.setColorSchemeResources(R.color.colorPrimaryDark);
+//        binding.swipeToRefresh.setOnRefreshListener(this);
+//    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         View root = binding.getRoot();
         utilities = Utilities.getInstance(getActivity());
         session = new SessionManager(getActivity());
+       // binding.swipeToRefresh.setColorSchemeResources(R.color.colorPrimaryDark);
+       // binding.swipeToRefresh.setOnRefreshListener(this);
 
         try {
             ((MainActivity) getActivity()).Update_header(getString(R.string.home));
@@ -136,6 +146,20 @@ public class Home_Fragment extends Fragment {
             utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
         }
         }
+
+//        binding.swipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//
+//                binding.swipeToRefresh.setRefreshing(false);
+//
+//                if (Connectivity.isConnected(getActivity())){
+//                    getAllCategory();
+//                }else {
+//                    utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+//                }
+//            }
+//        });
 
 
         binding.tvAllGrocery.setOnClickListener(new View.OnClickListener() {
@@ -196,7 +220,7 @@ public class Home_Fragment extends Fragment {
     private void getFeatureProduct() {
         final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        progressDialog.setCancelable(false);
+        progressDialog.setCancelable(true);
         progressDialog.show();
 
         Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
@@ -292,7 +316,9 @@ public class Home_Fragment extends Fragment {
                                 binding.setCategoryAdapter(friendsAdapter);//set databinding adapter
                                 friendsAdapter.notifyDataSetChanged();
 
+                             //   binding.swipeToRefresh.setVisibility(View.VISIBLE);
                             } else {
+                              //  binding.swipeToRefresh.setVisibility(View.GONE);
                                 //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
                             }
 
@@ -449,5 +475,14 @@ public class Home_Fragment extends Fragment {
     }
 
 
+    @Override
+    public void onRefresh() {
+              //  binding.swipeToRefresh.setRefreshing(false);
 
+        if (Connectivity.isConnected(getActivity())){
+            getAllCategory();
+        }else {
+            utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+        }
+    }
 }

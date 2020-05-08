@@ -17,6 +17,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.adapter.CategoryProduct_Adapter;
@@ -42,12 +44,13 @@ import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
 /**
  * Created by Raghvendra Sahu on 10-Apr-20.
  */
-public class All_Product_Fragment extends Fragment {
+public class All_Product_Fragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     FragmentAllProductsBinding binding;
     String SubCategory_Id;
     private Utilities utilities;
     List<FilterBy> filterByModelList = new ArrayList<>();
     ArrayList<String> filterName = new ArrayList<>();
+    String sort, order;
 
     public static All_Product_Fragment newInstance(String SubCategory_Id) {
         All_Product_Fragment fragmentAction = new All_Product_Fragment();
@@ -64,6 +67,8 @@ public class All_Product_Fragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_all_products, container, false);
         View root = binding.getRoot();
         utilities = Utilities.getInstance(getActivity());
+         binding.swipeToRefresh.setColorSchemeResources(R.color.colorPrimaryDark);
+         binding.swipeToRefresh.setOnRefreshListener(this);
         try {
             ((MainActivity) getActivity()).Update_header(getString(R.string.all_products));
         } catch (Exception e) {
@@ -90,8 +95,8 @@ public class All_Product_Fragment extends Fragment {
 
              String  selecteditem =  adapter.getItemAtPosition(i).toString();
                 //or this can be also right: selecteditem = level[i];
-                String  sort=filterByModelList.get(i).getValue();
-                String  order=filterByModelList.get(i).getOrder();
+                sort=filterByModelList.get(i).getValue();
+                order=filterByModelList.get(i).getOrder();
 
                 Log.e("selected_item",""+sort+" "+order);
                 getCategoryWiseProduct(sort,order);
@@ -110,10 +115,10 @@ public class All_Product_Fragment extends Fragment {
 
     @SuppressLint("CheckResult")
     private void getFilterBy() {
-      //  final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
-      //  progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        // progressDialog.setCancelable(false);
-      //  progressDialog.show();
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+         progressDialog.setCancelable(false);
+        progressDialog.show();
 
         Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
 
@@ -126,7 +131,7 @@ public class All_Product_Fragment extends Fragment {
                         //Handle logic
                         try {
                             filterByModelList.clear();
-                          //  progressDialog.dismiss();
+                           progressDialog.dismiss();
                             Log.e("result_category_pro", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
@@ -143,7 +148,7 @@ public class All_Product_Fragment extends Fragment {
                             }
 
                         } catch (Exception e) {
-                         //   progressDialog.dismiss();
+                        progressDialog.dismiss();
                         }
 
                     }
@@ -151,7 +156,7 @@ public class All_Product_Fragment extends Fragment {
                     @Override
                     public void onError(Throwable e) {
                         //Handle error
-                       // progressDialog.dismiss();
+                        progressDialog.dismiss();
                         Log.e("Categ_product_error", e.toString());
 
                         if (e instanceof HttpException) {
@@ -179,7 +184,7 @@ public class All_Product_Fragment extends Fragment {
 
                     @Override
                     public void onComplete() {
-                       // progressDialog.dismiss();
+                       progressDialog.dismiss();
                     }
                 });
     }
@@ -214,7 +219,9 @@ public class All_Product_Fragment extends Fragment {
                                 binding.setFeatureAdapter(friendsAdapter);//set databinding adapter
                                 friendsAdapter.notifyDataSetChanged();
 
+                                binding.swipeToRefresh.setVisibility(View.VISIBLE);
                             } else {
+                                binding.swipeToRefresh.setVisibility(View.GONE);
                                 //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
                                 utilities.dialogOKOnBack(getActivity(), getString(R.string.validation_title),
                                         response.getMsg(), getString(R.string.ok), true);
@@ -264,4 +271,14 @@ public class All_Product_Fragment extends Fragment {
     }
 
 
+    @Override
+    public void onRefresh() {
+        binding.swipeToRefresh.setRefreshing(false);
+
+        if (Connectivity.isConnected(getActivity())){
+            getCategoryWiseProduct(sort,order);
+        }else {
+            utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+        }
+    }
 }

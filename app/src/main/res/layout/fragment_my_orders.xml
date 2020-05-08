@@ -12,6 +12,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeToRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
     <androidx.recyclerview.widget.RecyclerView
         android:adapter="@{myOrderAdapter}"
         android:layout_width="match_parent"
@@ -20,6 +26,8 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         >
     </androidx.recyclerview.widget.RecyclerView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>
 

@@ -21,6 +21,7 @@ import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.activity.Splash_Activity;
 import com.grocery.gtohome.databinding.FragmentHomeBinding;
 import com.grocery.gtohome.databinding.FragmentMyAccountBinding;
+import com.grocery.gtohome.fragment.Information_Fragment;
 import com.grocery.gtohome.fragment.my_orders.OrderHistory_Fragment;
 import com.grocery.gtohome.fragment.my_orders.RecuringPayment_Fragment;
 import com.grocery.gtohome.fragment.my_orders.ReturnProduct_Fragment;
@@ -220,6 +221,72 @@ public class My_Account_Fragment extends Fragment {
                 fragment2.setArguments(bundle);
             }
         });
+
+        binding.llAboutus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Information_Fragment fragment2 = new Information_Fragment();
+                Bundle bundle = new Bundle();
+                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                  bundle.putString("Info","About Us");
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                fragment2.setArguments(bundle);
+            }
+        });
+
+
+        binding.llTerms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Information_Fragment fragment2 = new Information_Fragment();
+                Bundle bundle = new Bundle();
+                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                bundle.putString("Info","Terms");
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                fragment2.setArguments(bundle);
+            }
+        });
+
+        binding.llDeliveryInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Information_Fragment fragment2 = new Information_Fragment();
+                Bundle bundle = new Bundle();
+                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                bundle.putString("Info","DeliveryInfo");
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                fragment2.setArguments(bundle);
+            }
+        });
+
+        binding.llPrivacy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Information_Fragment fragment2 = new Information_Fragment();
+                Bundle bundle = new Bundle();
+                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                bundle.putString("Info","Privacy");
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                fragment2.setArguments(bundle);
+            }
+        });
+
 
         binding.llLogout.setOnClickListener(new View.OnClickListener() {
             @Override

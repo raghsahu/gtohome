@@ -14,12 +14,11 @@
         <LinearLayout
             android:id="@+id/ll_veg"
             android:layout_margin="@dimen/_3sdp"
-            android:background="@drawable/rectangle_bg_border"
+            android:background="@drawable/rect_bg_small_padding"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
-
 
             <ImageView
                 android:id="@+id/iv_image"
@@ -48,7 +47,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/_5sdp"
-                        android:singleLine="true"
+                        android:singleLine="false"
+                        android:maxLines="2"
                         android:text="@{model.name}"
                         android:textAlignment="textStart"
                         android:textStyle="normal">
@@ -71,13 +71,11 @@
                     android:background="@drawable/rectangle_border"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_5sdp"
-                    android:layout_marginRight="@dimen/_5sdp"
                     >
                     <Spinner
                         android:id="@+id/spinner_qty"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/_30sdp"
                         >
                     </Spinner>
 
@@ -90,8 +88,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginLeft="@dimen/_5sdp"
-                    android:layout_marginRight="@dimen/_5sdp"
                     >
 
                     <TextView
@@ -166,7 +162,6 @@
                         android:padding="@dimen/_5sdp"
                         android:singleLine="true"
                         android:text="@string/add"
-                        android:drawablePadding="@dimen/_5sdp"
                         android:drawableStart="@drawable/ic_cart"
                         android:textAlignment="center"
                         android:textStyle="normal">

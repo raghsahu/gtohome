@@ -15,7 +15,7 @@
 
     <LinearLayout
         android:id="@+id/ll_veg"
-        android:layout_margin="@dimen/_5sdp"
+        android:layout_margin="@dimen/_3sdp"
         android:background="@drawable/rectangle_bg_border"
         android:orientation="vertical"
         android:layout_width="match_parent"

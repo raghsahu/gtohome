@@ -1,6 +1,7 @@
 package com.grocery.gtohome.api_client;
 
-import com.grocery.gtohome.fragment.country_model.CountryModel;
+import com.grocery.gtohome.model.company_info_model.Company_infoModel;
+import com.grocery.gtohome.model.country_model.CountryModel;
 import com.grocery.gtohome.fragment.state_model.StateModel;
 import com.grocery.gtohome.model.FilterByModel;
 import com.grocery.gtohome.model.SimpleResultModel;
@@ -10,24 +11,20 @@ import com.grocery.gtohome.model.cart_model.CartModel;
 import com.grocery.gtohome.model.category_model.CategoryModel;
 import com.grocery.gtohome.model.category_product_model.CategoryProductModel;
 import com.grocery.gtohome.model.create_order.CreateOrderModel;
+import com.grocery.gtohome.model.order_history.OrderHistory;
+import com.grocery.gtohome.model.order_history.OrderHistoryDetails;
 import com.grocery.gtohome.model.product_details.Product_Details_Model;
 import com.grocery.gtohome.model.register_model.RegistrationModel;
 import com.grocery.gtohome.model.shipping_method.ShippingMethod;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -135,4 +132,24 @@ public interface Api_Call {
     @FormUrlEncoded
     @POST("index.php?route=restapi/orders/add")
     Observable<CreateOrderModel>  CreateOrder(@FieldMap HashMap<String, String> map);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/orders")
+    Observable<OrderHistory>  OrderHistoryApi(@FieldMap HashMap<String, String> map);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/orders/info")
+    Observable<OrderHistoryDetails> OrderHistoryItemDetails(@FieldMap HashMap<String, String> map);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/customer/edit_account")
+    Observable<SimpleResultModel> UpdateUser(
+            @Field ("firstname")  String first_name,
+            @Field ("lastname")String lastname,
+            @Field ("telephone") String mobile,
+            @Field ("email") String email,
+            @Field ("customer_id")  String customer_id);
+
+    @GET("index.php?route=restapi/information")
+    Observable<Company_infoModel> InfoCompany();
 }

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="model"
+            type="com.grocery.gtohome.model.order_history.OrderDetailsProduct" />
+
+    </data>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            style="@style/text_12_light_black"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_5sdp"
+            android:text="@{model.name}"
+            android:textAlignment="textStart"
+            android:textStyle="normal">
+
+        </TextView>
+
+        <TextView
+            style="@style/text_12_light_black"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_5sdp"
+            android:text="@{model.model}"
+            android:textAlignment="textStart"
+            android:textStyle="normal">
+
+        </TextView>
+
+        <TextView
+            style="@style/text_12_light_black"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_5sdp"
+            android:text="@{model.quantity}"
+            android:textAlignment="textStart"
+            android:textStyle="normal">
+
+        </TextView>
+        <TextView
+            style="@style/text_12_light_black"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_5sdp"
+            android:text="@{model.price}"
+            android:textAlignment="textStart"
+            android:textStyle="normal">
+
+        </TextView>
+        <TextView
+            style="@style/text_12_light_black"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_5sdp"
+            android:text="@{model.total}"
+            android:textAlignment="textStart"
+            android:textStyle="normal">
+
+        </TextView>
+
+        <TextView
+            android:visibility="gone"
+            style="@style/text_12_light_black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_5sdp"
+            android:text="Re-order"
+            android:textAlignment="textStart"
+            android:textStyle="normal">
+
+        </TextView>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/light_white"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp">
+    </View>
+
+</LinearLayout>
+
+
+</layout>
