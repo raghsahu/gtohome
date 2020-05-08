@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -13,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.grocery.gtohome.BR;
@@ -20,6 +24,7 @@ import com.grocery.gtohome.R;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.AddressListBinding;
+import com.grocery.gtohome.fragment.my_account.AddAddressFragment;
 import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.model.address_model.AddressData;
 import com.grocery.gtohome.session.SessionManager;
@@ -92,6 +97,25 @@ public class AddressBook_Adapter extends RecyclerView.Adapter<AddressBook_Adapte
                 }
             }
         });
+
+        holder.itemRowBinding.ivEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String addressId=dataModel.getAddressId();
+                AddAddressFragment fragment2 = new AddAddressFragment();
+                Bundle bundle = new Bundle();
+                 bundle.putSerializable("MyAddressEdit", dataModel);
+                bundle.putString("addressId",addressId);
+                FragmentManager manager = ((FragmentActivity)context).getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                fragment2.setArguments(bundle);
+
+            }
+        });
+
     }
 
     @SuppressLint("CheckResult")

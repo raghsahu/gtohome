@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-
+    <data>
+        <variable
+            name="model"
+            type="com.grocery.gtohome.model.address_model.AddressData" />
+    </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -48,7 +52,8 @@
 
 
                     <EditText
-                        android:id="@+id/inward_time"
+                        android:text="@{model.firstname}"
+                        android:id="@+id/et_firstname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_8sdp"
@@ -75,6 +80,8 @@
 
 
                     <EditText
+                        android:text="@{model.lastname}"
+                        android:id="@+id/et_lastname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_8sdp"
@@ -101,6 +108,8 @@
 
 
                     <EditText
+                        android:text="@{model.company}"
+                        android:id="@+id/et_company"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_8sdp"
@@ -127,6 +136,8 @@
 
 
                     <EditText
+                        android:text="@{model.address1}"
+                        android:id="@+id/et_address_one"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_8sdp"
@@ -153,6 +164,8 @@
 
 
                     <EditText
+                        android:text="@{model.address2}"
+                        android:id="@+id/et_address_two"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_8sdp"
@@ -179,6 +192,8 @@
 
 
                     <EditText
+                        android:text="@{model.city}"
+                        android:id="@+id/et_city"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_8sdp"
@@ -205,6 +220,8 @@
 
 
                     <EditText
+                        android:text="@{model.postcode}"
+                        android:id="@+id/et_postcode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_8sdp"
@@ -237,9 +254,9 @@
                         >
 
                         <Spinner
+                            android:id="@+id/spin_country"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:entries="@array/country"
+                            android:layout_height="@dimen/_35sdp"
                             android:padding="@dimen/_10sdp"
                             >
                         </Spinner>
@@ -269,9 +286,9 @@
                         >
 
                         <Spinner
+                            android:id="@+id/spin_state"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:entries="@array/state"
+                            android:layout_height="@dimen/_35sdp"
                             android:padding="@dimen/_10sdp"
                             >
                         </Spinner>
@@ -302,7 +319,7 @@
                         android:orientation="horizontal">
 
                         <RadioButton
-                            android:id="@+id/radio_male"
+                            android:id="@+id/radio_yes"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
@@ -311,7 +328,7 @@
                         </RadioButton>
 
                         <RadioButton
-                            android:id="@+id/radio_female"
+                            android:id="@+id/radio_no"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"

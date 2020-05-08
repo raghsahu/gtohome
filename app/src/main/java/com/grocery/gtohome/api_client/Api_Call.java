@@ -165,4 +165,20 @@ public interface Api_Call {
     @FormUrlEncoded
     @POST("index.php?route=restapi/customer/delete_address")
     Observable<SimpleResultModel> RemoveAddressApi(@FieldMap HashMap<String, String> map);
+
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/customer/add_edit_address")
+    Observable<SimpleResultModel>  SaveNewAddress(
+            @Field ("customer_id")  String customer_id,
+            @Field ("firstname")  String first_name,
+            @Field ("lastname") String last_name,
+            @Field ("company")  String company_name,
+            @Field ("address_1")  String address1,
+            @Field ("address_2")  String address2,
+            @Field ("city")  String city,
+            @Field ("postcode")  String post_code,
+            @Field ("country_id")  String country_id,
+            @Field ("zone_id")  String zone_id,
+            @Field ("default")  String default_address);
 }

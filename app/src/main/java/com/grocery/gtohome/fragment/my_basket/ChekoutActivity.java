@@ -167,11 +167,17 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                         if (!first_name.isEmpty() && !last_name.isEmpty() && !address1.isEmpty()
                                 && !city.isEmpty() && !post_code.isEmpty()) {
 
-                            if (Connectivity.isConnected(context)) {
-                                SaveAddressApi(first_name, last_name, company_name, address1, address2, city, post_code,false);
-                            } else {
-                                utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+                            if (country_id != null && !country_id.isEmpty() && zone_id != null && !zone_id.isEmpty()){
+                                if (Connectivity.isConnected(context)) {
+                                    SaveAddressApi(first_name, last_name, company_name, address1, address2, city, post_code,false);
+                                } else {
+                                    utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+                                }
+
+                            }else {
+                                utilities.dialogOK(context, getString(R.string.validation_title), "Please select country & state", getString(R.string.ok), false);
                             }
+
 
 
                         } else {
@@ -222,12 +228,17 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
                             if (!first_name.isEmpty() && !last_name.isEmpty() && !address1.isEmpty()
                                     && !city.isEmpty() && !post_code.isEmpty()) {
+                                if (country_delivery_id != null && !country_delivery_id.isEmpty() && zone_delivery_id != null && !zone_delivery_id.isEmpty()){
 
-                                if (Connectivity.isConnected(context)) {
-                                    SaveAddressApi(first_name, last_name, company_name, address1, address2, city, post_code,true);
-                                } else {
-                                    utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+                                    if (Connectivity.isConnected(context)) {
+                                        SaveAddressApi(first_name, last_name, company_name, address1, address2, city, post_code,true);
+                                    } else {
+                                        utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+                                    }
+                                }else {
+                                    utilities.dialogOK(context, getString(R.string.validation_title), "Please select country & state", getString(R.string.ok), false);
                                 }
+
 
 
                             } else {

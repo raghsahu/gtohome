@@ -3,10 +3,12 @@ package com.grocery.gtohome.model.address_model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by Raghvendra Sahu on 03-May-20.
  */
-public class AddressData {
+public class AddressData implements Serializable {
     @SerializedName("address_id")
     @Expose
     private String addressId;
