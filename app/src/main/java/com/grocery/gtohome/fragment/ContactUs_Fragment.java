@@ -58,6 +58,7 @@ public class ContactUs_Fragment extends Fragment implements OnMapReadyCallback ,
         View root = binding.getRoot();
         try {
             ((MainActivity) getActivity()).Update_header(getString(R.string.contact_us));
+            ((MainActivity) getActivity()).CheckBottom(4);
         } catch (Exception e) {
         }
         //onback press call

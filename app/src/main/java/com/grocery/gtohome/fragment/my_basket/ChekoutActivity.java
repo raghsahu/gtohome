@@ -124,6 +124,10 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
             utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
         }
 
+        billing_details=true;
+        binding.llBilingDetails.setVisibility(View.VISIBLE);
+
+        //***********************
         binding.tvBillingContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

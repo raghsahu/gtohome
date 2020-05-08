@@ -38,6 +38,7 @@ public class Search_Fragment extends Fragment {
         View root = binding.getRoot();
         try {
             ((MainActivity) getActivity()).Update_header(getString(R.string.search));
+            ((MainActivity) getActivity()).CheckBottom(1);
         } catch (Exception e) {
         }
         //onback press call

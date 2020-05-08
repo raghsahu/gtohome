@@ -152,4 +152,17 @@ public interface Api_Call {
 
     @GET("index.php?route=restapi/information")
     Observable<Company_infoModel> InfoCompany();
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/cart/clear")
+    Observable<SimpleResultModel>  CartRemoveApi(@FieldMap HashMap<String, String> map);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/customer/address")
+    Observable<AddressModel> GetAddressApi(@FieldMap HashMap<String, String> map);
+
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/customer/delete_address")
+    Observable<SimpleResultModel> RemoveAddressApi(@FieldMap HashMap<String, String> map);
 }

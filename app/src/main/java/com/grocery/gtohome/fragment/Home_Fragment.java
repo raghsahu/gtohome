@@ -104,6 +104,8 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         try {
             ((MainActivity) getActivity()).Update_header(getString(R.string.home));
+            ((MainActivity) getActivity()).CheckBottom(0);
+            ((MainActivity) getActivity()).CountCart("2");
         } catch (Exception e) {
         }
         //onback press call

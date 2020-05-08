@@ -44,6 +44,7 @@ public class My_Account_Fragment extends Fragment {
         sessionManager =new SessionManager(getActivity());
         try {
             ((MainActivity) getActivity()).Update_header(getString(R.string.my_account));
+            ((MainActivity) getActivity()).CheckBottom(3);
         } catch (Exception e) {
         }
         //onback press call

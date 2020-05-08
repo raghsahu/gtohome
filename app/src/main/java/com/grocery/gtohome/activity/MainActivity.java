@@ -28,6 +28,8 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.grocery.gtohome.CustomExpandableListAdapter;
 import com.grocery.gtohome.FragmentNavigationManager;
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case R.id.navigation_home:
                     Fragment fragment_home = new Home_Fragment();
                     FragmentTransaction ft_home = getSupportFragmentManager().beginTransaction();
-                    ft_home.replace(R.id.frame, fragment_home);
+                    ft_home.replace(R.id.frame, fragment_home, "HOME_FRAGMENT");
                     ft_home.addToBackStack(null);
                     ft_home.commit();
 
@@ -345,7 +347,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void Update_header(String title) {
         tv_main_header.setText(title);
     }
+    public void CheckBottom(int pos) {
+        navView.getMenu().getItem(pos).setChecked(true);
+    }
+    public void CountCart(String pos) {
+        BottomNavigationMenuView bottomNavigationMenuView =
+                (BottomNavigationMenuView) navView.getChildAt(0);
+        View v = bottomNavigationMenuView.getChildAt(2);
+        BottomNavigationItemView itemView = (BottomNavigationItemView) v;
 
+        View badge = LayoutInflater.from(this)
+                .inflate(R.layout.cart_count, bottomNavigationMenuView, false);
+        TextView tv = badge.findViewById(R.id.notification_badge);
+        tv.setText("2");
+        itemView.addView(badge);
+
+    }
     //**************************************************************************
     private void selectFirstItemAsDefault() {
         if (mNavigationManager != null) {

@@ -58,6 +58,9 @@ public class AddressData {
     @SerializedName("custom_field")
     @Expose
     private Object customField;
+    @SerializedName("address")
+    @Expose
+    private String address;
 
     public String getAddressId() {
         return addressId;
@@ -65,6 +68,14 @@ public class AddressData {
 
     public void setAddressId(String addressId) {
         this.addressId = addressId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getFirstname() {
