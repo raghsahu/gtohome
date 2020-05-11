@@ -13,6 +13,9 @@ public class SimpleResultModel {
     @SerializedName("msg")
     @Expose
     private String msg;
+    @SerializedName("cartCount")
+    @Expose
+    private Integer cartCount;
     @SerializedName("status")
     @Expose
     private Boolean status;
@@ -35,6 +38,14 @@ public class SimpleResultModel {
 
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    public Integer getCartCount() {
+        return cartCount;
+    }
+
+    public void setCartCount(Integer cartCount) {
+        this.cartCount = cartCount;
     }
 
     public void setMsg(String msg) {

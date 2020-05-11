@@ -36,6 +36,7 @@ import com.grocery.gtohome.FragmentNavigationManager;
 import com.grocery.gtohome.NavigationManager;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.login_signup.Login_Activity;
+import com.grocery.gtohome.adapter.WishList_Adapter;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.Base_Url;
 import com.grocery.gtohome.api_client.RxApiClient;
@@ -45,9 +46,11 @@ import com.grocery.gtohome.fragment.Home_Fragment;
 import com.grocery.gtohome.fragment.my_basket.MyBasket_Fragment;
 import com.grocery.gtohome.fragment.my_account.My_Account_Fragment;
 import com.grocery.gtohome.fragment.Search_Fragment;
+import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.model.category_model.CategoryChild;
 import com.grocery.gtohome.model.category_model.CategoryModel;
 import com.grocery.gtohome.model.category_model.CategoryName;
+import com.grocery.gtohome.model.wishlist_model.Wishlist_Model;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
@@ -58,11 +61,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.adapter.rxjava2.HttpException;
 
+import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
 import static com.grocery.gtohome.api_client.Base_Url.categoriesapi;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -84,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      Map<String, List<CategoryChild>> mExpandableListData;
 
     SessionManager session;
+    private String Customer_Id;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -149,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         session = new SessionManager(MainActivity.this);
+        Customer_Id = session.getUser().getCustomerId();
         //open default fragmentframe
         setHomeFragment();
         navView.getMenu().findItem(R.id.navigation_home).setChecked(true);
@@ -164,10 +171,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         initItems();
 
+        if (Connectivity.isConnected(MainActivity.this)) {
+            getCartCount();
+        } else {
+            //Toast.makeText(getActivity(), "Please check Internet", Toast.LENGTH_SHORT).show();
+            utilities.dialogOK(MainActivity.this, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+        }
+
         LayoutInflater inflater = getLayoutInflater();
         View listHeaderView = inflater.inflate(R.layout.nav_header, null, false);
         mExpandableListView.addHeaderView(listHeaderView);
        // mExpandableListView.addFooterView(listHeaderView);
+
+       // View headerview = mExpandableListView.getHeaderView(0);
+       // TextView nav_tv_name = headerview.findViewById(R.id.tv_nav_name);
+
+
 
         if (session.getCategoryData()!=null && !session.getCategoryData().isEmpty()){
             mExpandableListTitle = new ArrayList<String>();
@@ -210,6 +229,80 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (savedInstanceState == null) {
               //selectFirstItemAsDefault();
         }
+
+    }
+
+    @SuppressLint("CheckResult")
+    private void getCartCount() {
+        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this, R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        // progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
+
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("customer_id", Customer_Id);
+
+        apiInterface.CartCount(map)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<SimpleResultModel>() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onNext(SimpleResultModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_add_cart", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+                                // utilities.dialogOK(getActivity(), "","Success: You have added to your wish list", getString(R.string.ok), false);
+                                CountCart(response.getCartCount().toString());
+                            } else {
+
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("product_details_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
 
     }
 
@@ -359,7 +452,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         View badge = LayoutInflater.from(this)
                 .inflate(R.layout.cart_count, bottomNavigationMenuView, false);
         TextView tv = badge.findViewById(R.id.notification_badge);
-        tv.setText("2");
+        tv.setText(pos);
         itemView.addView(badge);
 
     }

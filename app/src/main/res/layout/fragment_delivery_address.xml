@@ -1091,17 +1091,36 @@
 
                   </LinearLayout>
 
-                  <CheckBox
-                      android:id="@+id/check_terms"
-                      android:layout_marginTop="@dimen/_5sdp"
-                      android:padding="@dimen/_5sdp"
-                      android:layout_width="match_parent"
+                  <LinearLayout
+                      android:orientation="horizontal"
+                      android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      style="@style/text_12_black"
-                      android:text="@string/read_agree_terms_conditions"
+                      android:layout_margin="@dimen/_5sdp"
                       >
 
-                  </CheckBox>
+                      <CheckBox
+                          android:padding="@dimen/_5sdp"
+                          android:id="@+id/check_terms"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          style="@style/text_12_black"
+                          android:text="@string/read_agree_terms_conditions"
+                          >
+
+                      </CheckBox>
+
+                      <TextView
+                          android:visibility="gone"
+                          android:id="@+id/tv_terms"
+                          style="@style/text_12_black"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content">
+
+                      </TextView>
+
+                  </LinearLayout>
+
+
 
                   <TextView
                       android:id="@+id/tv_continue_checkout"
@@ -1125,7 +1144,76 @@
 
           </LinearLayout>
 
+          <LinearLayout
+              android:layout_margin="@dimen/_5sdp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/rectangle_border_primary"
+              android:orientation="vertical">
 
+
+              <TextView
+                  android:id="@+id/tv_confirm_order"
+                  style="@style/text_12_black"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="start"
+                  android:drawableEnd="@drawable/ic_arrow_drop_down_black"
+                  android:padding="@dimen/_10sdp"
+                  android:text="Confirm Order"
+                  android:textAlignment="textStart">
+
+              </TextView>
+
+              <LinearLayout
+                  android:id="@+id/ll_delivery_confirm"
+                  android:visibility="gone"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical">
+
+                  <View
+                      android:background="@color/light_white"
+                      android:layout_width="match_parent"
+                      android:layout_height="@dimen/_1sdp">
+                  </View>
+
+                      <LinearLayout
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="@dimen/_5sdp"
+                          android:orientation="vertical"
+                          android:padding="@dimen/_5sdp">
+
+                          <androidx.recyclerview.widget.RecyclerView
+                              android:scrollbars="none"
+                              app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content">
+
+                          </androidx.recyclerview.widget.RecyclerView>
+
+                      </LinearLayout>
+
+
+                  <TextView
+                      android:id="@+id/tv_confirm_order_delivery"
+                      android:background="@drawable/rectangle_bg_solid"
+                      android:padding="@dimen/_10sdp"
+                      android:layout_marginTop="@dimen/_10sdp"
+                      android:layout_marginBottom="@dimen/_10sdp"
+                      style="@style/text_12_black"
+                      android:text="Confirm Order"
+                      android:layout_width="@dimen/_150sdp"
+                      android:layout_gravity="end"
+                      android:gravity="center"
+                      android:layout_height="wrap_content"
+                      >
+                  </TextView>
+
+              </LinearLayout>
+
+          </LinearLayout>
 
 
 

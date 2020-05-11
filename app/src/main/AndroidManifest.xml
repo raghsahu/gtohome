@@ -26,6 +26,7 @@
         tools:targetApi="q">
         <activity android:name=".activity.PayUMoneyActivity"></activity>
         <activity android:name=".fragment.my_basket.ChekoutActivity"></activity>
+        <activity android:name=".fragment.Information_Fragment"></activity>
         <activity android:name=".activity.OrderSuccess_Activity" />
         <activity android:name=".activity.PaymentMethod_Activity" />
         <activity android:name=".activity.login_signup.Forgot_Pw_Activity" />

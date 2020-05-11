@@ -6,11 +6,18 @@
             type="com.grocery.gtohome.adapter.Shopping_List_Adapter" />
 
     </data>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
     <TextView
         android:layout_alignParentEnd="true"
@@ -27,6 +34,7 @@
     </TextView>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_marginBottom="@dimen/_50sdp"
         android:layout_below="@+id/tv_clear_cart"
         android:id="@+id/swipeToRefresh"
         android:layout_width="match_parent"
@@ -36,7 +44,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginBottom="@dimen/_50sdp"
         android:id="@+id/recycler_cart"
-        android:layout_below="@+id/tv_clear_cart"
         android:adapter="@{cartlistAdapter}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -89,7 +96,9 @@
 
     </LinearLayout>
 
+    </RelativeLayout>
 
-</RelativeLayout>
+
+</LinearLayout>
 
 </layout>

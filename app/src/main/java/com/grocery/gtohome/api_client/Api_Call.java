@@ -16,6 +16,7 @@ import com.grocery.gtohome.model.order_history.OrderHistoryDetails;
 import com.grocery.gtohome.model.product_details.Product_Details_Model;
 import com.grocery.gtohome.model.register_model.RegistrationModel;
 import com.grocery.gtohome.model.shipping_method.ShippingMethod;
+import com.grocery.gtohome.model.wishlist_model.Wishlist_Model;
 
 import java.util.HashMap;
 
@@ -170,15 +171,29 @@ public interface Api_Call {
     @FormUrlEncoded
     @POST("index.php?route=restapi/customer/add_edit_address")
     Observable<SimpleResultModel>  SaveNewAddress(
-            @Field ("customer_id")  String customer_id,
-            @Field ("firstname")  String first_name,
-            @Field ("lastname") String last_name,
-            @Field ("company")  String company_name,
-            @Field ("address_1")  String address1,
-            @Field ("address_2")  String address2,
-            @Field ("city")  String city,
-            @Field ("postcode")  String post_code,
-            @Field ("country_id")  String country_id,
-            @Field ("zone_id")  String zone_id,
-            @Field ("default")  String default_address);
+            @Field("address_id")  String address_id,
+            @Field("customer_id") String customer_id,
+            @Field("firstname") String first_name,
+            @Field("lastname") String last_name,
+            @Field("company") String company_name,
+            @Field("address_1") String address1,
+            @Field("address_2") String address2,
+            @Field("city") String city,
+            @Field("postcode") String post_code,
+            @Field("country_id") String country_id,
+            @Field("zone_id") String zone_id,
+            @Field("default") String default_address);
+
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/wishlist/add_remove")
+    Observable<SimpleResultModel> AddWishlist(@FieldMap HashMap<String, String> map);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/wishlist")
+    Observable<Wishlist_Model> GetWishlist(@FieldMap HashMap<String, String> map);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/cart/count")
+    Observable<SimpleResultModel>  CartCount(@FieldMap HashMap<String, String> map);
 }

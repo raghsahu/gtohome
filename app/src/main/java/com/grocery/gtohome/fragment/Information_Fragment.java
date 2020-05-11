@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
@@ -37,54 +38,42 @@ import retrofit2.adapter.rxjava2.HttpException;
 /**
  * Created by Raghvendra Sahu on 06-May-20.
  */
-public class Information_Fragment extends Fragment {
+public class Information_Fragment extends AppCompatActivity {
     FragmentInfoBinding binding;
     private Utilities utilities;
     private String Info;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_info, container, false);
-        View root = binding.getRoot();
-        utilities = Utilities.getInstance(getActivity());
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = DataBindingUtil.setContentView(this, R.layout.fragment_info);
+        utilities = Utilities.getInstance(this);
 
-        //onback press call
-        View view = getActivity().findViewById(R.id.img_back);
-        if (view instanceof ImageView) {
-            ImageView imageView = (ImageView) view;
-            //Do your stuff
-            imageView.setVisibility(View.VISIBLE);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((MainActivity) getActivity()).onBackPressed();
-                }
-            });
-        }
-
-        if (getArguments() != null) {
-            Info = getArguments().getString("Info");
-            try {
-                ((MainActivity) getActivity()).Update_header(Info);
-            } catch (Exception e) {
+        binding.toolbar.imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
+        });
+
+        if (getIntent() != null) {
+            Info = getIntent().getStringExtra("Info");
+            binding.toolbar.tvToolbar.setText(Info);
         }
 
-        if (Connectivity.isConnected(getActivity())) {
+        if (Connectivity.isConnected(Information_Fragment.this)) {
             CallInfoApi(Info);
         } else {
             // Toast.makeText(context, getString(R.string.please_check_internet), Toast.LENGTH_SHORT).show();
-            utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+            utilities.dialogOK(Information_Fragment.this, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
         }
 
-
-        return root;
     }
 
 
     @SuppressLint("CheckResult")
     private void CallInfoApi(String info) {
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+        final ProgressDialog progressDialog = new ProgressDialog(Information_Fragment.this, R.style.MyGravity);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         progressDialog.show();
 
@@ -129,7 +118,7 @@ public class Information_Fragment extends Fragment {
                                 }
 
                             } else {
-                                Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Information_Fragment.this, response.getMsg(), Toast.LENGTH_SHORT).show();
                             }
 
                         } catch (Exception e) {
@@ -172,5 +161,10 @@ public class Information_Fragment extends Fragment {
                         progressDialog.dismiss();
                     }
                 });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

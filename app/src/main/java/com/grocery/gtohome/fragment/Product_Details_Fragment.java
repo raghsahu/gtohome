@@ -145,8 +145,99 @@ public class Product_Details_Fragment extends Fragment {
             }
         });
 
+        //*****************************************************************
+        //click add cart
+        binding.llWishlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+                if (Connectivity.isConnected(getActivity())) {
+                    AddWishlist(Product_Id, Customer_Id);
+                } else {
+                    utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+                }
+
+            }
+        });
+
 
         return root;
+
+    }
+
+    @SuppressLint("CheckResult")
+    private void AddWishlist(String product_id, String customer_id) {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        // progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
+
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("product_id", product_id);
+        map.put("customer_id", customer_id);
+        map.put("remove", "1");
+
+        apiInterface.AddWishlist(map)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<SimpleResultModel>() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onNext(SimpleResultModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_add_cart", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+                                utilities.dialogOK(getActivity(), "","Success: You have added to your wish list", getString(R.string.ok), false);
+
+                            } else {
+                                Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("product_details_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
 
     }
 

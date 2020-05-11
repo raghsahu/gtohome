@@ -200,7 +200,8 @@ public class AddAddressFragment extends Fragment {
 
         Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
 
-        apiInterface.SaveNewAddress(Customer_Id, first_name, last_name, company_name, address1, address2, city, post_code, country_id, zone_id, default_address)
+        apiInterface.SaveNewAddress(address_id,Customer_Id, first_name, last_name, company_name, address1, address2, city,
+                post_code, country_id, zone_id, default_address)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<SimpleResultModel>() {
@@ -213,8 +214,7 @@ public class AddAddressFragment extends Fragment {
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
 
-                                utilities.dialogOKOnBack(context, getString(R.string.validation_title),
-                                        response.getMsg(), getString(R.string.ok), true);
+                                utilities.dialogOKOnBack(context, getString(R.string.validation_title), response.getMsg(), getString(R.string.ok), true);
 
                             } else {
                                 Toast.makeText(context, response.getMsg(), Toast.LENGTH_SHORT).show();

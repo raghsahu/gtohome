@@ -40,12 +40,12 @@
 
     <TextView
         android:layout_gravity="center"
-        android:id="@+id/website"
+        android:id="@+id/tv_nav_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="left|start"
         android:padding="@dimen/layout_padding_default"
-        android:text="Rrrr ss"
+        android:text=" "
         android:textColor="@color/white"
         android:textSize="@dimen/header_font_size"/>
 

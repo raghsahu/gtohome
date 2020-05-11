@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -21,11 +22,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.grocery.gtohome.R;
+import com.grocery.gtohome.activity.PaymentMethod_Activity;
 import com.grocery.gtohome.adapter.ShippingMethodAdapter;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.Base_Url;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.FragmentDeliveryAddressBinding;
+import com.grocery.gtohome.fragment.Information_Fragment;
 import com.grocery.gtohome.model.country_model.CountryData;
 import com.grocery.gtohome.model.country_model.CountryModel;
 import com.grocery.gtohome.fragment.state_model.StateModel;
@@ -82,9 +85,10 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
     private String SubTitle="",SubCode="";
     String payment_code="", payment_title="";
 
-    boolean billing_details=false, deliver_details=false,deliver_method=false,payment_method=false;
+    boolean billing_details=false, deliver_details=false,deliver_method=false,payment_method=false,confirm_order=false;
+    String Et_Comment_Order,Et_Comment_Deliver;
 
-        @Override
+    @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             //setContentView(R.layout.activity_pyment_method);
@@ -100,6 +104,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
             binding.tvDeliveryDetails.setEnabled(false);
             binding.tvDeliveryMethod.setEnabled(false);
             binding.tvPaymentMethod.setEnabled(false);
+            binding.tvConfirmOrder.setEnabled(false);
 
         binding.toolbar.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +133,15 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         binding.llBilingDetails.setVisibility(View.VISIBLE);
 
         //***********************
+            binding.tvTerms.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(ChekoutActivity.this, Information_Fragment.class);
+                    intent.putExtra("Info","Terms");
+                    startActivity(intent);
+                }
+            });
+
         binding.tvBillingContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -254,12 +268,60 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                 @Override
                 public void onClick(View v) {
 
-                    binding.llDeliveryMethod.setVisibility(View.GONE);
-                    deliver_method=false;
+                    if (SubTitle.isEmpty() && SubTitle.equals("")) {
+                        utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
+                                "Please select shipping method", getString(R.string.ok), false);
+                    } else {
 
-                    binding.tvPaymentMethod.setEnabled(true);
-                    binding.llPaymentMethod.setVisibility(View.VISIBLE);
-                    payment_method=true;
+                        Et_Comment_Deliver=binding.etComments.getText().toString();
+
+
+                        binding.llDeliveryMethod.setVisibility(View.GONE);
+                        deliver_method=false;
+
+                        binding.tvPaymentMethod.setEnabled(true);
+                        binding.llPaymentMethod.setVisibility(View.VISIBLE);
+                        payment_method=true;
+
+                    }
+
+                }
+            });
+
+            //***************************************************
+            binding.tvContinueCheckout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (payment_code.isEmpty() && payment_code.equals("")) {
+                        utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
+                                "Please select payment method", getString(R.string.ok), false);
+                    } else {
+                        if (!binding.checkTerms.isChecked()) {
+                            utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
+                                    "Please accept Terms & Conditions", getString(R.string.ok), false);
+                        } else {
+                           Et_Comment_Order=binding.etCommentsOrder.getText().toString();
+
+
+                            binding.llPaymentMethod.setVisibility(View.GONE);
+                            payment_method=false;
+
+                            binding.tvConfirmOrder.setEnabled(true);
+                            binding.llDeliveryConfirm.setVisibility(View.VISIBLE);
+                            confirm_order=true;
+
+
+
+                            if (Connectivity.isConnected(ChekoutActivity.this)){
+                                //CreateOrder(Customer_Id,Et_Comment,AddressId,payment_code,payment_title,SubCode,SubTitle,TotalPrice);
+                            }else {
+                                utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title), getString(R.string.please_check_internet),
+                                        getString(R.string.ok), false);
+                            }
+                        }
+                    }
+
 
                 }
             });
@@ -404,6 +466,16 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                     billing_details=false;
                 }
 
+                deliver_details=false;
+                deliver_method=false;
+                payment_method=false;
+                confirm_order=false;
+
+                binding.llDeliveryDetails.setVisibility(View.GONE);
+                binding.llDeliveryMethod.setVisibility(View.GONE);
+                binding.llPaymentMethod.setVisibility(View.GONE);
+                binding.llDeliveryConfirm.setVisibility(View.GONE);
+
             }
         });
         //*******************************************
@@ -418,6 +490,16 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                     binding.llDeliveryDetails.setVisibility(View.GONE);
                     deliver_details=false;
                 }
+
+                billing_details=false;
+                deliver_method=false;
+                payment_method=false;
+                confirm_order=false;
+
+                binding.llBilingDetails.setVisibility(View.GONE);
+                binding.llDeliveryMethod.setVisibility(View.GONE);
+                binding.llPaymentMethod.setVisibility(View.GONE);
+                binding.llDeliveryConfirm.setVisibility(View.GONE);
 
             }
         });
@@ -435,6 +517,16 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                     deliver_method = false;
                 }
 
+                billing_details=false;
+                deliver_details=false;
+                payment_method=false;
+                confirm_order=false;
+
+                binding.llBilingDetails.setVisibility(View.GONE);
+                binding.llDeliveryDetails.setVisibility(View.GONE);
+                binding.llPaymentMethod.setVisibility(View.GONE);
+                binding.llDeliveryConfirm.setVisibility(View.GONE);
+
             }
         });
 
@@ -451,9 +543,45 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                     payment_method = false;
                 }
 
+                billing_details=false;
+                deliver_details=false;
+                deliver_method=false;
+                confirm_order=false;
+
+                binding.llBilingDetails.setVisibility(View.GONE);
+                binding.llDeliveryDetails.setVisibility(View.GONE);
+                binding.llDeliveryMethod.setVisibility(View.GONE);
+                binding.llDeliveryConfirm.setVisibility(View.GONE);
+
+
             }
         });
+        //*********************tv confirm order expand**********************
+        binding.tvConfirmOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                if (!confirm_order) {
+                    binding.llDeliveryConfirm.setVisibility(View.VISIBLE);
+                    confirm_order = true;
+                } else {
+                    binding.llDeliveryConfirm.setVisibility(View.GONE);
+                    confirm_order = false;
+                }
+
+                billing_details=false;
+                deliver_details=false;
+                deliver_method=false;
+                payment_method=false;
+
+                binding.llBilingDetails.setVisibility(View.GONE);
+                binding.llDeliveryDetails.setVisibility(View.GONE);
+                binding.llDeliveryMethod.setVisibility(View.GONE);
+                binding.llPaymentMethod.setVisibility(View.GONE);
+
+
+            }
+        });
 
         //******************************************
             binding.rgPaymentMethod.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

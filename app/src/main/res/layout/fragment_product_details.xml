@@ -183,6 +183,7 @@
                 </TextView>
 
                 <LinearLayout
+                    android:id="@+id/ll_wishlist"
                     android:layout_margin="@dimen/_5sdp"
                     android:background="@drawable/rectangle_bg_solid"
                     android:layout_gravity="center"

@@ -226,16 +226,20 @@ public class My_Account_Fragment extends Fragment {
         binding.llAboutus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Information_Fragment fragment2 = new Information_Fragment();
-                Bundle bundle = new Bundle();
-                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
-                  bundle.putString("Info","About Us");
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = manager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame, fragment2);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                fragment2.setArguments(bundle);
+                Intent intent=new Intent(getActivity(), Information_Fragment.class);
+                intent.putExtra("Info","About Us");
+                startActivity(intent);
+
+//                Information_Fragment fragment2 = new Information_Fragment();
+//                Bundle bundle = new Bundle();
+//                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+//                  bundle.putString("Info","About Us");
+//                FragmentManager manager = getActivity().getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+//                fragmentTransaction.replace(R.id.frame, fragment2);
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.commit();
+//                fragment2.setArguments(bundle);
             }
         });
 
@@ -243,48 +247,60 @@ public class My_Account_Fragment extends Fragment {
         binding.llTerms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Information_Fragment fragment2 = new Information_Fragment();
-                Bundle bundle = new Bundle();
-                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
-                bundle.putString("Info","Terms");
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = manager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame, fragment2);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                fragment2.setArguments(bundle);
+                Intent intent=new Intent(getActivity(), Information_Fragment.class);
+                intent.putExtra("Info","Terms");
+                startActivity(intent);
+
+//                Information_Fragment fragment2 = new Information_Fragment();
+//                Bundle bundle = new Bundle();
+//                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+//                bundle.putString("Info","Terms");
+//                FragmentManager manager = getActivity().getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+//                fragmentTransaction.replace(R.id.frame, fragment2);
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.commit();
+//                fragment2.setArguments(bundle);
             }
         });
 
         binding.llDeliveryInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Information_Fragment fragment2 = new Information_Fragment();
-                Bundle bundle = new Bundle();
-                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
-                bundle.putString("Info","DeliveryInfo");
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = manager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame, fragment2);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                fragment2.setArguments(bundle);
+                Intent intent=new Intent(getActivity(), Information_Fragment.class);
+                intent.putExtra("Info","DeliveryInfo");
+                startActivity(intent);
+
+//                Information_Fragment fragment2 = new Information_Fragment();
+//                Bundle bundle = new Bundle();
+//                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+//                bundle.putString("Info","DeliveryInfo");
+//                FragmentManager manager = getActivity().getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+//                fragmentTransaction.replace(R.id.frame, fragment2);
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.commit();
+//                fragment2.setArguments(bundle);
             }
         });
 
         binding.llPrivacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Information_Fragment fragment2 = new Information_Fragment();
-                Bundle bundle = new Bundle();
-                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
-                bundle.putString("Info","Privacy");
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = manager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame, fragment2);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                fragment2.setArguments(bundle);
+                Intent intent=new Intent(getActivity(), Information_Fragment.class);
+                intent.putExtra("Info","Privacy");
+                startActivity(intent);
+
+//                Information_Fragment fragment2 = new Information_Fragment();
+//                Bundle bundle = new Bundle();
+//                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+//                bundle.putString("Info","Privacy");
+//                FragmentManager manager = getActivity().getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+//                fragmentTransaction.replace(R.id.frame, fragment2);
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.commit();
+//                fragment2.setArguments(bundle);
             }
         });
 
