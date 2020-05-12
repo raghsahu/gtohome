@@ -39,6 +39,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.adapter.rxjava2.HttpException;
 
+import static com.grocery.gtohome.activity.MainActivity.tv_budge;
 import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
 
 /**
@@ -168,7 +169,8 @@ public class MyBasket_Fragment extends Fragment implements SwipeRefreshLayout.On
                             Log.e("result_category_pro", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
-
+                              //  ((MainActivity) getActivity()).CountCart("0");
+                                tv_budge.setText("0");
                                 binding.setCartlistAdapter(null);//set databinding adapter
                                 friendsAdapter.notifyDataSetChanged();
 
@@ -248,6 +250,8 @@ public class MyBasket_Fragment extends Fragment implements SwipeRefreshLayout.On
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
                                 if (total){
+                                  //  ((MainActivity) getActivity()).CountCart(response.getCartCount().toString());
+                                    tv_budge.setText(response.getCartCount().toString());
                                     String total_amount = "",sub_total="";
                                     for (int j=0; j<response.getProducts().size(); j++){
                                         if (!response.getProducts().get(j).getStock()){
@@ -288,10 +292,10 @@ public class MyBasket_Fragment extends Fragment implements SwipeRefreshLayout.On
 
                                 binding.swipeToRefresh.setVisibility(View.VISIBLE);
                             } else {
+                                tv_budge.setText("0");
                                 binding.swipeToRefresh.setVisibility(View.GONE);
                                 //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
-                                utilities.dialogOK(getActivity(), getString(R.string.validation_title),
-                                        response.getMsg(), getString(R.string.ok), false);
+                                utilities.dialogOK(getActivity(), getString(R.string.validation_title), response.getMsg(), getString(R.string.ok), false);
                             }
 
                         } catch (Exception e) {

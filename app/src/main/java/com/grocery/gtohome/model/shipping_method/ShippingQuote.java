@@ -11,6 +11,17 @@ public class ShippingQuote {
     @SerializedName("flat")
     @Expose
     private ShippingQuoteFlat flat;
+    @SerializedName("free")
+    @Expose
+    private ShippingQuoteFlat free;
+
+    public ShippingQuoteFlat getFree() {
+        return free;
+    }
+
+    public void setFree(ShippingQuoteFlat free) {
+        this.free = free;
+    }
 
     public ShippingQuoteFlat getFlat() {
         return flat;

@@ -46,6 +46,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.adapter.rxjava2.HttpException;
 
+import static com.grocery.gtohome.activity.MainActivity.tv_budge;
 import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
 
 /**
@@ -270,6 +271,8 @@ public class Product_Details_Fragment extends Fragment {
                             Log.e("result_add_cart", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
+                                tv_budge.setText(response.getCartCount().toString());
+                                //((MainActivity) getActivity()).CountCart(response.getCartCount().toString());
                                 utilities.dialogOK(getActivity(), "", response.getMsg(), getString(R.string.ok), false);
 
                             } else {

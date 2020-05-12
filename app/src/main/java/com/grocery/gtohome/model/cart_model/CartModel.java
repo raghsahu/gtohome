@@ -15,6 +15,9 @@ public class CartModel {
     @SerializedName("msg")
     @Expose
     private String msg;
+    @SerializedName("cartCount")
+    @Expose
+    private Integer cartCount;
     @SerializedName("products")
     @Expose
     private List<CartProduct> products = null;
@@ -39,6 +42,14 @@ public class CartModel {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public Integer getCartCount() {
+        return cartCount;
+    }
+
+    public void setCartCount(Integer cartCount) {
+        this.cartCount = cartCount;
     }
 
     public List<CartProduct> getProducts() {

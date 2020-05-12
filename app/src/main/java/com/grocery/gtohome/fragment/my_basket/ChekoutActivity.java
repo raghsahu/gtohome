@@ -22,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.grocery.gtohome.R;
+import com.grocery.gtohome.activity.OrderSuccess_Activity;
+import com.grocery.gtohome.activity.PayUMoneyActivity;
 import com.grocery.gtohome.activity.PaymentMethod_Activity;
 import com.grocery.gtohome.adapter.ShippingMethodAdapter;
 import com.grocery.gtohome.api_client.Api_Call;
@@ -36,14 +38,19 @@ import com.grocery.gtohome.fragment.state_model.StateZoneData;
 import com.grocery.gtohome.model.address_model.AddressData;
 import com.grocery.gtohome.model.address_model.AddressModel;
 import com.grocery.gtohome.model.address_model.SaveAddressModel;
+import com.grocery.gtohome.model.create_order.CreateOrderModel;
 import com.grocery.gtohome.model.shipping_method.ShippingMethod;
+import com.grocery.gtohome.model.slot_model.Slot_Model;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -84,9 +91,12 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
     private String TotalPrice,amount ="";
     private String SubTitle="",SubCode="";
     String payment_code="", payment_title="";
+    boolean biling_delivery_charge=false;
 
     boolean billing_details=false, deliver_details=false,deliver_method=false,payment_method=false,confirm_order=false;
     String Et_Comment_Order,Et_Comment_Deliver;
+    String timeslot_name;
+    private String Delivery_Date;
 
     @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +133,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         if (Connectivity.isConnected(context)) {
             getExistingAddress(Customer_Id);
             getCountryName();
-            getShippingMethod();
+
         } else {
             //Toast.makeText(getActivity(), "Please check Internet", Toast.LENGTH_SHORT).show();
             utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
@@ -145,7 +155,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         binding.tvBillingContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                biling_delivery_charge=false;
                 if (!binding.radioExistAddress.isChecked() && !binding.radioOtherAddress.isChecked()) {
                     utilities.dialogOK(context, getString(R.string.validation_title), "Please select shipping address", getString(R.string.ok), false);
                 } else {
@@ -219,6 +229,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 //                            intent.putExtra("ZoneId",zone_id);
 //                            intent.putExtra("AddressId",address_id);
 //                            startActivity(intent);
+                                getShippingMethod();
 
                                 binding.llDeliveryDetails.setVisibility(View.GONE);
                                 deliver_details=false;
@@ -245,6 +256,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                                 if (country_delivery_id != null && !country_delivery_id.isEmpty() && zone_delivery_id != null && !zone_delivery_id.isEmpty()){
 
                                     if (Connectivity.isConnected(context)) {
+                                        biling_delivery_charge=true;
                                         SaveAddressApi(first_name, last_name, company_name, address1, address2, city, post_code,true);
                                     } else {
                                         utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
@@ -271,7 +283,10 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                     if (SubTitle.isEmpty() && SubTitle.equals("")) {
                         utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
                                 "Please select shipping method", getString(R.string.ok), false);
-                    } else {
+                    } else   if (timeslot_name.isEmpty() && timeslot_name.equals("")) {
+                        utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
+                                "Please select timeslot", getString(R.string.ok), false);
+                    }else {
 
                         Et_Comment_Deliver=binding.etComments.getText().toString();
 
@@ -304,17 +319,15 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                            Et_Comment_Order=binding.etCommentsOrder.getText().toString();
 
 
-                            binding.llPaymentMethod.setVisibility(View.GONE);
-                            payment_method=false;
+                           // binding.llPaymentMethod.setVisibility(View.GONE);
+                           // payment_method=false;
 
-                            binding.tvConfirmOrder.setEnabled(true);
-                            binding.llDeliveryConfirm.setVisibility(View.VISIBLE);
-                            confirm_order=true;
-
-
+                          //  binding.tvConfirmOrder.setEnabled(true);
+                          //  binding.llDeliveryConfirm.setVisibility(View.VISIBLE);
+                          //  confirm_order=true;
 
                             if (Connectivity.isConnected(ChekoutActivity.this)){
-                                //CreateOrder(Customer_Id,Et_Comment,AddressId,payment_code,payment_title,SubCode,SubTitle,TotalPrice);
+                                CreateOrder(Customer_Id,Et_Comment_Order,address_id,payment_code,payment_title,SubCode,SubTitle,TotalPrice);
                             }else {
                                 utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title), getString(R.string.please_check_internet),
                                         getString(R.string.ok), false);
@@ -608,6 +621,122 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                 }
             });
 
+
+        //*******************bradio button time slot***********************
+        binding.radioGroupSlot.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.radio_slot_1:
+                        timeslot_name="1";
+                        break;
+                    case R.id.radio_slot_2:
+                        timeslot_name="2";
+                        break;
+                }
+            }
+        });
+
+    }
+
+    @SuppressLint("CheckResult")
+    private void CreateOrder(String customer_id, String et_comment, String addressId, final String payment_code, String payment_title,
+                             String subCode, String subTitle, String totalPrice) {
+        final ProgressDialog progressDialog = new ProgressDialog(ChekoutActivity.this, R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        // progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
+
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("customer_id", customer_id);
+        map.put("comment", et_comment);
+        map.put("address_id", addressId);
+        map.put("payment_method[code]", payment_code);
+        map.put("payment_method[title]", payment_title);
+        map.put("shipping_method[code]", subCode);
+        map.put("shipping_method[title]", subTitle);
+        map.put("subtotal", totalPrice);
+        map.put("deliverydate", Delivery_Date);
+        map.put("extrafield", "");
+        map.put("timeslotid", timeslot_name);
+
+        apiInterface.CreateOrder(map)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<CreateOrderModel>() {
+                    @Override
+                    public void onNext(CreateOrderModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_order", "" + response.getStatus());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+                                if (payment_code.equals("cod")){
+                                    Intent intent = new Intent(ChekoutActivity.this, OrderSuccess_Activity.class);
+                                    intent.putExtra("OrderId",response.getOrderId().toString());
+                                    startActivity(intent);
+                                }else {
+
+                                    Intent intent = new Intent(ChekoutActivity.this, PayUMoneyActivity.class);
+                                    //intent.putExtra("OrderId",response.getOrderId().toString());
+                                    intent.putExtra("amount",amount);
+                                    startActivity(intent);
+
+                                    // CallPaymentgateway();
+                                }
+
+
+                            } else {
+                                //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                                utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
+                                        "Order not submit, error", getString(R.string.ok), true);
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("Categ_product_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
+
+
     }
 
     private void Select_date() {
@@ -624,6 +753,14 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                 String myFormat = "dd-MM-yyyy"; //Change as you need
                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
                 binding.tvDeliveryDate.setText(sdf.format(myCalendar.getTime()));
+                Delivery_Date=sdf.format(myCalendar.getTime());
+
+                if (Connectivity.isConnected(ChekoutActivity.this)){
+                    GetSlotBooking(sdf.format(myCalendar.getTime()));
+                }else {
+                    utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+                }
+
 
                 mDay[0] = selectedday;
                 mMonth[0] = selectedmonth;
@@ -637,13 +774,99 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
     }
 
     @SuppressLint("CheckResult")
+    private void GetSlotBooking(String date) {
+        final ProgressDialog progressDialog = new ProgressDialog(context, R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        // progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
+
+        apiInterface.GetSlot(date)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<Slot_Model>() {
+                    @Override
+                    public void onNext(Slot_Model response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_adderss", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+
+                                //set time slot in radio button
+                                binding.radioGroupSlot.setVisibility(View.VISIBLE);
+                                if (response.getModulePincodedays().getPincodedaysTimeslot()==0){
+                                    binding.radioSlot1.setText(Html.fromHtml(response.getModulePincodedays().getTimeslots().get_0().get1()+" "+
+                                            response.getModulePincodedays().getIndividualslots().get1()));
+                                    binding.radioSlot2.setText(Html.fromHtml(response.getModulePincodedays().getTimeslots().get_0().get2()+" "+
+                                            response.getModulePincodedays().getIndividualslots().get2()));
+
+                                }//else if ()
+
+
+                            } else {
+                                //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                                utilities.dialogOK(context, getString(R.string.validation_title),
+                                        response.getMsg(), getString(R.string.ok), false);
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("Categ_product_error", e.toString());
+                        utilities.dialogOK(context, getString(R.string.validation_title),
+                                "We are sorry but we don't delivery on this date at your pincode", getString(R.string.ok), false);
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
+
+    }
+
+    @SuppressLint("CheckResult")
     private void getShippingMethod() {
         final ProgressDialog progressDialog = new ProgressDialog(context, R.style.MyGravity);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         // progressDialog.setCancelable(false);
         progressDialog.show();
 
-        amount=TotalPrice.substring(1);
+       // amount=TotalPrice.substring(1);
+        amount = TotalPrice.replace("₹", "").replace(",", "");
+
 
         Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
 
@@ -737,6 +960,10 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                                 if (delivery_continue){
                                     OpenDialogDelivery(context, getString(R.string.validation_title), response.getAddressId(),
                                             "Save Delivery Address Successful", getString(R.string.ok));
+                                    if (biling_delivery_charge){
+                                        getShippingMethod();
+                                    }
+
                                 }else {
                                     OpenDialog(context, getString(R.string.validation_title), response.getAddressId(),
                                             "Save Delivery Address Successful", getString(R.string.ok));

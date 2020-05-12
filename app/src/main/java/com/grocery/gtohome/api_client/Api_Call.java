@@ -16,6 +16,7 @@ import com.grocery.gtohome.model.order_history.OrderHistoryDetails;
 import com.grocery.gtohome.model.product_details.Product_Details_Model;
 import com.grocery.gtohome.model.register_model.RegistrationModel;
 import com.grocery.gtohome.model.shipping_method.ShippingMethod;
+import com.grocery.gtohome.model.slot_model.Slot_Model;
 import com.grocery.gtohome.model.wishlist_model.Wishlist_Model;
 
 import java.util.HashMap;
@@ -196,4 +197,7 @@ public interface Api_Call {
     @FormUrlEncoded
     @POST("index.php?route=restapi/cart/count")
     Observable<SimpleResultModel>  CartCount(@FieldMap HashMap<String, String> map);
+
+    @GET("index.php?route=restapi/deliverydate")
+    Observable<Slot_Model> GetSlot(@Query("deliverydate") String date);
 }

@@ -55,8 +55,14 @@ public class ShippingMethodAdapter extends RecyclerView.Adapter<ShippingMethodAd
         holder.itemRowBinding.radioShipingCharge.setChecked(position == lastCheckedPosition);
 
         holder.itemRowBinding.tvShippingTitle.setText(dataModel.getTitle());
-        holder.itemRowBinding.radioShipingCharge.setText(dataModel.getQuote().getFlat().getTitle()+" "+
-                dataModel.getQuote().getFlat().getText());
+        if (dataModel.getCode().equalsIgnoreCase("flat")){
+            holder.itemRowBinding.radioShipingCharge.setText(dataModel.getQuote().getFlat().getTitle()+" "+
+                    dataModel.getQuote().getFlat().getText());
+        }else if (dataModel.getCode().equalsIgnoreCase("free")){
+            holder.itemRowBinding.radioShipingCharge.setText(dataModel.getQuote().getFree().getTitle()+" "+
+                    dataModel.getQuote().getFree().getText());
+        }
+
 
         holder.itemRowBinding.radioShipingCharge.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,8 +70,15 @@ public class ShippingMethodAdapter extends RecyclerView.Adapter<ShippingMethodAd
                 lastCheckedPosition = holder.getAdapterPosition();
               //  MainTitle=dataModel.getTitle();
               //  MainCode=dataModel.getCode();
-                subTitle=dataModel.getQuote().getFlat().getTitle();
-                subCode=dataModel.getQuote().getFlat().getCode();
+
+                if (dataModel.getCode().equalsIgnoreCase("flat")){
+                    subTitle=dataModel.getQuote().getFlat().getTitle();
+                    subCode=dataModel.getQuote().getFlat().getCode();
+                }else if (dataModel.getCode().equalsIgnoreCase("free")){
+                    subTitle=dataModel.getQuote().getFree().getTitle();
+                    subCode=dataModel.getQuote().getFree().getCode();
+                }
+
 
                 mAdapterCallback.onMethodCallback(subTitle,subCode);
                 notifyDataSetChanged();

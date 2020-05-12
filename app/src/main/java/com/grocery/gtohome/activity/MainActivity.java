@@ -72,9 +72,11 @@ import static com.grocery.gtohome.api_client.Base_Url.categoriesapi;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public BottomNavigationView navView;
+    BottomNavigationMenuView bottomNavigationMenuView;
     TextView tv_main_header;
     ImageView iv_drawer;
     private Utilities utilities;
+    public static TextView tv_budge;
     //*******************************
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -443,16 +445,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void CheckBottom(int pos) {
         navView.getMenu().getItem(pos).setChecked(true);
     }
+
     public void CountCart(String pos) {
-        BottomNavigationMenuView bottomNavigationMenuView =
+        bottomNavigationMenuView =
                 (BottomNavigationMenuView) navView.getChildAt(0);
         View v = bottomNavigationMenuView.getChildAt(2);
         BottomNavigationItemView itemView = (BottomNavigationItemView) v;
 
         View badge = LayoutInflater.from(this)
                 .inflate(R.layout.cart_count, bottomNavigationMenuView, false);
-        TextView tv = badge.findViewById(R.id.notification_badge);
-        tv.setText(pos);
+        tv_budge = badge.findViewById(R.id.notification_badge);
+       // tv.setText(" ");
+        tv_budge.setText(pos);
         itemView.addView(badge);
 
     }

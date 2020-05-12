@@ -135,8 +135,8 @@ public class PayUMoneyActivity extends AppCompatActivity {
             public void onReceivedSslError(WebView view,
                                            SslErrorHandler handler, SslError error) {
                 // TODO Auto-generated method stub
-                Toast.makeText(PayUMoneyActivity.this, "SslError! " + error,
-                        Toast.LENGTH_SHORT).show();
+               // Toast.makeText(PayUMoneyActivity.this, "SslError! " + error,
+                //        Toast.LENGTH_SHORT).show();
                 handler.proceed();
             }
 
@@ -146,7 +146,7 @@ public class PayUMoneyActivity extends AppCompatActivity {
                 if (url.equals(SUCCESS_URL)) {
                     Toast.makeText(PayUMoneyActivity.this, "Success! " + url, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(PayUMoneyActivity.this, "Failure! " + url, Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(PayUMoneyActivity.this, "Failure! " + url, Toast.LENGTH_SHORT).show();
                 }
                 return super.shouldOverrideUrlLoading(view, url);
             }

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.grocery.gtohome.BR;
 import com.grocery.gtohome.R;
+import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.CategoryProductListBinding;
@@ -43,6 +44,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.adapter.rxjava2.HttpException;
 
+import static com.grocery.gtohome.activity.MainActivity.tv_budge;
 import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
 
 /**
@@ -256,6 +258,8 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
                             Log.e("result_add_cart", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
+                                tv_budge.setText(response.getCartCount().toString());
+                              //  ((MainActivity) context).CountCart(response.getCartCount().toString());
                                 utilities.dialogOK(context, "", response.getMsg(), context.getString(R.string.ok), false);
 
                             } else {

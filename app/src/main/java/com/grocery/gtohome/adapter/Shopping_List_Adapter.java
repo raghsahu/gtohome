@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.grocery.gtohome.BR;
 import com.grocery.gtohome.R;
+import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.ShoppingItemListBinding;
@@ -38,6 +39,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.adapter.rxjava2.HttpException;
 
+import static com.grocery.gtohome.activity.MainActivity.tv_budge;
 import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
 
 /**
@@ -188,6 +190,8 @@ public class Shopping_List_Adapter extends RecyclerView.Adapter<Shopping_List_Ad
 
                                 dataModel.setTotal("₹"+totalPrice);
                                 tvTotalPrice.setText(dataModel.getTotal());
+                                //((MainActivity)context).CountCart(response.getCartCount().toString());
+                                tv_budge.setText(response.getCartCount().toString());
 
                             } else {
                                 //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
@@ -260,7 +264,8 @@ public class Shopping_List_Adapter extends RecyclerView.Adapter<Shopping_List_Ad
                             Log.e("result_category_pro", "" + response.getMsg());
                             Toast.makeText(context, "" + response.getMsg(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
-
+                                tv_budge.setText(response.getCartCount().toString());
+                              //  ((MainActivity) context).CountCart(response.getCartCount().toString());
                                 dataModelList.remove(dataModel);
                                 notifyDataSetChanged();
                             } else {
