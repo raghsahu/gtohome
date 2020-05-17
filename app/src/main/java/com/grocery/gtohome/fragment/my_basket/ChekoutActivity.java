@@ -283,21 +283,25 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                     if (SubTitle.isEmpty() && SubTitle.equals("")) {
                         utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
                                 "Please select shipping method", getString(R.string.ok), false);
-                    } else   if (timeslot_name.isEmpty() && timeslot_name.equals("")) {
-                        utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
-                                "Please select timeslot", getString(R.string.ok), false);
+                    } else if (Delivery_Date!=null && !Delivery_Date.isEmpty()){
+                        if(timeslot_name!=null && !timeslot_name.isEmpty()) {
+                            Et_Comment_Deliver=binding.etComments.getText().toString();
+
+                            binding.llDeliveryMethod.setVisibility(View.GONE);
+                            deliver_method=false;
+
+                            binding.tvPaymentMethod.setEnabled(true);
+                            binding.llPaymentMethod.setVisibility(View.VISIBLE);
+                            payment_method=true;
+                        }else {
+                            utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
+                                    "Please select timeslot", getString(R.string.ok), false);
+
+                        }
+
                     }else {
-
-                        Et_Comment_Deliver=binding.etComments.getText().toString();
-
-
-                        binding.llDeliveryMethod.setVisibility(View.GONE);
-                        deliver_method=false;
-
-                        binding.tvPaymentMethod.setEnabled(true);
-                        binding.llPaymentMethod.setVisibility(View.VISIBLE);
-                        payment_method=true;
-
+                        utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
+                                "Please select delivery date", getString(R.string.ok), false);
                     }
 
                 }
@@ -865,7 +869,10 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         progressDialog.show();
 
        // amount=TotalPrice.substring(1);
-        amount = TotalPrice.replace("₹", "").replace(",", "");
+        if (TotalPrice!=null && !TotalPrice.isEmpty()){
+            amount = TotalPrice.replace("₹", "").replace(",", "");
+        }
+
 
 
         Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);

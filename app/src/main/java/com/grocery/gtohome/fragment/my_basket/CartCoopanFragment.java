@@ -86,6 +86,12 @@ public class CartCoopanFragment extends Fragment {
 
         if (getArguments()!=null){
             cartTotals= (List<CartTotal>) getArguments().getSerializable("Cart_Total");
+            for (int i=0; i<cartTotals.size(); i++){
+                if (cartTotals.get(i).getTitle().equals("Total")){
+                    TotalPrice= cartTotals.get(i).getText();
+                }
+
+            }
 
             TotalAmount_Adapter friendsAdapter = new TotalAmount_Adapter(cartTotals,getActivity());
             binding.setSubtotalAdapter(friendsAdapter);//set databinding adapter
