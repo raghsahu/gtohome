@@ -51,7 +51,7 @@
 
 
                     <EditText
-                        android:id="@+id/inward_time"
+                        android:id="@+id/et_pw"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_8sdp"
@@ -78,6 +78,7 @@
 
 
                     <EditText
+                        android:id="@+id/et_confirm_pw"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_8sdp"

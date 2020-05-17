@@ -200,4 +200,16 @@ public interface Api_Call {
 
     @GET("index.php?route=restapi/deliverydate")
     Observable<Slot_Model> GetSlot(@Query("deliverydate") String date);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/coupon")
+    Observable<SimpleResultModel>  ApplyCoopanApi(@FieldMap  HashMap<String, String> map);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/voucher")
+    Observable<SimpleResultModel> ApplyGiftApi(@FieldMap  HashMap<String, String> map);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/customer/change_password")
+    Observable<SimpleResultModel>  ChanePwApi(@FieldMap  HashMap<String, String> map);
 }

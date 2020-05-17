@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="subtotalAdapter"
+            type="com.grocery.gtohome.adapter.TotalAmount_Adapter" />
 
+    </data>
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_alignParentTop="true"
             android:layout_above="@+id/ll_continue"
             android:scrollbars="none"
@@ -40,7 +45,7 @@
 
 
                         <EditText
-                            android:id="@+id/inward_time"
+                            android:id="@+id/et_coupon"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_8sdp"
@@ -48,11 +53,13 @@
                             android:hint="@string/enter_coopan_here"
                             android:inputType="text"
                             android:padding="@dimen/_10sdp"
+                            android:imeOptions="actionDone"
                             android:textColor="@color/black" />
 
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tv_coupon"
                         style="@style/text_12_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -197,6 +204,7 @@
 
 
                         <EditText
+                            android:id="@+id/et_gift"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_8sdp"
@@ -204,11 +212,13 @@
                             android:hint="@string/enter_gift_certificate"
                             android:inputType="text"
                             android:padding="@dimen/_10sdp"
+                            android:imeOptions="actionDone"
                             android:textColor="@color/black" />
 
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tv_apply_certificate"
                         style="@style/text_12_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -232,79 +242,15 @@
                 android:background="@color/light_white"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_gravity="center"
-                    android:gravity="center"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_cart"
+                    android:adapter="@{subtotalAdapter}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1"
+                    android:scrollbars="none"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     >
-
-                    <TextView
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:layout_weight="0.5"
-                        style="@style/text_14_black"
-                        android:textStyle="bold"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/sub_total"
-                        >
-                    </TextView>
-
-                    <TextView
-                        android:id="@+id/tv_subtotal"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:layout_weight="0.5"
-                        style="@style/text_14_black"
-                        android:textStyle="bold"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="₹200"
-                        >
-                    </TextView>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1"
-                    >
-
-                    <TextView
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:layout_weight="0.5"
-                        style="@style/text_14_black"
-                        android:textStyle="bold"
-                        android:textColor="@color/colorAccent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/total_"
-                        >
-                    </TextView>
-
-                    <TextView
-                        android:id="@+id/tv_total"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:layout_weight="0.5"
-                        style="@style/text_14_black"
-                        android:textStyle="bold"
-                        android:textColor="@color/colorAccent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="₹200"
-                        >
-                    </TextView>
-
-                </LinearLayout>
+                </androidx.recyclerview.widget.RecyclerView>
 
             </LinearLayout>
 
@@ -320,7 +266,7 @@
 
             </LinearLayout>
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
             android:id="@+id/ll_continue"

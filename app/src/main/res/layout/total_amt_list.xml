@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="model"
+            type="com.grocery.gtohome.model.cart_model.CartTotal" />
+
+    </data>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        >
+
+        <TextView
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="0.5"
+            style="@style/text_14_black"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{model.title}"
+            >
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_subtotal"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="0.5"
+            style="@style/text_14_black"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{model.text}"
+            >
+        </TextView>
+
+    </LinearLayout>
+
+</LinearLayout>
+
+</layout>

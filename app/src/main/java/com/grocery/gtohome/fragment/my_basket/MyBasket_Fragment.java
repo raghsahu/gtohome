@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -32,6 +33,8 @@ import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -236,6 +239,8 @@ public class MyBasket_Fragment extends Fragment implements SwipeRefreshLayout.On
 
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("customer_id", Customer_Id);
+        map.put("coupon", "");
+        map.put("voucher", "");
 
         apiInterface.CartListApi(map)
                 .subscribeOn(Schedulers.io())
@@ -259,21 +264,14 @@ public class MyBasket_Fragment extends Fragment implements SwipeRefreshLayout.On
                                                     "Please remove Out of Stock product", getString(R.string.ok), false);
                                             break;
                                         }else {
-                                            for (int i=0; i<response.getTotals().size(); i++){
-                                                if (response.getTotals().get(i).getTitle().equals("Total")){
-                                                    total_amount= response.getTotals().get(i).getText();
-                                                }
-                                                if (response.getTotals().get(i).getTitle().equals("Sub-Total")){
-                                                    sub_total= response.getTotals().get(i).getText();
-                                                }
-                                            }
 
                                             CartCoopanFragment fragment2 = new CartCoopanFragment();
                                             //  DeliveryAddressFragment fragment2 = new DeliveryAddressFragment();
                                             Bundle bundle = new Bundle();
-                                            // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
-                                            bundle.putString("TotalPrice",total_amount);
-                                            bundle.putString("SubTotal",sub_total);
+                                           // bundle.putSerializable("Cart_Total", (Serializable) response.getTotals());
+                                            bundle.putSerializable("Cart_Total", (Serializable) response.getTotals());
+                                          //  bundle.putString("TotalPrice",total_amount);
+                                           // bundle.putString("SubTotal",sub_total);
                                             FragmentManager manager = getActivity().getSupportFragmentManager();
                                             FragmentTransaction fragmentTransaction = manager.beginTransaction();
                                             fragmentTransaction.replace(R.id.frame, fragment2);
