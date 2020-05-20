@@ -2,6 +2,7 @@ package com.grocery.gtohome.model.order_history;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.grocery.gtohome.model.cart_model.CartTotal;
 
 import java.util.List;
 
@@ -228,7 +229,7 @@ public class OrderDetails {
     private List<OrderDetailsProduct> products = null;
     @SerializedName("totals")
     @Expose
-    private List<TotalItemPrice> totals = null;
+    private List<CartTotal> totals = null;
     @SerializedName("histories")
     @Expose
     private List<HistoryItem> histories = null;
@@ -809,11 +810,11 @@ public class OrderDetails {
         this.products = products;
     }
 
-    public List<TotalItemPrice> getTotals() {
+    public List<CartTotal> getTotals() {
         return totals;
     }
 
-    public void setTotals(List<TotalItemPrice> totals) {
+    public void setTotals(List<CartTotal> totals) {
         this.totals = totals;
     }
 

@@ -25,12 +25,15 @@ import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.OrderSuccess_Activity;
 import com.grocery.gtohome.activity.PayUMoneyActivity;
 import com.grocery.gtohome.activity.PaymentMethod_Activity;
+import com.grocery.gtohome.adapter.HistoryItemList_Adapter;
 import com.grocery.gtohome.adapter.ShippingMethodAdapter;
+import com.grocery.gtohome.adapter.TotalAmount_Adapter;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.Base_Url;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.FragmentDeliveryAddressBinding;
 import com.grocery.gtohome.fragment.Information_Fragment;
+import com.grocery.gtohome.model.confirm_order_model.Confirm_Order_Model;
 import com.grocery.gtohome.model.country_model.CountryData;
 import com.grocery.gtohome.model.country_model.CountryModel;
 import com.grocery.gtohome.fragment.state_model.StateModel;
@@ -88,7 +91,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
     ArrayList<String> stateDeliveryName = new ArrayList<>();
     String address_delivery_id, country_delivery_id, zone_delivery_id;
 
-    private String TotalPrice,amount ="";
+    private String TotalPrice,SubTotal,amount ="",Et_Coupan ="",Et_gift ="",FinalTotalPrice, Finalamount="";
     private String SubTitle="",SubCode="";
     String payment_code="", payment_title="";
     boolean biling_delivery_charge=false;
@@ -127,6 +130,9 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         //********************************
         if (getIntent()!=null){
             TotalPrice=getIntent().getStringExtra("TotalPrice");
+            SubTotal=getIntent().getStringExtra("SubTotal");
+            Et_Coupan=getIntent().getStringExtra("Et_Coupan");
+            Et_gift=getIntent().getStringExtra("Et_gift");
         }
 
         //get existing address
@@ -322,16 +328,15 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                         } else {
                            Et_Comment_Order=binding.etCommentsOrder.getText().toString();
 
+                            binding.llPaymentMethod.setVisibility(View.GONE);
+                            payment_method=false;
 
-                           // binding.llPaymentMethod.setVisibility(View.GONE);
-                           // payment_method=false;
-
-                          //  binding.tvConfirmOrder.setEnabled(true);
-                          //  binding.llDeliveryConfirm.setVisibility(View.VISIBLE);
-                          //  confirm_order=true;
+                            binding.tvConfirmOrder.setEnabled(true);
+                            binding.llDeliveryConfirm.setVisibility(View.VISIBLE);
+                            confirm_order=true;
 
                             if (Connectivity.isConnected(ChekoutActivity.this)){
-                                CreateOrder(Customer_Id,Et_Comment_Order,address_id,payment_code,payment_title,SubCode,SubTitle,TotalPrice);
+                                GetTotalProduct_Amount(Customer_Id,SubTotal,address_id,SubCode,SubTitle,Et_Coupan,Et_gift);
                             }else {
                                 utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title), getString(R.string.please_check_internet),
                                         getString(R.string.ok), false);
@@ -342,6 +347,20 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
                 }
             });
+
+            //********place final order
+        binding.tvConfirmOrderDelivery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Connectivity.isConnected(ChekoutActivity.this)){
+                    CreateOrder(Customer_Id,Et_Comment_Order,address_id,address_delivery_id,payment_code,payment_title,SubCode,SubTitle,TotalPrice);
+                }else {
+                    utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title), getString(R.string.please_check_internet),
+                            getString(R.string.ok), false);
+                }
+
+            }
+        });
 
         //**************************************************
         binding.spinExistAddress.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -644,8 +663,9 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
     }
 
     @SuppressLint("CheckResult")
-    private void CreateOrder(String customer_id, String et_comment, String addressId, final String payment_code, String payment_title,
-                             String subCode, String subTitle, String totalPrice) {
+    private void GetTotalProduct_Amount(String customer_id, String subTotal, String address_id, String subCode, String subTitle,
+                                        String et_coupan, String et_gift) {
+
         final ProgressDialog progressDialog = new ProgressDialog(ChekoutActivity.this, R.style.MyGravity);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         // progressDialog.setCancelable(false);
@@ -655,8 +675,111 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("customer_id", customer_id);
+        map.put("address_id", address_id);
+        map.put("shipping_method[code]", subCode);
+        map.put("shipping_method[title]", subTitle);
+        map.put("subtotal", subTotal);
+        map.put("coupon", et_coupan);
+        map.put("voucher", et_gift);
+
+        apiInterface.ConfirmOrder(map)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<Confirm_Order_Model>() {
+                    @Override
+                    public void onNext(Confirm_Order_Model response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_order", "" + response.getStatus());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+
+                                if (response.getOrders().getProducts()!=null){
+                                    HistoryItemList_Adapter friendsAdapter = new HistoryItemList_Adapter(response.getOrders().getProducts(),ChekoutActivity.this);
+                                    binding.setMyOrderAdapter(friendsAdapter);//set databinding adapter
+                                    friendsAdapter.notifyDataSetChanged();
+                                }
+
+                                for (int i=0; i<response.getOrders().getTotals().size(); i++){
+                                    if (response.getOrders().getTotals().get(i).getTitle().equals("Total")){
+                                        FinalTotalPrice= response.getOrders().getTotals().get(i).getText();
+                                    }
+
+                                }
+
+                                TotalAmount_Adapter friendsAdapter = new TotalAmount_Adapter(response.getOrders().getTotals(),ChekoutActivity.this);
+                                binding.setTotalAdapter(friendsAdapter);//set databinding adapter
+                                friendsAdapter.notifyDataSetChanged();
+
+                            } else {
+                                //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                                utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
+                                        response.getMsg(), getString(R.string.ok), false);
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("Categ_product_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
+
+    }
+
+    @SuppressLint("CheckResult")
+    private void CreateOrder(String customer_id, String et_comment, String addressId,String address_delivery_id, final String payment_code, String payment_title,
+                             String subCode, String subTitle, String totalPrice) {
+        final ProgressDialog progressDialog = new ProgressDialog(ChekoutActivity.this, R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        // progressDialog.setCancelable(false);
+        progressDialog.show();
+        // amount=TotalPrice.substring(1);
+        if (FinalTotalPrice!=null && !FinalTotalPrice.isEmpty()){
+            Finalamount = FinalTotalPrice.replace("₹", "").replace(",", "");
+        }
+
+        Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
+
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("customer_id", customer_id);
         map.put("comment", et_comment);
         map.put("address_id", addressId);
+        map.put("shipping_address_id", address_delivery_id);
         map.put("payment_method[code]", payment_code);
         map.put("payment_method[title]", payment_title);
         map.put("shipping_method[code]", subCode);
@@ -665,6 +788,8 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         map.put("deliverydate", Delivery_Date);
         map.put("extrafield", "");
         map.put("timeslotid", timeslot_name);
+        map.put("coupon", Et_Coupan);
+        map.put("voucher", Et_gift);
 
         apiInterface.CreateOrder(map)
                 .subscribeOn(Schedulers.io())
@@ -686,7 +811,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
                                     Intent intent = new Intent(ChekoutActivity.this, PayUMoneyActivity.class);
                                     //intent.putExtra("OrderId",response.getOrderId().toString());
-                                    intent.putExtra("amount",amount);
+                                    intent.putExtra("amount",Finalamount);
                                     startActivity(intent);
 
                                     // CallPaymentgateway();
@@ -872,7 +997,6 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         if (TotalPrice!=null && !TotalPrice.isEmpty()){
             amount = TotalPrice.replace("₹", "").replace(",", "");
         }
-
 
 
         Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);

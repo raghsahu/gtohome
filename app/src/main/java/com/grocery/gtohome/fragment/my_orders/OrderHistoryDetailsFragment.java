@@ -20,10 +20,12 @@ import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.adapter.HistoryItemList_Adapter;
 import com.grocery.gtohome.adapter.MyOrder_Adapter;
+import com.grocery.gtohome.adapter.TotalAmount_Adapter;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.FragmentMyOrdersBinding;
 import com.grocery.gtohome.databinding.FragmentOrdersDetailsBinding;
+import com.grocery.gtohome.fragment.my_basket.ChekoutActivity;
 import com.grocery.gtohome.model.order_history.OrderHistory;
 import com.grocery.gtohome.model.order_history.OrderHistoryDetails;
 import com.grocery.gtohome.session.SessionManager;
@@ -141,10 +143,14 @@ public class OrderHistoryDetailsFragment extends Fragment {
                                 }
 
                                 //*************set order item charges in text***
-                                if (response.getOrder().getTotal()!=null){
-                                    binding.tvSubtotal.setText(response.getOrder().getTotals().get(0).getText());
-                                    binding.tvFlateShipping.setText(response.getOrder().getTotals().get(1).getText());
-                                    binding.tvTotal.setText(response.getOrder().getTotals().get(2).getText());
+                                if (response.getOrder().getTotals()!=null){
+//                                    binding.tvSubtotal.setText(response.getOrder().getTotals().get(0).getText());
+//                                    binding.tvFlateShipping.setText(response.getOrder().getTotals().get(1).getText());
+//                                    binding.tvTotal.setText(response.getOrder().getTotals().get(2).getText());
+
+                                    TotalAmount_Adapter friendsAdapter = new TotalAmount_Adapter(response.getOrder().getTotals(), getActivity());
+                                    binding.setTotalamountAdapter(friendsAdapter);//set databinding adapter
+                                    friendsAdapter.notifyDataSetChanged();
                                 }
 
                             } else {

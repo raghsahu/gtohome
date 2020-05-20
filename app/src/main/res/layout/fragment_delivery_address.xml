@@ -6,6 +6,13 @@
             name="shipingRateAdapter"
             type="com.grocery.gtohome.adapter.ShippingMethodAdapter" />
 
+        <variable
+            name="totalAdapter"
+            type="com.grocery.gtohome.adapter.TotalAmount_Adapter" />
+        <variable
+            name="myOrderAdapter"
+            type="com.grocery.gtohome.adapter.HistoryItemList_Adapter" />
+
     </data>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -19,7 +26,7 @@
 
     </include>
 
-  <ScrollView
+  <androidx.core.widget.NestedScrollView
       android:scrollbars="none"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -74,6 +81,7 @@
                   android:orientation="vertical">
 
                   <RadioButton
+                      android:checked="true"
                       android:id="@+id/radio_exist_address"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
@@ -451,6 +459,7 @@
                       android:orientation="vertical">
 
                       <RadioButton
+                          android:checked="true"
                           android:id="@+id/radio_exist_delivery"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
@@ -1206,22 +1215,142 @@
                       android:layout_height="@dimen/_1sdp">
                   </View>
 
+                  <HorizontalScrollView
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:scrollbars="horizontal"
+                      >
+
                       <LinearLayout
+                          android:orientation="vertical"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
-                          android:layout_marginTop="@dimen/_5sdp"
-                          android:orientation="vertical"
-                          android:padding="@dimen/_5sdp">
+                          >
+
+                          <LinearLayout
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:layout_gravity="center"
+                              android:orientation="horizontal">
+
+                              <TextView
+                                  android:textColor="@color/black"
+                                  android:background="@color/light_white1"
+                                  style="@style/text_12_black"
+                                  android:layout_width="@dimen/_120sdp"
+                                  android:layout_height="wrap_content"
+                                  android:padding="@dimen/_5sdp"
+                                  android:text="Product Name"
+                                  android:textAlignment="textStart"
+                                  android:textStyle="normal">
+
+                              </TextView>
+
+                              <TextView
+                                  android:textColor="@color/black"
+                                  android:background="@color/light_white1"
+                                  style="@style/text_12_black"
+                                  android:layout_width="@dimen/_50sdp"
+                                  android:layout_height="wrap_content"
+                                  android:padding="@dimen/_5sdp"
+                                  android:text="Model"
+                                  android:textAlignment="textStart"
+                                  android:textStyle="normal">
+
+                              </TextView>
+
+                              <TextView
+                                  android:textColor="@color/black"
+                                  android:background="@color/light_white1"
+                                  style="@style/text_12_black"
+                                  android:layout_width="@dimen/_70sdp"
+                                  android:layout_height="wrap_content"
+                                  android:padding="@dimen/_5sdp"
+                                  android:text="Quantity"
+                                  android:textAlignment="textStart"
+                                  android:textStyle="normal">
+
+                              </TextView>
+                              <TextView
+                                  android:textColor="@color/black"
+                                  android:background="@color/light_white1"
+                                  style="@style/text_12_black"
+                                  android:layout_width="@dimen/_70sdp"
+                                  android:layout_height="wrap_content"
+                                  android:padding="@dimen/_5sdp"
+                                  android:text="Price"
+                                  android:textAlignment="textStart"
+                                  android:textStyle="normal">
+
+                              </TextView>
+                              <TextView
+                                  android:textColor="@color/black"
+                                  android:background="@color/light_white1"
+                                  style="@style/text_12_black"
+                                  android:layout_width="@dimen/_70sdp"
+                                  android:layout_height="wrap_content"
+                                  android:padding="@dimen/_5sdp"
+                                  android:text="Total"
+                                  android:textAlignment="textStart"
+                                  android:textStyle="normal">
+
+                              </TextView>
+                              <TextView
+                                  android:visibility="gone"
+                                  android:textColor="@color/black"
+                                  android:background="@color/light_white1"
+                                  style="@style/text_14_black"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:padding="@dimen/_5sdp"
+                                  android:text="Re-order"
+                                  android:textAlignment="textStart"
+                                  android:textStyle="normal">
+
+                              </TextView>
+
+
+                          </LinearLayout>
+
+                          <View
+                              android:background="@color/light_white"
+                              android:layout_width="match_parent"
+                              android:layout_height="@dimen/_1sdp">
+                          </View>
 
                           <androidx.recyclerview.widget.RecyclerView
-                              android:scrollbars="none"
-                              app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                              android:adapter="@{myOrderAdapter}"
                               android:layout_width="match_parent"
-                              android:layout_height="wrap_content">
+                              android:layout_height="match_parent"
+                              android:scrollbars="none"
+                              app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
                           </androidx.recyclerview.widget.RecyclerView>
 
                       </LinearLayout>
+
+                  </HorizontalScrollView>
+
+
+                  <LinearLayout
+                      android:padding="@dimen/_5sdp"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_margin="@dimen/_10sdp"
+                      android:background="@color/light_white"
+                      android:orientation="vertical">
+
+                      <androidx.recyclerview.widget.RecyclerView
+                          android:id="@+id/recycler_cart"
+                          android:adapter="@{totalAdapter}"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:scrollbars="none"
+                          app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                          >
+                      </androidx.recyclerview.widget.RecyclerView>
+
+                  </LinearLayout>
 
 
                   <TextView
@@ -1253,7 +1382,7 @@
 
       </LinearLayout>
 
-  </ScrollView>
+  </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>
 

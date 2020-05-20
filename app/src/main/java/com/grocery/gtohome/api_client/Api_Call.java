@@ -1,6 +1,7 @@
 package com.grocery.gtohome.api_client;
 
 import com.grocery.gtohome.model.company_info_model.Company_infoModel;
+import com.grocery.gtohome.model.confirm_order_model.Confirm_Order_Model;
 import com.grocery.gtohome.model.country_model.CountryModel;
 import com.grocery.gtohome.fragment.state_model.StateModel;
 import com.grocery.gtohome.model.FilterByModel;
@@ -212,4 +213,8 @@ public interface Api_Call {
     @FormUrlEncoded
     @POST("index.php?route=restapi/customer/change_password")
     Observable<SimpleResultModel>  ChanePwApi(@FieldMap  HashMap<String, String> map);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/orders/confirm")
+    Observable<Confirm_Order_Model>  ConfirmOrder(@FieldMap HashMap<String, String> map);
 }

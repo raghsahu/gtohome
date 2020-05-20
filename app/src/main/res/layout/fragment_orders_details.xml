@@ -5,7 +5,9 @@
         <variable
             name="myOrderAdapter"
             type="com.grocery.gtohome.adapter.HistoryItemList_Adapter" />
-
+        <variable
+            name="totalamountAdapter"
+            type="com.grocery.gtohome.adapter.TotalAmount_Adapter" />
     </data>
 <LinearLayout
     android:layout_width="match_parent"
@@ -347,92 +349,22 @@
 <!--        </View>-->
 
         <LinearLayout
-            android:layout_margin="@dimen/_5sdp"
+            android:padding="@dimen/_5sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@color/light_white"
+            android:orientation="vertical">
 
-        <LinearLayout
-            android:weightSum="1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:textAlignment="textEnd"
-                android:layout_weight="0.5"
-                style="@style/text_14_black"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_cart"
+                android:adapter="@{totalamountAdapter}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sub-Total:"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_subtotal"
-                style="@style/text_12_light_black"
-                android:layout_width="match_parent"
-                android:layout_height="29dp"
-                android:layout_weight="0.5"
-                android:text="0"
-                android:textAlignment="textEnd" />
-
-        </LinearLayout>
-
-            <LinearLayout
-                android:weightSum="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:textAlignment="textEnd"
-                    android:layout_weight="0.5"
-                    style="@style/text_14_black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Flat Shipping Rate:"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_flate_shipping"
-                    android:textAlignment="textEnd"
-                    android:layout_weight="0.5"
-                    style="@style/text_12_light_black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="0" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:weightSum="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:textAlignment="textEnd"
-                    android:layout_weight="0.5"
-                    style="@style/text_14_black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Total:"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_total"
-                    android:textAlignment="textEnd"
-                    android:layout_weight="0.5"
-                    style="@style/text_12_light_black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="0" />
-
-            </LinearLayout>
+                android:scrollbars="none"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                >
+            </androidx.recyclerview.widget.RecyclerView>
 
         </LinearLayout>
 

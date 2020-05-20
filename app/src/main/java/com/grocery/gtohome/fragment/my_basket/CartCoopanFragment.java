@@ -131,7 +131,9 @@ public class CartCoopanFragment extends Fragment {
 
                 Intent intent = new Intent(getActivity(), ChekoutActivity.class);
                 intent.putExtra("TotalPrice",TotalPrice);
-               // intent.putExtra("SubTotal",SubTotal);
+                intent.putExtra("SubTotal",SubTotal);
+                intent.putExtra("Et_Coupan",Et_Coupan);
+                intent.putExtra("Et_gift",Et_gift);
                 startActivity(intent);
             }
         });
@@ -347,10 +349,13 @@ public class CartCoopanFragment extends Fragment {
                                     if (response.getTotals().get(i).getTitle().equals("Total")){
                                         TotalPrice= response.getTotals().get(i).getText();
                                     }
-//                                    if (response.getTotals().get(i).getTitle().equals("Sub-Total")){
-//                                        sub_total= response.getTotals().get(i).getText();
-//                                    }
+                                    if (response.getTotals().get(i).getTitle().equals("Sub-Total")){
+                                        SubTotal= response.getTotals().get(i).getText();
+                                    }
                                 }
+
+                                Et_gift=binding.etGift.getText().toString();
+                                Et_Coupan=binding.etCoupon.getText().toString();
 
                                 TotalAmount_Adapter friendsAdapter = new TotalAmount_Adapter(response.getTotals(),getActivity());
                                 binding.setSubtotalAdapter(friendsAdapter);//set databinding adapter
