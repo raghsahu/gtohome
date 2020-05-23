@@ -1,5 +1,6 @@
 package com.grocery.gtohome.api_client;
 
+import com.grocery.gtohome.model.blog_model.BlogModel;
 import com.grocery.gtohome.model.company_info_model.Company_infoModel;
 import com.grocery.gtohome.model.confirm_order_model.Confirm_Order_Model;
 import com.grocery.gtohome.model.country_model.CountryModel;
@@ -217,4 +218,19 @@ public interface Api_Call {
     @FormUrlEncoded
     @POST("index.php?route=restapi/orders/confirm")
     Observable<Confirm_Order_Model>  ConfirmOrder(@FieldMap HashMap<String, String> map);
+
+    @GET("index.php?route=restapi/information/blogs")
+    Observable<BlogModel> BlogApi();
+
+    @GET("index.php?route=restapi/information/blog_detail")
+    Observable<BlogModel>  BlogDetailsApi(@Query("blogger_id") String blog_id);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/information/blog_add_comment")
+    Observable<BlogModel>  AddCommentApi(
+            @Field("author")  String et_author,
+            @Field("email") String et_email,
+            @Field("comment") String et_comment,
+            @Field("blogger_id") String blog_id,
+            @Field("auto_approve") String autoApprove);
 }

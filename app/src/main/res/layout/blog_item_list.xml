@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.text.Html"/>
+        <variable
+            name="model"
+            type="com.grocery.gtohome.model.blog_model.BlogData" />
+
+    </data>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:background="@color/light_white1"
+        android:id="@+id/ll_blog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_3sdp"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_150sdp"
+            android:scaleType="fitXY"
+            android:src="@drawable/banner1"
+            app:postImage="@{model.image}">
+        </ImageView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/text_14_black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:padding="@dimen/_2sdp"
+                android:text="@{Html.fromHtml(model.title)}"
+                android:textAlignment="textStart"
+                android:textStyle="bold">
+            </TextView>
+
+            <LinearLayout
+                android:weightSum="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <TextView
+                android:layout_marginEnd="@dimen/_5sdp"
+                style="@style/text_12_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_2sdp"
+                android:text="@{model.dateAdded}"
+                android:textAlignment="textStart"
+                android:textStyle="normal">
+
+            </TextView>
+
+                <View
+                    android:layout_gravity="center"
+                    android:background="@color/light_black"
+                    android:layout_width="@dimen/_1sdp"
+                    android:layout_height="@dimen/_12sdp">
+
+                </View>
+
+                <TextView
+                    android:layout_marginStart="@dimen/_5sdp"
+                    style="@style/text_12_black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_2sdp"
+                    android:text="@{model.totalComments +` Comment`}"
+                    android:textAlignment="textStart"
+                    android:textStyle="normal">
+
+                </TextView>
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="@dimen/_5sdp"
+                style="@style/text_12_light_black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="3"
+                android:padding="@dimen/_2sdp"
+                android:text="@{Html.fromHtml(model.description)}"
+                android:textAlignment="textStart"
+                android:textStyle="normal">
+            </TextView>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
+
+</layout>

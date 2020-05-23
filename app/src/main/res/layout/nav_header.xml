@@ -127,6 +127,7 @@
         </TextView>
 
         <TextView
+            android:id="@+id/tv_blog"
             android:background="@drawable/rectangle_bg_border"
             android:drawableStart="@drawable/ic_brightness_"
             android:layout_weight="0.5"

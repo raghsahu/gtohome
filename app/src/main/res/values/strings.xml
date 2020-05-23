@@ -318,6 +318,9 @@
     <string name="delivery_method">Delivery Method</string>
     <string name="select_delivery_date">Please select the delivery date for this order.</string>
     <string name="payment_method">Payment Method</string>
+    <string name="blog">Blog</string>
+    <string name="add_comment">Add Comment</string>
+    <string name="please_enter_name">Please Enter Name</string>
 
 
 </resources>

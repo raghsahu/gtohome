@@ -90,7 +90,9 @@ public class CartCoopanFragment extends Fragment {
                 if (cartTotals.get(i).getTitle().equals("Total")){
                     TotalPrice= cartTotals.get(i).getText();
                 }
-
+                if (cartTotals.get(i).getTitle().equals("Sub-Total")){
+                    SubTotal= cartTotals.get(i).getText();
+                }
             }
 
             TotalAmount_Adapter friendsAdapter = new TotalAmount_Adapter(cartTotals,getActivity());

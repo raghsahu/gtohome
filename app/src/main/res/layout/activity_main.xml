@@ -11,16 +11,44 @@
         android:layout_height="match_parent" />
 
     <!-- Side navigation drawer UI -->
-    <ExpandableListView
-        android:id="@+id/navList"
+    <LinearLayout
+        android:id="@+id/drawer"
         android:layout_width="@dimen/_260sdp"
         android:layout_height="match_parent"
-        android:layout_gravity="left|start"
-        android:background="@color/white"
-        android:divider="@color/light_white"
-        android:dividerHeight="@dimen/_1sdp"
-        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"/>
+        android:layout_gravity="start"
+        android:orientation="vertical"
+        >
 
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+        <include
+            layout="@layout/nav_header"
+           />
+
+
+        <ExpandableListView
+            android:id="@+id/navList"
+            android:layout_width="@dimen/_260sdp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left|start"
+            android:background="@color/white"
+            android:divider="@color/light_white"
+            android:dividerHeight="@dimen/_1sdp"
+            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 
 <!--    <LinearLayout-->
 <!--        android:id="@+id/left_drawer"-->

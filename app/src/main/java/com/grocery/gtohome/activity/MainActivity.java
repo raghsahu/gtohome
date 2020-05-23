@@ -46,6 +46,7 @@ import com.grocery.gtohome.fragment.Home_Fragment;
 import com.grocery.gtohome.fragment.my_basket.MyBasket_Fragment;
 import com.grocery.gtohome.fragment.my_account.My_Account_Fragment;
 import com.grocery.gtohome.fragment.Search_Fragment;
+import com.grocery.gtohome.fragment.nav_fragment.Blog_Fragment;
 import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.model.category_model.CategoryChild;
 import com.grocery.gtohome.model.category_model.CategoryModel;
@@ -180,13 +181,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             utilities.dialogOK(MainActivity.this, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
         }
 
-        LayoutInflater inflater = getLayoutInflater();
-        View listHeaderView = inflater.inflate(R.layout.nav_header, null, false);
-        mExpandableListView.addHeaderView(listHeaderView);
+        //LayoutInflater inflater = getLayoutInflater();
+      //  View listHeaderView = inflater.inflate(R.layout.nav_header, null, false);
+      //  mExpandableListView.addHeaderView(listHeaderView);
        // mExpandableListView.addFooterView(listHeaderView);
 
-       // View headerview = mExpandableListView.getHeaderView(0);
-       // TextView nav_tv_name = headerview.findViewById(R.id.tv_nav_name);
+        // View headerview = mExpandableListView.getHeaderView(0);
+        TextView nav_tv_blog = findViewById(R.id.tv_blog);
+        nav_tv_blog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new Blog_Fragment();
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.frame, fragment);
+                ft.addToBackStack(null);
+                ft.commit();
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
+            }
+        });
 
 
 

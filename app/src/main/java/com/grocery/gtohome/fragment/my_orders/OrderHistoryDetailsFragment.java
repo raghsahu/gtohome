@@ -25,7 +25,6 @@ import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.FragmentMyOrdersBinding;
 import com.grocery.gtohome.databinding.FragmentOrdersDetailsBinding;
-import com.grocery.gtohome.fragment.my_basket.ChekoutActivity;
 import com.grocery.gtohome.model.order_history.OrderHistory;
 import com.grocery.gtohome.model.order_history.OrderHistoryDetails;
 import com.grocery.gtohome.session.SessionManager;
