@@ -13,8 +13,11 @@ import com.grocery.gtohome.model.cart_model.CartModel;
 import com.grocery.gtohome.model.category_model.CategoryModel;
 import com.grocery.gtohome.model.category_product_model.CategoryProductModel;
 import com.grocery.gtohome.model.create_order.CreateOrderModel;
+import com.grocery.gtohome.model.home_slider.HomeSliderBanner;
+import com.grocery.gtohome.model.login_model.LoginModel;
 import com.grocery.gtohome.model.order_history.OrderHistory;
 import com.grocery.gtohome.model.order_history.OrderHistoryDetails;
+import com.grocery.gtohome.model.popular_brand.PopularBrandModel;
 import com.grocery.gtohome.model.product_details.Product_Details_Model;
 import com.grocery.gtohome.model.register_model.RegistrationModel;
 import com.grocery.gtohome.model.shipping_method.ShippingMethod;
@@ -32,25 +35,31 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
+import static com.grocery.gtohome.api_client.Base_Url.Register;
+import static com.grocery.gtohome.api_client.Base_Url.loginapi;
+
 /**
  * Created by Raghvendra Sahu on 20-Apr-20.
  */
 public interface Api_Call {
 
-    @GET("index.php?")
-    Observable<RegistrationModel> EmailRegistrationUser(
-            @Query("route") String path,
+    @GET(Register)
+    Observable<LoginModel> EmailRegistrationUser(
+           // @Query("route") String path,
             @Query("firstname") String first_name,
             @Query("lastname") String last_name,
             @Query("password") String et_pw,
             @Query("confirm") String etConf_pw,
             @Query("telephone") String et_mobile,
-            @Query("email") String et_email);
+            @Query("email") String et_email,
+            @Query("agree") String agree,
+            @Query("newsletter") String newsletter,
+            @Query("customer_group_id") String customer_group_id);
 
 
-    @GET("index.php?")
-    Observable<RegistrationModel> LoginUser(
-            @Query("route") String loginapi,
+    @GET(loginapi)
+    Observable<LoginModel> LoginUser(
+           // @Query("route") String loginapi,
             @Query("email") String et_email,
             @Query("password") String et_pw);
 
@@ -233,4 +242,24 @@ public interface Api_Call {
             @Field("comment") String et_comment,
             @Field("blogger_id") String blog_id,
             @Field("auto_approve") String autoApprove);
+
+
+    @GET("index.php?route=restapi/home/slideshow")
+    Observable<HomeSliderBanner> HomeHorizontalSlideApi();
+
+
+    @GET("index.php?route=restapi/home/add_newsletter")
+    Observable<SimpleResultModel>  AddNews( @Query("email") String news_address);
+
+    @GET("index.php?route=restapi/customer/newsletter_subscription")
+    Observable<SimpleResultModel> UpdateNewsletter(@Query("newsletter") String newsValue,
+                                                   @Query("customer_id")String customerId);
+
+
+    @GET("index.php?route=restapi/home/our_brands")
+    Observable<PopularBrandModel> PopularBrandApi();
+
+
+    @GET("index.php?route=restapi/product/special_products")
+    Observable<CategoryProductModel>  SpecialProductApi();
 }

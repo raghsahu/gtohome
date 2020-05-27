@@ -299,6 +299,44 @@
 
                 </LinearLayout>
 
+                <TextView
+                    style="@style/text_16_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
+                    android:text="Newsletter" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_white">
+                </View>
+
+                <LinearLayout
+                    android:id="@+id/ll_newsletter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/text_12_black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right"
+                        android:padding="@dimen/_5sdp"
+                        android:text="Subscribe / unsubscribe to newsletter" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/light_white">
+                    </View>
+
+                </LinearLayout>
 
                 <TextView
                     style="@style/text_16_black"

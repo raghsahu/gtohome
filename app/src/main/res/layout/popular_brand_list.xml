@@ -3,7 +3,7 @@
     <data>
         <variable
             name="model"
-            type="com.grocery.gtohome.model.SampleModel" />
+            type="com.grocery.gtohome.model.popular_brand.PopularBanner" />
     </data>
 
     <LinearLayout
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:id="@+id/ll_veg"
+            android:id="@+id/ll_brand"
             android:layout_margin="@dimen/_5sdp"
             android:background="@drawable/rectangle_bg_border"
             android:orientation="vertical"
@@ -21,16 +21,6 @@
             android:layout_height="wrap_content"
             >
 
-<!--            <TextView-->
-<!--                style="@style/text_14_black"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:padding="@dimen/_5sdp"-->
-<!--                android:text="@{model.product_name}"-->
-<!--                android:textAlignment="center"-->
-<!--                android:textStyle="normal">-->
-
-<!--            </TextView>-->
 
             <ImageView
                 app:postImage="@{model.image}"

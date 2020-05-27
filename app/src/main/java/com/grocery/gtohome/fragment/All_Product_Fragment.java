@@ -46,7 +46,7 @@ import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
  */
 public class All_Product_Fragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     FragmentAllProductsBinding binding;
-    String SubCategory_Id;
+    String SubCategory_Id,GH_Offer="";
     private Utilities utilities;
     List<FilterBy> filterByModelList = new ArrayList<>();
     ArrayList<String> filterName = new ArrayList<>();
@@ -76,13 +76,20 @@ public class All_Product_Fragment extends Fragment implements SwipeRefreshLayout
 
         if (getArguments() != null) {
             SubCategory_Id = getArguments().getString("SubCategory_Id");
+            GH_Offer = getArguments().getString("GH_Offer");
             Log.e("selectedID",SubCategory_Id);
         }
 
         //get product
         if (Connectivity.isConnected(getActivity())) {
            // getCategoryWiseProduct("p.sort_order","ASC");
-            getFilterBy();
+            if (GH_Offer!=null && !GH_Offer.equalsIgnoreCase("") && GH_Offer.equalsIgnoreCase("Special")){
+                binding.llFilter.setVisibility(View.GONE);
+                ((MainActivity) getActivity()).Update_header("Special product");
+                getSpecialProduct();
+            }else {
+                getFilterBy();
+            }
         } else {
             Toast.makeText(getActivity(), "Please check Internet", Toast.LENGTH_SHORT).show();
         }
@@ -111,6 +118,82 @@ public class All_Product_Fragment extends Fragment implements SwipeRefreshLayout
 
 
         return root;
+    }
+
+    @SuppressLint("CheckResult")
+    private void getSpecialProduct() {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        // progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
+
+        apiInterface.SpecialProductApi()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<CategoryProductModel>() {
+                    @Override
+                    public void onNext(CategoryProductModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("special_pro", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+                                CategoryProduct_Adapter friendsAdapter = new CategoryProduct_Adapter(response.getProducts(), getActivity(),GH_Offer);
+                                binding.setFeatureAdapter(friendsAdapter);//set databinding adapter
+                                friendsAdapter.notifyDataSetChanged();
+
+                                binding.swipeToRefresh.setVisibility(View.VISIBLE);
+                            } else {
+                                binding.swipeToRefresh.setVisibility(View.GONE);
+                                //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                                utilities.dialogOKOnBack(getActivity(), getString(R.string.validation_title),
+                                        response.getMsg(), getString(R.string.ok), true);
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("Categ_product_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
+
     }
 
     @SuppressLint("CheckResult")
@@ -215,7 +298,7 @@ public class All_Product_Fragment extends Fragment implements SwipeRefreshLayout
                             Log.e("result_category_pro", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
-                                CategoryProduct_Adapter friendsAdapter = new CategoryProduct_Adapter(response.getProducts(), getActivity());
+                                CategoryProduct_Adapter friendsAdapter = new CategoryProduct_Adapter(response.getProducts(), getActivity(),"");
                                 binding.setFeatureAdapter(friendsAdapter);//set databinding adapter
                                 friendsAdapter.notifyDataSetChanged();
 
@@ -275,10 +358,16 @@ public class All_Product_Fragment extends Fragment implements SwipeRefreshLayout
     public void onRefresh() {
         binding.swipeToRefresh.setRefreshing(false);
 
-        if (Connectivity.isConnected(getActivity())){
-            getCategoryWiseProduct(sort,order);
-        }else {
-            utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+        if (Connectivity.isConnected(getActivity())) {
+            // getCategoryWiseProduct("p.sort_order","ASC");
+            if (GH_Offer!=null && !GH_Offer.equalsIgnoreCase("") && GH_Offer.equalsIgnoreCase("Special")){
+                binding.llFilter.setVisibility(View.GONE);
+                getSpecialProduct();
+            }else {
+                getCategoryWiseProduct(sort,order);
+            }
+        } else {
+            Toast.makeText(getActivity(), "Please check Internet", Toast.LENGTH_SHORT).show();
         }
     }
 }

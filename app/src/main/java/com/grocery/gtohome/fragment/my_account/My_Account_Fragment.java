@@ -304,6 +304,22 @@ public class My_Account_Fragment extends Fragment {
             }
         });
 
+        binding.llNewsletter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                NewsLetter_Fragment fragment2 = new NewsLetter_Fragment();
+                Bundle bundle = new Bundle();
+                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+              //  bundle.putString("Info","Privacy");
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                fragment2.setArguments(bundle);
+            }
+        });
 
         binding.llLogout.setOnClickListener(new View.OnClickListener() {
             @Override

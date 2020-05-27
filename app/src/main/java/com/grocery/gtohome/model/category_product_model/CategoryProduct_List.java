@@ -26,13 +26,16 @@ public class CategoryProduct_List {
     private String price;
     @SerializedName("special")
     @Expose
-    private Boolean special;
+    private String special;
     @SerializedName("tax")
     @Expose
     private Boolean tax;
     @SerializedName("minimum")
     @Expose
     private String minimum;
+    @SerializedName("special_date_end")
+    @Expose
+    private String special_date_end;
     @SerializedName("rating")
     @Expose
     private Integer rating;
@@ -42,6 +45,14 @@ public class CategoryProduct_List {
     @SerializedName("options")
     @Expose
     private List<OptionQuantityType> options = null;
+
+    public String getSpecial_date_end() {
+        return special_date_end;
+    }
+
+    public void setSpecial_date_end(String special_date_end) {
+        this.special_date_end = special_date_end;
+    }
 
     public String getProductId() {
         return productId;
@@ -83,11 +94,11 @@ public class CategoryProduct_List {
         this.price = price;
     }
 
-    public Boolean getSpecial() {
+    public String getSpecial() {
         return special;
     }
 
-    public void setSpecial(Boolean special) {
+    public void setSpecial(String special) {
         this.special = special;
     }
 

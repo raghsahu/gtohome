@@ -35,7 +35,7 @@ public class Product_Details_Data {
     private String price;
     @SerializedName("special")
     @Expose
-    private Boolean special;
+    private String special;
     @SerializedName("tax")
     @Expose
     private Boolean tax;
@@ -126,11 +126,11 @@ public class Product_Details_Data {
         this.price = price;
     }
 
-    public Boolean getSpecial() {
+    public String getSpecial() {
         return special;
     }
 
-    public void setSpecial(Boolean special) {
+    public void setSpecial(String special) {
         this.special = special;
     }
 

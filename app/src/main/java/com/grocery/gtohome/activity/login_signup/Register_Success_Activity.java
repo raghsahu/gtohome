@@ -10,12 +10,13 @@ import android.view.View;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.databinding.ActivityRegisterSuccessBinding;
+import com.grocery.gtohome.model.login_model.CustomerInfo;
 import com.grocery.gtohome.model.register_model.RegistrationModelData;
 import com.grocery.gtohome.session.SessionManager;
 
 public class Register_Success_Activity extends AppCompatActivity {
     ActivityRegisterSuccessBinding binding;
-    RegistrationModelData RegistrationData;
+    CustomerInfo RegistrationData;
     SessionManager session;
 
     @Override
@@ -26,7 +27,7 @@ public class Register_Success_Activity extends AppCompatActivity {
         session = new SessionManager(Register_Success_Activity.this);
         try {
             if (getIntent()!=null){
-                RegistrationData=(RegistrationModelData) getIntent().getSerializableExtra("RegistrationData");
+                RegistrationData=(CustomerInfo) getIntent().getSerializableExtra("RegistrationData");
             }
 
         }catch (Exception e){

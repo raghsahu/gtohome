@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.grocery.gtohome.activity.Splash_Activity;
 import com.grocery.gtohome.model.category_model.CategoryName;
+import com.grocery.gtohome.model.login_model.CustomerInfo;
 import com.grocery.gtohome.model.register_model.RegistrationModelData;
 
 import java.lang.reflect.Type;
@@ -48,7 +49,7 @@ public class SessionManager extends Object {
 
     }
 
-    public void createSession(RegistrationModelData userInfoData) {
+    public void createSession(CustomerInfo userInfoData) {
         Gson gson = new Gson();
         String json = gson.toJson(userInfoData);
         editor.putString("user", json);
@@ -56,12 +57,12 @@ public class SessionManager extends Object {
         editor.apply();
     }
 
-    public RegistrationModelData getUser() {
+    public CustomerInfo getUser() {
         Gson gson = new Gson();
         String str = mypref.getString("user", "");
         if (str.isEmpty())
             return null;
-        return gson.fromJson(str, RegistrationModelData.class);
+        return gson.fromJson(str, CustomerInfo.class);
     }
 
 

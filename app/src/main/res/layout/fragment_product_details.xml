@@ -52,16 +52,38 @@
                     >
                 </TextView>
 
-                <TextView
-                    android:id="@+id/tv_price"
+                <LinearLayout
+                    android:weightSum="1"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/text_16_black"
-                    android:textStyle="bold"
-                    android:text=""
-                    android:padding="@dimen/_5sdp"
                     >
-                </TextView>
+                    <TextView
+                        android:layout_weight="0.5"
+                        android:id="@+id/tv_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/text_16_black"
+                        android:textStyle="bold"
+                        android:text=""
+                        android:padding="@dimen/_5sdp"
+                        >
+                    </TextView>
+
+                    <TextView
+                        android:layout_weight="0.5"
+                        android:id="@+id/tv_special_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/text_16_black"
+                        android:textStyle="bold"
+                        android:text=""
+                        android:padding="@dimen/_5sdp"
+                        >
+                    </TextView>
+                </LinearLayout>
+
+
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -37,11 +37,25 @@
                 >
 
                 <LinearLayout
-                    android:weightSum="1"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     >
+
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/tv_countdown"
+                        style="@style/text_12_black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/_5sdp"
+                        android:singleLine="false"
+                        android:maxLines="2"
+                        android:text=""
+                        android:textAlignment="textStart"
+                        android:textStyle="normal">
+                    </TextView>
+
                     <TextView
                         style="@style/text_12_black"
                         android:layout_width="match_parent"
@@ -54,15 +68,37 @@
                         android:textStyle="normal">
                     </TextView>
 
-                    <TextView
-                        android:id="@+id/tv_price"
-                        android:padding="@dimen/_5sdp"
-                        style="@style/text_12_black"
+                    <LinearLayout
+                        android:weightSum="1"
+                        android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAlignment="textStart"
-                        android:textStyle="normal">
-                    </TextView>
+                        >
+                        <TextView
+                            android:layout_weight="0.5"
+                            android:id="@+id/tv_price"
+                            android:padding="@dimen/_5sdp"
+                            style="@style/text_12_black"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="textStart"
+                            android:textStyle="normal">
+                        </TextView>
+
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_weight="0.5"
+                            android:id="@+id/tv_special_price"
+                            android:padding="@dimen/_5sdp"
+                            style="@style/text_12_black"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="textStart"
+                            android:textStyle="normal">
+                        </TextView>
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 

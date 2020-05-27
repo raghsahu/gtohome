@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/text_14_black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
+            android:padding="@dimen/_5sdp"
+            android:text="Subscribe"
+            android:textAlignment="textStart"
+            android:textStyle="normal">
+
+        </TextView>
+
+        <RadioGroup
+            android:id="@+id/radio_group_news"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:orientation="horizontal">
+
+        <RadioButton
+            android:layout_weight="0.5"
+            android:id="@+id/radio_yes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Yes">
+
+        </RadioButton>
+
+            <RadioButton
+                android:layout_weight="0.5"
+                android:checked="true"
+                android:id="@+id/radio_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No">
+            </RadioButton>
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/tv_subscribe_news"
+            style="@style/text_12_black"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/rectangle_bg_solid"
+            android:gravity="center"
+            android:padding="@dimen/_10sdp"
+            android:text="@string/continue_">
+        </TextView>
+
+    </LinearLayout>
+
+
+</LinearLayout>
+</layout>

@@ -2,6 +2,8 @@ package com.grocery.gtohome.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -108,12 +110,16 @@ public class Product_Details_Fragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
                 String selecteditem = adapter.getItemAtPosition(i).toString();
-                QtyName = productOptionValueList.get(i).getName();
-                String QtyPrice = productOptionValueList.get(i).getPrice();
-                QtyId = productOptionValueList.get(i).getProductOptionValueId();
 
-                if (selecteditem.equals(QtyName)) {
-                    binding.tvPrice.setText(QtyPrice);
+                if (productOptionValueList.size()>1){
+                    QtyName = productOptionValueList.get(i).getName();
+                    String QtyPrice = productOptionValueList.get(i).getPrice();
+                    QtyId = productOptionValueList.get(i).getProductOptionValueId();
+
+                    if (selecteditem.equals(QtyName)) {
+                        binding.tvPrice.setText(QtyPrice);
+
+                    }
                 }
             }
 
@@ -384,14 +390,32 @@ public class Product_Details_Fragment extends Fragment {
                                         }
                                     } else {
                                         binding.llSpin.setVisibility(View.GONE);
-                                        binding.tvPrice.setText(response.getProducts().get(i).getPrice());
+                                        if (!response.getProducts().get(i).getSpecial().equalsIgnoreCase("false")){
+                                            binding.tvSpecialPrice.setVisibility(View.VISIBLE);
+                                            binding.tvSpecialPrice.setText(response.getProducts().get(i).getSpecial());
+                                            binding.tvPrice.setText(response.getProducts().get(i).getPrice());
+                                            binding.tvPrice.setTextColor(Color.RED);
+                                            binding.tvPrice.setPaintFlags( binding.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                                        }else {
+                                            binding.tvPrice.setText(response.getProducts().get(i).getPrice());
+                                        }
                                     }
 
+                                    //********************if special price applied
+                                    if (productOptionValueList.size()< 1 || productOptionValueList.size()==1){
+                                            if (!response.getProducts().get(i).getSpecial().equalsIgnoreCase("false")){
+                                                binding.tvSpecialPrice.setVisibility(View.VISIBLE);
+                                                binding.tvSpecialPrice.setText(response.getProducts().get(i).getSpecial());
+                                                binding.tvPrice.setText(response.getProducts().get(i).getPrice());
+                                                binding.tvPrice.setTextColor(Color.RED);
+                                                binding.tvPrice.setPaintFlags( binding.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                                            }
+                                    }
                                     //****set related product
                                     if (response.getProducts().get(i).getRelatedProducts() != null &&
                                             !response.getProducts().get(i).getRelatedProducts().isEmpty()) {
 
-                                        CategoryProduct_Adapter friendsAdapter = new CategoryProduct_Adapter(response.getProducts().get(i).getRelatedProducts(), getActivity());
+                                        CategoryProduct_Adapter friendsAdapter = new CategoryProduct_Adapter(response.getProducts().get(i).getRelatedProducts(), getActivity(), "");
                                         binding.setFeatureAdapter(friendsAdapter);//set databinding adapter
                                         friendsAdapter.notifyDataSetChanged();
                                     }

@@ -19,6 +19,7 @@ import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.Base_Url;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.ActivityLoginBinding;
+import com.grocery.gtohome.model.login_model.LoginModel;
 import com.grocery.gtohome.model.register_model.RegistrationModel;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
@@ -28,9 +29,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.adapter.rxjava2.HttpException;
-
-import static com.grocery.gtohome.api_client.Base_Url.Register;
-import static com.grocery.gtohome.api_client.Base_Url.loginapi;
 
 public class Login_Activity extends AppCompatActivity {
     ActivityLoginBinding binding;
@@ -94,24 +92,23 @@ public class Login_Activity extends AppCompatActivity {
 
         Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
 
-        apiInterface.LoginUser(loginapi, Et_Email,Et_Pw)
+        apiInterface.LoginUser(Et_Email,Et_Pw)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<RegistrationModel>() {
+                .subscribeWith(new DisposableObserver<LoginModel>() {
                     @Override
-                    public void onNext(RegistrationModel response) {
+                    public void onNext(LoginModel response) {
                         //Handle logic
                         try {
                             progressDialog.dismiss();
                             Log.e("result_my_test", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
-                            if (response.getResult().equalsIgnoreCase("true")) {
-                                Log.e("result_my_test", "" + response.getData().getCustomerId());
-                                session.createSession(response.getData());
+                            if (response.getStatus()) {
+                                Log.e("result_my_test", "" + response.getCustomerInfo().getCustomerId());
+                                session.createSession(response.getCustomerInfo());
                                 Toast.makeText(context, response.getMsg(), Toast.LENGTH_SHORT).show();
                                 Intent intent=new Intent(Login_Activity.this, MainActivity.class);
                                 startActivity(intent);
-
 
                             } else {
                                 Toast.makeText(context, response.getMsg(), Toast.LENGTH_SHORT).show();

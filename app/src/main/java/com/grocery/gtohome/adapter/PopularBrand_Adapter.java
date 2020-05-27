@@ -1,18 +1,24 @@
 package com.grocery.gtohome.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.grocery.gtohome.BR;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.databinding.FeatureProductListBinding;
 import com.grocery.gtohome.databinding.PopularBrandListBinding;
+import com.grocery.gtohome.fragment.All_Product_Fragment;
 import com.grocery.gtohome.model.SampleModel;
+import com.grocery.gtohome.model.popular_brand.PopularBanner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +28,11 @@ import java.util.List;
  */
 public class PopularBrand_Adapter extends RecyclerView.Adapter<PopularBrand_Adapter.ViewHolder> {
 
-    private List<SampleModel> dataModelList;
+    private List<PopularBanner> dataModelList;
     Context context;
 
 
-    public PopularBrand_Adapter(ArrayList<SampleModel> dataModelList, Context ctx) {
+    public PopularBrand_Adapter(List<PopularBanner> dataModelList, Context ctx) {
         this.dataModelList = dataModelList;
         context = ctx;
 
@@ -44,25 +50,29 @@ public class PopularBrand_Adapter extends RecyclerView.Adapter<PopularBrand_Adap
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        SampleModel dataModel = dataModelList.get(position);
+        PopularBanner dataModel = dataModelList.get(position);
         holder.bind(dataModel);
         holder.itemRowBinding.setModel(dataModel);
         // holder.itemRowBinding.setItemClickListener(this);
 
-        holder.itemRowBinding.llVeg.setOnClickListener(new View.OnClickListener() {
+        holder.itemRowBinding.llBrand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (dataModel.getCategoryId()!=null && !dataModel.getCategoryId().equalsIgnoreCase("")){
 
-//                TravelingFragment fragment2 = new TravelingFragment();
-//                Bundle bundle = new Bundle();
-//                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
-//                // bundle.putString("Type","Photo");
-//                FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = manager.beginTransaction();
-//                fragmentTransaction.replace(R.id.frame, fragment2);
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
-//                fragment2.setArguments(bundle);
+                    All_Product_Fragment fragment2 = new All_Product_Fragment();
+                    Bundle bundle = new Bundle();
+                    // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                    bundle.putString("SubCategory_Id",dataModel.getCategoryId());
+                    FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frame, fragment2);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                    fragment2.setArguments(bundle);
+
+                }
+
             }
         });
     }

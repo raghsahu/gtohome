@@ -321,6 +321,7 @@
     <string name="blog">Blog</string>
     <string name="add_comment">Add Comment</string>
     <string name="please_enter_name">Please Enter Name</string>
+    <string name="newsletter">Newsletter</string>
 
 
 </resources>

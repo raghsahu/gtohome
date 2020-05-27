@@ -3,7 +3,10 @@ package com.grocery.gtohome.adapter;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -20,22 +24,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.grocery.gtohome.BR;
 import com.grocery.gtohome.R;
-import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.CategoryProductListBinding;
-import com.grocery.gtohome.databinding.FeatureProductListBinding;
 import com.grocery.gtohome.fragment.Product_Details_Fragment;
-import com.grocery.gtohome.model.FilterBy;
-import com.grocery.gtohome.model.SampleModel;
 import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.model.category_product_model.CategoryProduct_List;
-import com.grocery.gtohome.model.category_product_model.ProductOptionValue;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -56,15 +58,16 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
     private List<CategoryProduct_List> dataModelList;
     Context context;
     private String QtyOptionValueId="";
+    private String GH_Offer="";
     private Utilities utilities;
     SessionManager sessionManager;
+    private CountDownTimer newtimer;
     // List<ProductOptionValue> productOptionValueList = new ArrayList<>();
 
-
-
-    public CategoryProduct_Adapter(List<CategoryProduct_List> dataModelList, Context ctx) {
+    public CategoryProduct_Adapter(List<CategoryProduct_List> dataModelList, Context ctx, String special) {
         this.dataModelList = dataModelList;
         context = ctx;
+        GH_Offer = special;
         utilities = Utilities.getInstance(context);
         sessionManager = new SessionManager(context);
         Customer_Id = sessionManager.getUser().getCustomerId();
@@ -86,8 +89,33 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
         final CategoryProduct_List dataModel = dataModelList.get(position);
         holder.bind(dataModel);
         holder.itemRowBinding.setModel(dataModel);
-        // holder.itemRowBinding.setItemClickListener(this);
 
+        if (GH_Offer!=null && !GH_Offer.equalsIgnoreCase("") && !GH_Offer.isEmpty()){
+            if (!dataModel.getSpecial().equalsIgnoreCase("false")){
+                holder.itemRowBinding.tvCountdown.setVisibility(View.VISIBLE);
+                try {
+                    newtimer = new CountDownTimer(1000000000, 1000) {
+                        public void onTick(long millisUntilFinished) {
+
+                            setCountDownTimer(dataModel, holder.itemRowBinding.tvCountdown);
+
+                        }
+                        public void onFinish() {
+
+
+                        }
+                    };
+                    newtimer.start();
+
+                }catch (Exception e){
+
+                }
+
+            }
+
+        }
+
+        //click open details page
         holder.itemRowBinding.ivImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +151,15 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
             }
         }else {
             holder.itemRowBinding.llSpin.setVisibility(View.GONE);
-            holder.itemRowBinding.tvPrice.setText(dataModel.getPrice());
+            if (!dataModel.getSpecial().equalsIgnoreCase("false")){
+                holder.itemRowBinding.tvSpecialPrice.setVisibility(View.VISIBLE);
+                holder.itemRowBinding.tvSpecialPrice.setText(dataModel.getSpecial());
+                holder.itemRowBinding.tvPrice.setText(dataModel.getPrice());
+                holder.itemRowBinding.tvPrice.setTextColor(Color.RED);
+                holder.itemRowBinding.tvPrice.setPaintFlags(holder.itemRowBinding.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }else {
+                holder.itemRowBinding.tvPrice.setText(dataModel.getPrice());
+            }
         }
 
 
@@ -133,15 +169,25 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
             public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
                 String  selecteditem =  adapter.getItemAtPosition(i).toString();
 
-                for (int k=0; k<dataModel.getOptions().size(); k++) {
-                    for (int j = 0; j < dataModel.getOptions().get(k).getProductOptionValue().size(); j++) {
-                        String QtyName = dataModel.getOptions().get(k).getProductOptionValue().get(j).getName();
-                        String QtyPrice = dataModel.getOptions().get(k).getProductOptionValue().get(j).getPrice();
-                        QtyOptionValueId = dataModel.getOptions().get(k).getProductOptionValue().get(j).getProductOptionValueId();
-                        if (selecteditem.equals(QtyName)){
-                            holder.itemRowBinding.tvPrice.setText(QtyPrice);
-                        }
+                if (dataModel.getOptions()!=null && !dataModel.getOptions().isEmpty() && dataModel.getOptions().get(0).getProductOptionValue().size()>1){
+                    for (int k=0; k<dataModel.getOptions().size(); k++) {
+                        for (int j = 0; j < dataModel.getOptions().get(k).getProductOptionValue().size(); j++) {
+                            String QtyName = dataModel.getOptions().get(k).getProductOptionValue().get(j).getName();
+                            String QtyPrice = dataModel.getOptions().get(k).getProductOptionValue().get(j).getPrice();
+                            QtyOptionValueId = dataModel.getOptions().get(k).getProductOptionValue().get(j).getProductOptionValueId();
+                            if (selecteditem.equals(QtyName)){
+                                holder.itemRowBinding.tvPrice.setText(QtyPrice);
+                            }
 
+                        }
+                    }
+                }else {
+                    if (!dataModel.getSpecial().equalsIgnoreCase("false")){
+                        holder.itemRowBinding.tvSpecialPrice.setVisibility(View.VISIBLE);
+                        holder.itemRowBinding.tvSpecialPrice.setText(dataModel.getSpecial());
+                        holder.itemRowBinding.tvPrice.setText(dataModel.getPrice());
+                        holder.itemRowBinding.tvPrice.setTextColor(Color.RED);
+                        holder.itemRowBinding.tvPrice.setPaintFlags(holder.itemRowBinding.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     }
                 }
             }
@@ -228,6 +274,54 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
         });
 
     }
+
+    private void setCountDownTimer(CategoryProduct_List dataModel, TextView tvCountdown) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String currentDateandTime = sdf.format(new Date());
+            Log.e("currecttime", ""+currentDateandTime);
+//            Date curDate = null;
+//            try {
+//                curDate = sdf.parse(currentDateandTime);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+
+            if (dataModel.getSpecial_date_end()!=null && !dataModel.getSpecial_date_end().isEmpty()){
+
+                String end_date = dataModel.getSpecial_date_end();
+                Date Enddate_Format=null;
+                try {
+                   Enddate_Format = sdf.parse(end_date+" "+"00:00:00");
+                    System.out.println(Enddate_Format);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                //****************************************
+
+                Date currentDate = new Date();
+
+                long diff = Enddate_Format.getTime() - currentDate.getTime();
+                long seconds = diff / 1000;
+                long minutes = seconds / 60;
+                long hours = minutes / 60;
+                long days = hours / 24;
+
+               // Log.e("min_left", ""+minutes);
+                int sec = (int) (seconds % 60);
+                int min = (int) ((seconds / 60)%60);
+                int hours1 = (int) ((int) ((seconds/60)/60)- (days *24));
+
+                System.out.println(days +" days "+ hours + ":" + min + ":" + sec);
+                tvCountdown.setText(days +" days "+ hours1 + ":" + min + ":" + sec);
+//                if (minutes!=0 && !(minutes<0)){
+//                    tvCountdown.setText("End time- " + minutes + " min "  + sec+" sec left");
+//                }else if (seconds<60 && !(seconds<0)){
+//                    tvCountdown.setText(seconds+" sec left");
+//                }
+
+            }
+        }
 
     @SuppressLint("CheckResult")
     private void AddCartProduct(String product_id, String customer_id, String api_id, String quantity, String qty_option, String option_key) {

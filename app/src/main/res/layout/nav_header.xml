@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:gravity="left|start"
         android:padding="@dimen/layout_padding_default"
-        android:text=" "
+        android:text="gtohome.in"
         android:textColor="@color/white"
         android:textSize="@dimen/header_font_size"/>
 
@@ -89,6 +89,7 @@
         </TextView>
 
         <TextView
+            android:id="@+id/tv_offer"
             android:background="@drawable/rectangle_bg_border"
             android:drawableStart="@drawable/ic_brightness_"
             android:layout_weight="0.5"

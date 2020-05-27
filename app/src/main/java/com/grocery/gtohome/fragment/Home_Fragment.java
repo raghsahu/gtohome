@@ -3,8 +3,6 @@ package com.grocery.gtohome.fragment;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,15 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
@@ -30,7 +25,6 @@ import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
-import com.grocery.gtohome.CustomExpandableListAdapter;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.adapter.CategoryList_Adapter;
@@ -41,27 +35,23 @@ import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.Base_Url;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.FragmentHomeBinding;
+import com.grocery.gtohome.model.popular_brand.PopularBrandModel;
 import com.grocery.gtohome.model.SampleModel;
 import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.model.SliderModel;
 import com.grocery.gtohome.model.category_model.CategoryModel;
 import com.grocery.gtohome.model.category_product_model.CategoryProductModel;
-import com.grocery.gtohome.model.product_details.Product_Details_Model;
+import com.grocery.gtohome.model.home_slider.HomeSliderBanner;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.adapter.rxjava2.HttpException;
-
-import static com.grocery.gtohome.api_client.Base_Url.categoriesapi;
-import static com.grocery.gtohome.api_client.Base_Url.forgottenapi;
 
 /**
  * Created by Raghvendra Sahu on 08-Apr-20.
@@ -212,10 +202,98 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
         });
 
+        //subscribe news
+        binding.tvSubscribeNews.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String news_address=binding.etEmail.getText().toString();
+                if (news_address.isEmpty()){
+                    utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_enter_email), getString(R.string.ok), false);
+                }else {
+                    if (Connectivity.isConnected(getActivity())){
+                        AddNewsLetter(news_address);
+                    }else {
+                        utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+                    }
+                }
+            }
+        });
 
 
         return root;
 
+    }
+
+    @SuppressLint("CheckResult")
+    private void AddNewsLetter(String news_address) {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
+
+        apiInterface.AddNews(news_address)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<SimpleResultModel>() {
+                    @Override
+                    public void onNext(SimpleResultModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("blog_details", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+                                binding.etEmail.getText().clear();
+                                utilities.dialogOKOnBack(getActivity(), "", response.getMsg(), getActivity().getString(R.string.ok), false);
+
+                            } else {
+                                //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                                utilities.dialogOKOnBack(getActivity(), "", response.getMsg(), getActivity().getString(R.string.ok), false);
+
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("mr_product_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
     }
 
     @SuppressLint("CheckResult")
@@ -241,7 +319,7 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             if (response.getStatus()) {
                                // session.setCategoryData(response.getCategories());
 
-                                CategoryProduct_Adapter friendsAdapter = new CategoryProduct_Adapter(response.getProducts(), getActivity());
+                                CategoryProduct_Adapter friendsAdapter = new CategoryProduct_Adapter(response.getProducts(), getActivity(), "");
                                 binding.setFeatureAdapter(friendsAdapter);//set databinding adapter
                                 friendsAdapter.notifyDataSetChanged();
 
@@ -367,39 +445,163 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     }
 
+    @SuppressLint("CheckResult")
     private void getPopularBrandList() {
-        sampleModels=new ArrayList<>();
-        sampleModels.add(new SampleModel("Apple", "20", R.drawable.ashirwad_logo));
-        sampleModels.add(new SampleModel("Apple Gala", "100", R.drawable.brand2));
-        sampleModels.add(new SampleModel("Banana Robest", "50", R.drawable.brand3));
-        sampleModels.add(new SampleModel("Beans", "20", R.drawable.brand4));
-        sampleModels.add(new SampleModel("Beetroot", "20", R.drawable.brand5));
-        sampleModels.add(new SampleModel("Broad Beans", "20", R.drawable.brand6));
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
-        friendsAdapter = new PopularBrand_Adapter(sampleModels,getActivity());
-        binding.setPopularBrandAdapter(friendsAdapter);//set databinding adapter
-        friendsAdapter.notifyDataSetChanged();
+        Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
+
+        apiInterface.PopularBrandApi()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<PopularBrandModel>() {
+                    @Override
+                    public void onNext(PopularBrandModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_my_test", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+
+                                friendsAdapter = new PopularBrand_Adapter(response.getResponse().getBanners(),getActivity());
+                                binding.setPopularBrandAdapter(friendsAdapter);//set databinding adapter
+                                friendsAdapter.notifyDataSetChanged();
+
+                            } else {
+
+
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("mr_product_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
+
+
+
 
     }
 
+    @SuppressLint("CheckResult")
     private void SliderListArray() {
-        // arraylist list variable for store data;
-        ArrayList<SliderModel> listarray = new ArrayList<>();
 
-        listarray.add(new SliderModel(" ",R.drawable.banner1));
-        listarray.add(new SliderModel(" ",R.drawable.banar2));
-        listarray.add(new SliderModel(" ",R.drawable.banar3));
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
-        for (int i=0; i<listarray.size(); i++) {
-            DefaultSliderView textSliderView = new DefaultSliderView(getActivity());
-            // initialize a SliderLayout
-            textSliderView
-                    .image(listarray.get(i).getSlide_image())
-                    .setScaleType(BaseSliderView.ScaleType.Fit);
+        Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
 
-            binding.homeImgSlider.addSlider(textSliderView);
+        apiInterface.HomeHorizontalSlideApi()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<HomeSliderBanner>() {
+                    @Override
+                    public void onNext(HomeSliderBanner response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_my_test", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
 
-        }
+                                for (int i=0; i<response.getResponse().getBanners().size(); i++) {
+                                    DefaultSliderView textSliderView = new DefaultSliderView(getActivity());
+                                    // initialize a SliderLayout
+                                    textSliderView
+                                            .image(response.getResponse().getBanners().get(i).getImage())
+                                            .setScaleType(BaseSliderView.ScaleType.Fit);
+
+                                    binding.homeImgSlider.addSlider(textSliderView);
+
+                                }
+
+                            } else {
+
+
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("mr_product_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
+
 
     }
 

@@ -5,18 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.grocery.gtohome.BR;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.databinding.FeatureProductListBinding;
-import com.grocery.gtohome.databinding.FruitVegListBinding;
-import com.grocery.gtohome.fragment.Product_Details_Fragment;
 import com.grocery.gtohome.model.SampleModel;
 
 import java.util.ArrayList;
