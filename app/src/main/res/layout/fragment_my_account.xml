@@ -193,11 +193,13 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/light_white"></View>
+                        android:background="@color/light_white">
+                    </View>
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/ll_reward_points"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -2,6 +2,9 @@ package com.grocery.gtohome.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -9,10 +12,14 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -25,6 +32,7 @@ import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.adapter.CategoryList_Adapter;
@@ -56,16 +64,19 @@ import retrofit2.adapter.rxjava2.HttpException;
 /**
  * Created by Raghvendra Sahu on 08-Apr-20.
  */
-public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     FragmentHomeBinding binding;
     SliderAdapter_range sliderAdapter_range;
     private int dotsCount;
     private ImageView[] dotes;
     PopularBrand_Adapter friendsAdapter;
     private Utilities utilities;
-    ArrayList<SampleModel>sampleModels;
+    ArrayList<SampleModel> sampleModels;
     SessionManager session;
 
+    private Boolean isFabOpen = false;
+    private FloatingActionButton fab, fab_call, fab_sms;
+    private Animation fab_open, fab_close, rotate_forward, rotate_backward;
 
     public static Home_Fragment newInstance(String movieTitle) {
         Home_Fragment fragmentAction = new Home_Fragment();
@@ -76,26 +87,26 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         return fragmentAction;
     }
 
-//    @Override
-//    public void onViewCreated(View view, Bundle savedInstanceState) {
-//
-//        binding.swipeToRefresh.setColorSchemeResources(R.color.colorPrimaryDark);
-//        binding.swipeToRefresh.setOnRefreshListener(this);
-//    }
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         View root = binding.getRoot();
         utilities = Utilities.getInstance(getActivity());
         session = new SessionManager(getActivity());
-       // binding.swipeToRefresh.setColorSchemeResources(R.color.colorPrimaryDark);
-       // binding.swipeToRefresh.setOnRefreshListener(this);
+
+        fab = binding.fab;
+        fab_call = binding.fabCall;
+        fab_sms = binding.fabSms;
+
+        fab_open = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_close);
+        rotate_forward = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_forward);
+        rotate_backward = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_backward);
 
         try {
             ((MainActivity) getActivity()).Update_header(getString(R.string.home));
             ((MainActivity) getActivity()).CheckBottom(0);
-          //  ((MainActivity) getActivity()).CountCart("2");
+            //  ((MainActivity) getActivity()).CountCart("2");
         } catch (Exception e) {
         }
         //onback press call
@@ -126,33 +137,60 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         getPopularBrandList();//popular brand list
         getFeatureProduct();
 
-        if (session.getCategoryData()!=null && !session.getCategoryData().isEmpty()){
-            CategoryList_Adapter friendsAdapter = new CategoryList_Adapter(session.getCategoryData(),getActivity());
+        if (session.getCategoryData() != null && !session.getCategoryData().isEmpty()) {
+            CategoryList_Adapter friendsAdapter = new CategoryList_Adapter(session.getCategoryData(), getActivity());
             binding.setCategoryAdapter(friendsAdapter);//set databinding adapter
             friendsAdapter.notifyDataSetChanged();
 
-        }else {
-        if (Connectivity.isConnected(getActivity())){
-            getAllCategory();
-        }else {
-            utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
-        }
+        } else {
+            if (Connectivity.isConnected(getActivity())) {
+                getAllCategory();
+            } else {
+                utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+            }
         }
 
-//        binding.swipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//
-//                binding.swipeToRefresh.setRefreshing(false);
-//
-//                if (Connectivity.isConnected(getActivity())){
-//                    getAllCategory();
-//                }else {
-//                    utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
-//                }
-//            }
-//        });
 
+        //***floating action button on click
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                animateFAB();
+
+            }
+        });
+
+        fab_sms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PackageManager pm = getActivity().getPackageManager();
+                try {
+                    String toNumber = "8848566995"; // Replace with mobile phone number without +Sign or leading zeros, but with country code.
+                    //Suppose your country is India and your phone number is “xxxxxxxxxx”, then you need to send “91xxxxxxxxxx”.
+
+                    Intent sendIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + "" + toNumber + "?body=" + "Hi"));
+                    sendIntent.setPackage("com.whatsapp");
+                    startActivity(sendIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), "it may be you dont have whats app", Toast.LENGTH_LONG).show();
+
+                }
+
+            }
+        });
+
+
+        fab_call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String number = "8848566995";
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + number));
+                startActivity(callIntent);
+
+            }
+        });
 
         binding.tvAllGrocery.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,13 +244,13 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         binding.tvSubscribeNews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String news_address=binding.etEmail.getText().toString();
-                if (news_address.isEmpty()){
+                String news_address = binding.etEmail.getText().toString();
+                if (news_address.isEmpty()) {
                     utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_enter_email), getString(R.string.ok), false);
-                }else {
-                    if (Connectivity.isConnected(getActivity())){
+                } else {
+                    if (Connectivity.isConnected(getActivity())) {
                         AddNewsLetter(news_address);
-                    }else {
+                    } else {
                         utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
                     }
                 }
@@ -222,6 +260,34 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         return root;
 
+    }
+
+    private void animateFAB() {
+        if (isFabOpen) {
+
+            fab.startAnimation(rotate_backward);
+            fab_sms.startAnimation(fab_close);
+            fab_call.startAnimation(fab_close);
+
+            fab_sms.setClickable(false);
+            fab_call.setClickable(false);
+
+            isFabOpen = false;
+            Log.d("Rrr", "close");
+
+        } else {
+
+            fab.startAnimation(rotate_forward);
+            fab_sms.startAnimation(fab_open);
+            fab_call.startAnimation(fab_open);
+
+            fab_sms.setClickable(true);
+            fab_call.setClickable(true);
+
+            isFabOpen = true;
+            Log.d("Rrr", "open");
+
+        }
     }
 
     @SuppressLint("CheckResult")
@@ -317,7 +383,7 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             Log.e("result_my_test", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
-                               // session.setCategoryData(response.getCategories());
+                                // session.setCategoryData(response.getCategories());
 
                                 CategoryProduct_Adapter friendsAdapter = new CategoryProduct_Adapter(response.getProducts(), getActivity(), "");
                                 binding.setFeatureAdapter(friendsAdapter);//set databinding adapter
@@ -392,13 +458,13 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             if (response.getResult().equalsIgnoreCase("true")) {
                                 session.setCategoryData(response.getCategories());
 
-                                CategoryList_Adapter friendsAdapter = new CategoryList_Adapter(response.getCategories(),getActivity());
+                                CategoryList_Adapter friendsAdapter = new CategoryList_Adapter(response.getCategories(), getActivity());
                                 binding.setCategoryAdapter(friendsAdapter);//set databinding adapter
                                 friendsAdapter.notifyDataSetChanged();
 
-                             //   binding.swipeToRefresh.setVisibility(View.VISIBLE);
+                                //   binding.swipeToRefresh.setVisibility(View.VISIBLE);
                             } else {
-                              //  binding.swipeToRefresh.setVisibility(View.GONE);
+                                //  binding.swipeToRefresh.setVisibility(View.GONE);
                                 //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
                             }
 
@@ -467,7 +533,7 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
 
-                                friendsAdapter = new PopularBrand_Adapter(response.getResponse().getBanners(),getActivity());
+                                friendsAdapter = new PopularBrand_Adapter(response.getResponse().getBanners(), getActivity());
                                 binding.setPopularBrandAdapter(friendsAdapter);//set databinding adapter
                                 friendsAdapter.notifyDataSetChanged();
 
@@ -518,8 +584,6 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 });
 
 
-
-
     }
 
     @SuppressLint("CheckResult")
@@ -545,7 +609,7 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
 
-                                for (int i=0; i<response.getResponse().getBanners().size(); i++) {
+                                for (int i = 0; i < response.getResponse().getBanners().size(); i++) {
                                     DefaultSliderView textSliderView = new DefaultSliderView(getActivity());
                                     // initialize a SliderLayout
                                     textSliderView
@@ -608,12 +672,12 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private void setHorizontalSliderItem() {
         ArrayList<SliderModel> listarray1 = new ArrayList<>();
 
-        listarray1.add(new SliderModel("Wide Collection \nRefreshments",R.drawable.side_baner1));
-        listarray1.add(new SliderModel("Break The Chain",R.drawable.side_baner2));
-        listarray1.add(new SliderModel("Get California RED \n @ 12$ \n Shop for $200",R.drawable.sub_banner3));
+        listarray1.add(new SliderModel("Wide Collection \nRefreshments", R.drawable.side_baner1));
+        listarray1.add(new SliderModel("Break The Chain", R.drawable.side_baner2));
+        listarray1.add(new SliderModel("Get California RED \n @ 12$ \n Shop for $200", R.drawable.sub_banner3));
 
         //**********
-        sliderAdapter_range = new SliderAdapter_range(getActivity(),listarray1);
+        sliderAdapter_range = new SliderAdapter_range(getActivity(), listarray1);
         binding.sliderPager.setAdapter(sliderAdapter_range);
         binding.sliderPager.setPageTransformer(true, new ZoomOutSlideTransformer());
         binding.sliderPager.setCurrentItem(0);
@@ -681,11 +745,11 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public void onRefresh() {
-              //  binding.swipeToRefresh.setRefreshing(false);
+        //  binding.swipeToRefresh.setRefreshing(false);
 
-        if (Connectivity.isConnected(getActivity())){
+        if (Connectivity.isConnected(getActivity())) {
             getAllCategory();
-        }else {
+        } else {
             utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
         }
     }

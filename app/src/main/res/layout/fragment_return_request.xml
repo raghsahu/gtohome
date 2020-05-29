@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="myReturnAdapter"
+            type="com.grocery.gtohome.adapter.MyReturn_Adapter" />
 
+    </data>
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
@@ -15,6 +20,7 @@
             >
 
             <TextView
+                android:visibility="gone"
                 style="@style/text_14_black"
                 android:text="You have not made any previous returns!"
                 android:layout_width="wrap_content"
@@ -23,24 +29,25 @@
                 >
             </TextView>
 
-<!--            <TextView-->
-<!--                style="@style/text_16_black"-->
-<!--                android:text="0"-->
-<!--                android:textStyle="bold"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:padding="@dimen/_5sdp"-->
-<!--                >-->
-<!--            </TextView>-->
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeToRefresh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:adapter="@{myReturnAdapter}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    >
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         </LinearLayout>
-
-        <View
-            android:background="@color/light_black"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_1sdp"
-            >
-        </View>
 
 
     </LinearLayout>

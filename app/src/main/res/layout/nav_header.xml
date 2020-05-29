@@ -76,6 +76,7 @@
         >
 
         <TextView
+            android:id="@+id/tv_wallet"
             android:background="@drawable/rectangle_bg_border"
             android:drawableStart="@drawable/round_bright_res"
             android:layout_weight="0.5"
@@ -115,6 +116,7 @@
         >
 
         <TextView
+            android:id="@+id/tv_prime"
             android:background="@drawable/rectangle_bg_border"
             android:drawableStart="@drawable/round_bright_res"
             android:layout_weight="0.5"

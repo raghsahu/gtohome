@@ -81,6 +81,28 @@
                   android:orientation="vertical">
 
                   <RadioButton
+                      android:id="@+id/radio_current_loc"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="@string/select_current_address">
+
+                  </RadioButton>
+
+                  <TextView
+                      android:layout_marginBottom="@dimen/_5sdp"
+                      android:id="@+id/tv_current_loc"
+                      style="@style/text_12_black"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="start"
+                      android:paddingStart="@dimen/_10sdp"
+                      android:text="current location"
+                      android:textAlignment="textStart"
+                      >
+
+                  </TextView>
+
+                  <RadioButton
                       android:checked="true"
                       android:id="@+id/radio_exist_address"
                       android:layout_width="match_parent"
@@ -457,6 +479,30 @@
                       android:layout_height="wrap_content"
                       android:layout_marginTop="@dimen/_10sdp"
                       android:orientation="vertical">
+
+                      <RadioButton
+                          android:id="@+id/radio_current_loc1"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:text="@string/select_current_address">
+
+                      </RadioButton>
+
+
+                          <TextView
+                              android:layout_marginBottom="@dimen/_5sdp"
+                              android:id="@+id/tv_current_loc1"
+                              style="@style/text_12_black"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:gravity="start"
+                              android:paddingStart="@dimen/_10sdp"
+                              android:text="current location"
+                              android:textAlignment="textStart"
+                              >
+
+                          </TextView>
+
 
                       <RadioButton
                           android:checked="true"
@@ -1061,10 +1107,10 @@
                               </RadioButton>
 
                               <RadioButton
-                                  android:visibility="gone"
+                                  android:id="@+id/radio_rozarpay"
                                   android:layout_width="match_parent"
                                   android:layout_height="wrap_content"
-                                  android:text="@string/google_pay">
+                                  android:text="@string/razor_pay">
                               </RadioButton>
 
                               <RadioButton

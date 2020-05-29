@@ -1,6 +1,8 @@
-package com.grocery.gtohome;
+package com.grocery.gtohome.model;
 
 import android.content.Context;
+
+import com.grocery.gtohome.R;
 
 import java.util.Arrays;
 import java.util.List;

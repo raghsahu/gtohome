@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -93,6 +94,12 @@ public class Information_Fragment extends AppCompatActivity {
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
                                 binding.webview.getSettings().setJavaScriptEnabled(true);
+                                binding.webview.getSettings().setLoadWithOverviewMode(true);
+                                binding.webview.getSettings().setUseWideViewPort(true);
+                                binding.webview.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
+
+                                WebSettings webSettings =  binding.webview.getSettings();
+                                webSettings.setDefaultTextEncodingName("utf-8");
 
                                 for (int i = 0; i < response.getInformations().size(); i++) {
                                     String inform = response.getInformations().get(i).getTitle();
@@ -111,6 +118,10 @@ public class Information_Fragment extends AppCompatActivity {
                                         }
                                      }else if (info.equals("Privacy")){
                                         if (inform.equals("Privacy Policy")) {
+                                            binding.webview.loadDataWithBaseURL("", response.getInformations().get(i).getDescription(), "text/html", "UTF-8", "");
+                                        }
+                                    }else if (info.equals("GH PRIME MEMBERSHIP")){
+                                        if (inform.equals("GH PRIME MEMBERSHIP")) {
                                             binding.webview.loadDataWithBaseURL("", response.getInformations().get(i).getDescription(), "text/html", "UTF-8", "");
                                         }
                                     }

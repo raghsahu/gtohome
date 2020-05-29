@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
 
+        <variable
+            name="featureAdapter"
+            type="com.grocery.gtohome.adapter.CategoryProduct_Adapter" />
+    </data>
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -32,7 +38,7 @@
 
 
                 <EditText
-                    android:id="@+id/inward_time"
+                    android:id="@+id/et_search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
@@ -52,6 +58,7 @@
                 >
 
                 <Spinner
+                    android:id="@+id/spin_category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:entries="@array/all_category"
@@ -61,6 +68,7 @@
             </LinearLayout>
 
             <CheckBox
+                android:id="@+id/check_sub_category"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:padding="@dimen/_5sdp"
                 android:layout_width="match_parent"
@@ -72,6 +80,7 @@
             </CheckBox>
 
             <CheckBox
+                android:id="@+id/check_pro_description"
                 android:padding="@dimen/_5sdp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -83,7 +92,7 @@
 
 
             <TextView
-                android:id="@+id/tv_continue"
+                android:id="@+id/tv_search"
                 android:background="@drawable/rectangle_bg_primary"
                 android:padding="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
@@ -109,11 +118,13 @@
                 android:layout_height="@dimen/_1sdp">
             </View>
 
-
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                >
+                android:adapter="@{featureAdapter}"
+                android:scrollbars="none"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2">
             </androidx.recyclerview.widget.RecyclerView>
 
         </LinearLayout>

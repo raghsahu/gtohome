@@ -112,7 +112,7 @@
     <string name="total">Total</string>
     <string name="date_added">Date Added</string>
     <string name="reward_point">Your Rewards Points</string>
-    <string name="return_request">Produrn Returns</string>
+    <string name="return_request">Product Returns</string>
     <string name="your_transcation">Your Transactions</string>
     <string name="recuring_payment">Recurring Payments</string>
     <string name="logout">Logout</string>
@@ -146,7 +146,7 @@
     <string name="select_shipping_prefer">Please select the preferred shipping method to use on this order.</string>
     <string name="select_payment_method">Please select the preferred payment method to use on this order.</string>
     <string name="cash_on_delivery">Cash On Delivery</string>
-    <string name="google_pay">Google Pay</string>
+    <string name="razor_pay">Razor Pay</string>
     <string name="payu_money">PayUMoney</string>
     <string name="add_comments_about_order">Add Comments About Your Order</string>
     <string name="comments">Comments</string>
@@ -322,6 +322,10 @@
     <string name="add_comment">Add Comment</string>
     <string name="please_enter_name">Please Enter Name</string>
     <string name="newsletter">Newsletter</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="select_current_address">I want to use an current location</string>
+    <string name="return_details">Return Details</string>
+    <string name="wallet">Wallet</string>
 
 
 </resources>

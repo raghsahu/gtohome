@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -59,7 +59,7 @@
 
 
                 <EditText
-                    android:id="@+id/inward_time"
+                    android:id="@+id/et_firstname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
@@ -86,6 +86,7 @@
 
 
                 <EditText
+                    android:id="@+id/et_lastname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
@@ -112,6 +113,7 @@
 
 
                 <EditText
+                    android:id="@+id/et_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
@@ -138,6 +140,7 @@
 
 
                 <EditText
+                    android:id="@+id/et_telefone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
@@ -165,6 +168,7 @@
 
 
                 <EditText
+                    android:id="@+id/et_orderid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
@@ -192,10 +196,11 @@
 
 
                 <EditText
+                    android:id="@+id/et_orderdate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
-                    android:inputType="number"
+                    android:inputType="date"
                     android:hint="@string/order_date"
                     android:background="@drawable/edit_text_bg"
                     android:drawableEnd="@drawable/ic_date_range"
@@ -235,10 +240,11 @@
 
 
                 <EditText
+                    android:id="@+id/et_product_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
-                    android:inputType="number"
+                    android:inputType="text"
                     android:hint="@string/product_name"
                     android:background="@drawable/edit_text_bg"
                     android:padding="@dimen/_10sdp"
@@ -261,10 +267,11 @@
 
 
                 <EditText
+                    android:id="@+id/et_product_code"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
-                    android:inputType="number"
+                    android:inputType="text"
                     android:hint="@string/product_code"
                     android:background="@drawable/edit_text_bg"
                     android:padding="@dimen/_10sdp"
@@ -287,6 +294,7 @@
 
 
                 <EditText
+                    android:id="@+id/et_qty"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
@@ -302,56 +310,23 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
                 android:orientation="vertical"
                 android:padding="@dimen/_5sdp">
 
                 <TextView
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:padding="@dimen/_5sdp"
                     style="@style/text_14_black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/reason_for_return" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list_reason"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <RadioGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:orientation="vertical">
-
-                    <RadioButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/dead_on_arival">
-
-                    </RadioButton>
-
-                    <RadioButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/faulty_please_supply">
-                    </RadioButton>
-
-                    <RadioButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/order_error">
-                    </RadioButton>
-
-                    <RadioButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/other_please_supply_details">
-                    </RadioButton>
-
-                    <RadioButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/reaciving_wrong_item">
-                    </RadioButton>
-
-
-                </RadioGroup>
+            </androidx.recyclerview.widget.RecyclerView>
 
             </LinearLayout>
 
@@ -370,14 +345,14 @@
 
 
                 <RadioGroup
-                    android:id="@+id/radio_group"
+                    android:id="@+id/radio_group_open"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:orientation="horizontal">
 
                     <RadioButton
-                        android:id="@+id/radio_male"
+                        android:id="@+id/radio_yes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
@@ -386,7 +361,7 @@
                     </RadioButton>
 
                     <RadioButton
-                        android:id="@+id/radio_female"
+                        android:id="@+id/radio_no"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
@@ -429,7 +404,7 @@
                         android:singleLine="false"
                         android:isScrollContainer="true"
                         android:focusable="true"
-                        android:id="@+id/et_comments"
+                        android:id="@+id/et_faulty_details"
                         android:hint="@string/faulty_other_details"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -444,9 +419,20 @@
 
                 </LinearLayout>
 
+
+                <CheckBox
+                    android:id="@+id/check_terms"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:padding="@dimen/_5sdp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/text_12_black"
+                    android:text="I have read and agree to the Terms &amp; Conditions"
+                    >
+
+                </CheckBox>
+
             </LinearLayout>
-
-
 
             <TextView
                 android:id="@+id/tv_continue"
@@ -470,7 +456,7 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 </LinearLayout>

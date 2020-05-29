@@ -12,7 +12,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.PaymentMethod_Activity">
+   >
 
 
     <include
@@ -104,10 +104,10 @@
                         </RadioButton>
 
                         <RadioButton
-                            android:visibility="gone"
+                            android:id="@+id/radio_rozarpay"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/google_pay">
+                            android:text="@string/razor_pay">
                         </RadioButton>
 
                         <RadioButton

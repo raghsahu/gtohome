@@ -20,6 +20,9 @@ import com.grocery.gtohome.model.order_history.OrderHistoryDetails;
 import com.grocery.gtohome.model.popular_brand.PopularBrandModel;
 import com.grocery.gtohome.model.product_details.Product_Details_Model;
 import com.grocery.gtohome.model.register_model.RegistrationModel;
+import com.grocery.gtohome.model.return_model.ReturnDetailsModel;
+import com.grocery.gtohome.model.return_model.ReturnModel;
+import com.grocery.gtohome.model.return_reason_model.ReturnReasonModel;
 import com.grocery.gtohome.model.shipping_method.ShippingMethod;
 import com.grocery.gtohome.model.slot_model.Slot_Model;
 import com.grocery.gtohome.model.wishlist_model.Wishlist_Model;
@@ -255,11 +258,32 @@ public interface Api_Call {
     Observable<SimpleResultModel> UpdateNewsletter(@Query("newsletter") String newsValue,
                                                    @Query("customer_id")String customerId);
 
-
     @GET("index.php?route=restapi/home/our_brands")
     Observable<PopularBrandModel> PopularBrandApi();
 
-
     @GET("index.php?route=restapi/product/special_products")
     Observable<CategoryProductModel>  SpecialProductApi();
+
+    @GET("index.php?route=restapi/product/search")
+    Observable<CategoryProductModel>  SearchApi(
+            @Query("customer_id") String customer_Id,
+            @Query("category_id")  String category_id,
+            @Query("sub_category")  String sub_category,
+            @Query("description") String description,
+            @Query("search")  String et_search);
+
+    @GET("index.php?route=restapi/return/reasons")
+    Observable<ReturnReasonModel>  ReturnReasonApi();
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/return/add")
+    Observable<SimpleResultModel>  ReturnRequestApi(@FieldMap HashMap<String, String> map);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/return")
+    Observable<ReturnModel>  OrderReturnApi(@FieldMap HashMap<String, String> map);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/return/info")
+    Observable<ReturnDetailsModel> ReturnItemDetails(@FieldMap  HashMap<String, String> map);
 }

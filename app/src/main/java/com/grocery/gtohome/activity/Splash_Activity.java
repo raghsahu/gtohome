@@ -36,6 +36,7 @@ public class Splash_Activity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.CALL_PHONE,
     };
 
     @Override
@@ -68,6 +69,8 @@ public class Splash_Activity extends AppCompatActivity {
                     ActivityCompat.checkSelfPermission(this, mPermission[5])
                             != PackageManager.PERMISSION_GRANTED ||
                     ActivityCompat.checkSelfPermission(this, mPermission[6])
+                            != PackageManager.PERMISSION_GRANTED ||
+                    ActivityCompat.checkSelfPermission(this, mPermission[7])
                             != PackageManager.PERMISSION_GRANTED) {
 
                 ActivityCompat.requestPermissions(this,
@@ -128,17 +131,19 @@ public class Splash_Activity extends AppCompatActivity {
         System.out.println(grantResults[4] == PackageManager.PERMISSION_GRANTED);
         System.out.println(grantResults[5] == PackageManager.PERMISSION_GRANTED);
         System.out.println(grantResults[6] == PackageManager.PERMISSION_GRANTED);
+        System.out.println(grantResults[7] == PackageManager.PERMISSION_GRANTED);
 
 
         if (requestCode == REQUEST_CODE_PERMISSION) {
-            if (grantResults.length == 7 &&
+            if (grantResults.length == 8 &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                     grantResults[1] == PackageManager.PERMISSION_GRANTED &&
                     grantResults[2] == PackageManager.PERMISSION_GRANTED &&
                     grantResults[3] == PackageManager.PERMISSION_GRANTED &&
                     grantResults[4] == PackageManager.PERMISSION_GRANTED &&
                     grantResults[5] == PackageManager.PERMISSION_GRANTED &&
-                    grantResults[6] == PackageManager.PERMISSION_GRANTED
+                    grantResults[6] == PackageManager.PERMISSION_GRANTED &&
+                    grantResults[7] == PackageManager.PERMISSION_GRANTED
             ) {
 
                 ViewAnimator

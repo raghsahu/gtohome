@@ -1,7 +1,9 @@
 package com.grocery.gtohome.fragment;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,6 +33,8 @@ import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.databinding.FragmentContactUsBinding;
 import com.grocery.gtohome.databinding.FragmentHomeBinding;
+
+import java.util.Locale;
 
 /**
  * Created by Raghvendra Sahu on 08-Apr-20.
@@ -74,6 +78,16 @@ public class ContactUs_Fragment extends Fragment implements OnMapReadyCallback ,
                 }
             });
         }
+
+        binding.tvViewGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String uri = String.format(Locale.ENGLISH, "geo:%f,%f", 11.245909, 75.780386);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                getActivity().startActivity(intent);
+            }
+        });
 
         return root;
 

@@ -80,5 +80,6 @@ dependencies {
 
     implementation 'com.payumoney.sdkui:plug-n-play:1.6.0'
     implementation 'com.payumoney.core:payumoney-sdk:7.6.0'
+    implementation 'com.razorpay:checkout:1.5.16'
 
 }

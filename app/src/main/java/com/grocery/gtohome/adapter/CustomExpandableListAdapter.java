@@ -1,4 +1,4 @@
-package com.grocery.gtohome;
+package com.grocery.gtohome.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import com.grocery.gtohome.R;
 import com.grocery.gtohome.model.category_model.CategoryChild;
 
 import java.util.List;

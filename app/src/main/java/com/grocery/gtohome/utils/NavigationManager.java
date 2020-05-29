@@ -1,4 +1,4 @@
-package com.grocery.gtohome;
+package com.grocery.gtohome.utils;
 
 /**
  * Created by Raghvendra Sahu on 10-Apr-20.

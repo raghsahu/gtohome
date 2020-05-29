@@ -1,11 +1,14 @@
 package com.grocery.gtohome.fragment.my_basket;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -46,8 +49,14 @@ import com.grocery.gtohome.model.shipping_method.ShippingMethod;
 import com.grocery.gtohome.model.slot_model.Slot_Model;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
+import com.grocery.gtohome.utils.GPSTracker;
 import com.grocery.gtohome.utils.Utilities;
+import com.razorpay.Checkout;
+import com.razorpay.PaymentResultListener;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -67,7 +76,7 @@ import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
 /**
  * Created by Raghvendra Sahu on 09-Apr-20.
  */
-public class ChekoutActivity extends AppCompatActivity implements ShippingMethodAdapter.AdapterCallback {
+public class ChekoutActivity extends AppCompatActivity implements ShippingMethodAdapter.AdapterCallback, PaymentResultListener {
     FragmentDeliveryAddressBinding binding;
     private Utilities utilities;
     Context context;
@@ -100,6 +109,10 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
     String Et_Comment_Order,Et_Comment_Deliver;
     String timeslot_name;
     private String Delivery_Date;
+    private GPSTracker tracker;
+    private Double lat;
+    private Double lng;
+    String address,city,postalCode,country_loc,state_loc,knownName;
 
     @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +125,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         sessionManager = new SessionManager(context);
         Customer_Id = sessionManager.getUser().getCustomerId();
         binding.toolbar.tvToolbar.setText("Checkout");
+        tracker=new GPSTracker(ChekoutActivity.this);
 
         //set clickable true false
             binding.tvDeliveryDetails.setEnabled(false);
@@ -126,6 +140,17 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
             }
         });
 
+
+        if (tracker.canGetLocation()) {
+            lat = tracker.getLatitude();
+            lng = tracker.getLongitude();
+            Log.e("current_lat ", " " + String.valueOf(lat));
+            Log.e("current_Lon ", " " + String.valueOf(lng));
+            getAddress(lat,lng);
+        } else if (!tracker.canGetLocation()) {
+
+            tracker.showSettingsAlert();
+        }
 
         //********************************
         if (getIntent()!=null){
@@ -162,17 +187,11 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
             @Override
             public void onClick(View v) {
                 biling_delivery_charge=false;
-                if (!binding.radioExistAddress.isChecked() && !binding.radioOtherAddress.isChecked()) {
+                if (!binding.radioExistAddress.isChecked() && !binding.radioOtherAddress.isChecked() && !binding.radioCurrentLoc.isChecked()) {
                     utilities.dialogOK(context, getString(R.string.validation_title), "Please select shipping address", getString(R.string.ok), false);
                 } else {
                     if (binding.radioExistAddress.isChecked()) {
                         if (address_id != null && !address_id.isEmpty()) {
-//                            Intent intent = new Intent(context, PaymentMethod_Activity.class);
-//                            intent.putExtra("TotalPrice",TotalPrice);
-//                            intent.putExtra("CountryId",country_id);
-//                            intent.putExtra("ZoneId",zone_id);
-//                            intent.putExtra("AddressId",address_id);
-//                            startActivity(intent);
 
                             binding.llBilingDetails.setVisibility(View.GONE);
                             billing_details=false;
@@ -184,7 +203,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                         } else {
                             utilities.dialogOK(context, getString(R.string.validation_title), "Address not found, Please select address!", getString(R.string.ok), false);
                         }
-                    } else {
+                    } else if (binding.radioOtherAddress.isChecked()) {
                         // save address api
                         String first_name = binding.etFirstname.getText().toString();
                         String last_name = binding.etLastname.getText().toString();
@@ -208,11 +227,40 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                                 utilities.dialogOK(context, getString(R.string.validation_title), "Please select country & state", getString(R.string.ok), false);
                             }
 
-
-
                         } else {
                             utilities.dialogOK(context, getString(R.string.validation_title), "Please enter all fields!", getString(R.string.ok), false);
                         }
+                    }else {
+
+                        if (lat!=0.0 && lng!=0.0){
+                            if (stateModelList!=null){
+                                for (int i=0; i<stateModelList.size(); i++){
+                                    if (state_loc.equalsIgnoreCase(stateModelList.get(i).getName())){
+                                        zone_id=stateModelList.get(i).getZoneId();
+                                    }
+                                }
+                            }
+
+                            Log.e("curre_loc",""+country_id+" "+zone_id);
+
+                            String first_name = sessionManager.getUser().getFirstname();
+                            String last_name =  sessionManager.getUser().getLastname();
+                            String company_name = " ";
+                            String address1 = knownName;
+                            String address2 = " ";
+                            String City = city;
+                            String post_code = postalCode;
+
+                            if (Connectivity.isConnected(context)) {
+                                SaveAddressApi(first_name, last_name, company_name, address1, address2, City, post_code,false);
+                            } else {
+                                utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+                            }
+
+                        }else {
+                            utilities.dialogOK(context, getString(R.string.validation_title), "Current address not found", getString(R.string.ok), false);
+                        }
+
                     }
                 }
             }
@@ -224,17 +272,11 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                 @Override
                 public void onClick(View v) {
 
-                    if (!binding.radioExistDelivery.isChecked() && !binding.radioOtherDelivery.isChecked()) {
+                    if (!binding.radioExistDelivery.isChecked() && !binding.radioOtherDelivery.isChecked() && !binding.radioCurrentLoc1.isChecked()) {
                         utilities.dialogOK(context, getString(R.string.validation_title), "Please select delivery address", getString(R.string.ok), false);
                     } else {
                         if (binding.radioExistDelivery.isChecked()) {
                             if (address_delivery_id != null && !address_delivery_id.isEmpty()) {
-//                            Intent intent = new Intent(context, PaymentMethod_Activity.class);
-//                            intent.putExtra("TotalPrice",TotalPrice);
-//                            intent.putExtra("CountryId",country_id);
-//                            intent.putExtra("ZoneId",zone_id);
-//                            intent.putExtra("AddressId",address_id);
-//                            startActivity(intent);
                                 getShippingMethod();
 
                                 binding.llDeliveryDetails.setVisibility(View.GONE);
@@ -247,7 +289,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                             } else {
                                 utilities.dialogOK(context, getString(R.string.validation_title), "Address not found, Please select address!", getString(R.string.ok), false);
                             }
-                        } else {
+                        } else if (binding.radioOtherDelivery.isChecked()){
                             // save address api
                             String first_name = binding.etFirstnameDelivery.getText().toString();
                             String last_name = binding.etLastnameDelivery.getText().toString();
@@ -276,7 +318,38 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                             } else {
                                 utilities.dialogOK(context, getString(R.string.validation_title), "Please enter all fields!", getString(R.string.ok), false);
                             }
+                        }else {
+                            if (lat!=0.0 && lng!=0.0){
+                                if (stateModelList!=null){
+                                    for (int i=0; i<stateModelList.size(); i++){
+                                        if (state_loc.equalsIgnoreCase(stateModelList.get(i).getName())){
+                                            zone_id=stateModelList.get(i).getZoneId();
+                                        }
+                                    }
+                                }
+
+                                Log.e("curre_loc",""+country_id+" "+zone_id);
+
+                                String first_name = sessionManager.getUser().getFirstname();
+                                String last_name =  sessionManager.getUser().getLastname();
+                                String company_name = " ";
+                                String address1 = knownName;
+                                String address2 = " ";
+                                String City = city;
+                                String post_code = postalCode;
+
+                                if (Connectivity.isConnected(context)) {
+                                    biling_delivery_charge=true;
+                                    SaveAddressApi(first_name, last_name, company_name, address1, address2, City, post_code,true);
+                                } else {
+                                    utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+                                }
+                            }else {
+                                utilities.dialogOK(context, getString(R.string.validation_title), "Current address not found", getString(R.string.ok), false);
+                            }
                         }
+
+
                     }
                 }
             });
@@ -400,8 +473,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
             }
         });
 
-
-        //****************************************************
+        //***************************************************************************************
         binding.spinCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
@@ -471,6 +543,14 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                     case R.id.radio_other_address:
                         binding.llOtherAddress.setVisibility(View.VISIBLE);
                         break;
+                    case R.id.radio_current_loc:
+                        for (int i=0; i<CountryModelList.size(); i++){
+                            if (country_loc.equalsIgnoreCase(CountryModelList.get(i).getName())){
+                                country_id=CountryModelList.get(i).getCountryId();
+                                getCountryWiseState(country_id);
+                            }
+                        }
+                        break;
                 }
             }
         });
@@ -486,6 +566,15 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                     case R.id.radio_other_delivery:
                         binding.llOtherDelivery.setVisibility(View.VISIBLE);
                         break;
+                    case R.id.radio_current_loc1:
+                        for (int i=0; i<CountryModelList.size(); i++){
+                            if (country_loc.equalsIgnoreCase(CountryModelList.get(i).getName())){
+                                country_id=CountryModelList.get(i).getCountryId();
+                                getCountryWiseState(country_id);
+                            }
+                        }
+                        break;
+
                 }
             }
         });
@@ -632,6 +721,11 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                             payment_code="payu";
                             payment_title="PayUMoney";
                             break;
+                        case R.id.radio_rozarpay:
+                            payment_code="razorpay";
+                            payment_title="Credit Card / Debit Card / Net Banking (Razorpay)";
+                            break;
+
                     }
                 }
             });
@@ -659,6 +753,44 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                 }
             }
         });
+
+    }
+
+    private void getAddress(Double lat, Double lng) {
+
+        Geocoder geocoder;
+        List<Address> addresses = null;
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+
+            address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            city = addresses.get(0).getLocality();
+            state_loc = addresses.get(0).getAdminArea();
+            country_loc = addresses.get(0).getCountryName();
+            postalCode = addresses.get(0).getPostalCode();
+            knownName = addresses.get(0).getFeatureName();
+
+           binding.tvCurrentLoc.setText(address);
+           binding.tvCurrentLoc1.setText(address);
+           // tv_find_city.setText(city);
+            Log.e("address_latlng", ""+address);
+//            Log.e("address_city", ""+city);
+//            Log.e("address_state", ""+state_loc);
+//            Log.e("address_country", ""+country_loc);
+//            Log.e("address_knownName", ""+knownName);
+
+        }catch (Exception e){
+
+        }
+
+
 
     }
 
@@ -807,7 +939,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                                     Intent intent = new Intent(ChekoutActivity.this, OrderSuccess_Activity.class);
                                     intent.putExtra("OrderId",response.getOrderId().toString());
                                     startActivity(intent);
-                                }else {
+                                }else  if (payment_code.equals("payu")){
 
                                     Intent intent = new Intent(ChekoutActivity.this, PayUMoneyActivity.class);
                                     //intent.putExtra("OrderId",response.getOrderId().toString());
@@ -815,6 +947,9 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                                     startActivity(intent);
 
                                     // CallPaymentgateway();
+                                }else  if (payment_code.equals("razorpay")){
+
+                                    startPayment(Finalamount);
                                 }
 
 
@@ -864,8 +999,37 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                         progressDialog.dismiss();
                     }
                 });
+    }
 
+    private void startPayment(String finalamount) {
+        final Activity activity = this;
+        final Checkout co = new Checkout();
 
+        try {
+            JSONObject options = new JSONObject();
+            options.put("name", "Razorpay Corp");
+            options.put("description", "Product Charges");
+            //You can omit the image option to fetch the image from dashboard
+            options.put("image", "https://rzp-mobile.s3.amazonaws.com/images/rzp.png");
+            options.put("currency", "INR");
+
+           // String payment = editTextPayment.getText().toString();
+
+            double total = Double.parseDouble(finalamount);
+            total = total * 100;
+            options.put("amount", total);
+
+            JSONObject preFill = new JSONObject();
+            preFill.put("email", sessionManager.getUser().getEmail());
+            preFill.put("contact", sessionManager.getUser().getTelephone());
+
+            options.put("prefill", preFill);
+
+            co.open(activity, options);
+        } catch (Exception e) {
+            Toast.makeText(activity, "Error in payment: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
     private void Select_date() {
@@ -1097,7 +1261,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
                                 }else {
                                     OpenDialog(context, getString(R.string.validation_title), response.getAddressId(),
-                                            "Save Delivery Address Successful", getString(R.string.ok));
+                                            "Save Shipping Address Successful", getString(R.string.ok));
                                 }
 
 
@@ -1156,13 +1320,6 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         alertDialogBuilder.setPositiveButton(ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-//                Intent intent = new Intent(context, PaymentMethod_Activity.class);
-//                intent.putExtra("TotalPrice",TotalPrice);
-//                intent.putExtra("CountryId",country_id);
-//                intent.putExtra("ZoneId",zone_id);
-//                intent.putExtra("AddressId",addressId.toString());
-//                startActivity(intent);
 
                 address_id=addrId.toString();
                 binding.llBilingDetails.setVisibility(View.GONE);
@@ -1336,7 +1493,6 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                                 ArrayAdapter<String> adp1 = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, CountryDeliveryName);
                                 binding.spinCountryDelivery.setAdapter(adp1);
 
-
                             } else {
                                 //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
                                 utilities.dialogOK(context, getString(R.string.validation_title),
@@ -1488,4 +1644,18 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         super.onBackPressed();
     }
 
+    @Override
+    public void onPaymentSuccess(String razorpayPaymentID) {
+        Toast.makeText(this, "Payment successfully done! " + razorpayPaymentID, Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onPaymentError(int code, String response) {
+        try {
+            Toast.makeText(this, "Payment error please try again", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("OnPaymentError", "Exception in onPaymentError", e);
+        }
+    }
 }

@@ -1,9 +1,12 @@
-package com.grocery.gtohome;
+package com.grocery.gtohome.utils;
 
 import android.annotation.SuppressLint;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.grocery.gtohome.BuildConfig;
+import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.fragment.All_Product_Fragment;
 

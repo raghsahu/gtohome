@@ -22,7 +22,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -31,18 +30,18 @@ import android.widget.TextView;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.grocery.gtohome.CustomExpandableListAdapter;
-import com.grocery.gtohome.FragmentNavigationManager;
-import com.grocery.gtohome.NavigationManager;
+import com.grocery.gtohome.adapter.CustomExpandableListAdapter;
+import com.grocery.gtohome.fragment.nav_fragment.Wallet_Fragment;
+import com.grocery.gtohome.utils.FragmentNavigationManager;
+import com.grocery.gtohome.utils.NavigationManager;
 import com.grocery.gtohome.R;
-import com.grocery.gtohome.activity.login_signup.Login_Activity;
-import com.grocery.gtohome.adapter.WishList_Adapter;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.Base_Url;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.fragment.All_Product_Fragment;
 import com.grocery.gtohome.fragment.ContactUs_Fragment;
 import com.grocery.gtohome.fragment.Home_Fragment;
+import com.grocery.gtohome.fragment.Information_Fragment;
 import com.grocery.gtohome.fragment.my_basket.MyBasket_Fragment;
 import com.grocery.gtohome.fragment.my_account.My_Account_Fragment;
 import com.grocery.gtohome.fragment.Search_Fragment;
@@ -50,26 +49,21 @@ import com.grocery.gtohome.fragment.nav_fragment.Blog_Fragment;
 import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.model.category_model.CategoryChild;
 import com.grocery.gtohome.model.category_model.CategoryModel;
-import com.grocery.gtohome.model.category_model.CategoryName;
-import com.grocery.gtohome.model.wishlist_model.Wishlist_Model;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.adapter.rxjava2.HttpException;
 
 import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
-import static com.grocery.gtohome.api_client.Base_Url.categoriesapi;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public BottomNavigationView navView;
@@ -192,6 +186,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         TextView nav_tv_blog = findViewById(R.id.tv_blog);
         TextView nav_tv_offer = findViewById(R.id.tv_offer);
+        TextView nav_tv_ghprime = findViewById(R.id.tv_prime);
+        TextView nav_tv_wallet = findViewById(R.id.tv_wallet);
         nav_tv_blog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,6 +196,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ft.replace(R.id.frame, fragment);
                 ft.addToBackStack(null);
                 ft.commit();
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
+            }
+        });
+
+        nav_tv_ghprime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this, Information_Fragment.class);
+                intent.putExtra("Info","GH PRIME MEMBERSHIP");
+                startActivity(intent);
                 mDrawerLayout.closeDrawer(Gravity.LEFT);
             }
         });
@@ -224,6 +230,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+
+        nav_tv_wallet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Wallet_Fragment fragment2 = new Wallet_Fragment();
+                Bundle bundle = new Bundle();
+                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+               // bundle.putString("SubCategory_Id","");
+                FragmentManager manager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment2);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                fragment2.setArguments(bundle);
+
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
+            }
+        });
 
         if (session.getCategoryData() != null && !session.getCategoryData().isEmpty()) {
             mExpandableListTitle = new ArrayList<String>();

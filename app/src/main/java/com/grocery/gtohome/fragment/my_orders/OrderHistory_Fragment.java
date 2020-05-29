@@ -170,6 +170,7 @@ public class OrderHistory_Fragment extends Fragment implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
+        binding.swipeToRefresh.setRefreshing(false);
         if (Connectivity.isConnected(getActivity())){
             getOrderItem();
         }else {
