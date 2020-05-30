@@ -141,22 +141,34 @@
             >
 
             <ImageView
-                android:layout_marginRight="@dimen/_10sdp"
+                android:id="@+id/iv_fb"
+                android:layout_marginEnd="@dimen/_10sdp"
                 android:src="@drawable/fff"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
-
+                android:onClick="onClick"
                 >
             </ImageView>
 
             <ImageView
-                android:layout_marginLeft="@dimen/_10sdp"
+                android:id="@+id/iv_google"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:src="@drawable/google"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:scaleType="fitXY"
                 >
             </ImageView>
+
+            <com.facebook.login.widget.LoginButton
+                android:visibility="gone"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:id="@+id/btn_fb"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:scaleType="fitXY"
+
+                />
 
 
         </LinearLayout>

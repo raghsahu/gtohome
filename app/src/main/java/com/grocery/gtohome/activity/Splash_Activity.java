@@ -194,7 +194,7 @@ public class Splash_Activity extends AppCompatActivity {
         // Add code to print out the key hash
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.grossary",
+                    "com.grocery.gtohome",
                     PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");

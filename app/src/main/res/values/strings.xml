@@ -323,9 +323,14 @@
     <string name="please_enter_name">Please Enter Name</string>
     <string name="newsletter">Newsletter</string>
     <string name="subscribe">Subscribe</string>
-    <string name="select_current_address">I want to use an current location</string>
+    <string name="select_current_address">I want to use my current location</string>
     <string name="return_details">Return Details</string>
     <string name="wallet">Wallet</string>
+
+    <string name="facebook_app_id">1646789842135119</string>
+    <string name="fb_login_protocol_scheme">fb1646789842135119</string>
+    <string name="cancel">Cancel</string>
+    <string name="fail">Fail</string>
 
 
 </resources>

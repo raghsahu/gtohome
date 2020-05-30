@@ -53,7 +53,7 @@ dependencies {
     implementation 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
     // load image
     implementation 'com.github.bumptech.glide:glide:4.11.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     //dimension
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
@@ -81,5 +81,8 @@ dependencies {
     implementation 'com.payumoney.sdkui:plug-n-play:1.6.0'
     implementation 'com.payumoney.core:payumoney-sdk:7.6.0'
     implementation 'com.razorpay:checkout:1.5.16'
-
+    //google play service
+    implementation 'com.google.android.gms:play-services-auth:18.0.0'
+    implementation 'com.facebook.android:facebook-login:5.15.3'
 }
+//apply plugin: 'com.google.gms.google-services'

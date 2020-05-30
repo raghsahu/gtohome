@@ -1,5 +1,6 @@
 package com.grocery.gtohome.activity.login_signup;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -10,9 +11,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.Login;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.api_client.Api_Call;
@@ -25,17 +40,28 @@ import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.adapter.rxjava2.HttpException;
 
-public class Login_Activity extends AppCompatActivity {
+public class Login_Activity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
     ActivityLoginBinding binding;
     private Utilities utilities;
     private Context context;
     String Et_Pw,Et_Email;
     SessionManager session;
+    private GoogleApiClient googleApiClient;
+    CallbackManager callbackManager;
+    private static final int RC_SIGN_IN = 1;
+    private String social_name = "", social_id = "", social_email = "", social_img = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +71,94 @@ public class Login_Activity extends AppCompatActivity {
         utilities = Utilities.getInstance(this);
         context = this;
         session = new SessionManager(Login_Activity.this);
+
+        //******google sign in
+        GoogleSignInOptions gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        googleApiClient=new GoogleApiClient.Builder(this)
+                .enableAutoManage(this,this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
+                .build();
+
+        //*****fb login
+        callbackManager = CallbackManager.Factory.create();
+        binding.btnFb.setPermissions("email", "public_profile");
+
+        binding.ivGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+                startActivityForResult(intent,RC_SIGN_IN);
+            }
+        });
+
+
+        binding.btnFb.registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {@Override
+                public void onSuccess(LoginResult loginResult) {
+
+                    System.out.println("onSuccess");
+                    Toast.makeText(Login_Activity.this, "success", Toast.LENGTH_SHORT).show();
+
+                    String accessToken = loginResult.getAccessToken()
+                            .getToken();
+                    Log.i("accessToken", accessToken);
+
+                    GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
+                            new GraphRequest.GraphJSONObjectCallback() {@Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+
+                                Log.i("LoginActivity",response.toString());
+                                try {
+                                    social_id = object.getString("id");
+                                    try {
+                                        URL profile_pic = new URL(
+                                                "http://graph.facebook.com/" + social_id + "/picture?type=large");
+                                        Log.i("profile_pic",profile_pic + "");
+
+                                    } catch (MalformedURLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    social_name = object.getString("name");
+                                   // String email = object.getString("email");
+                                    // String gender = object.getString("gender");
+                                    //String birthday = object.getString("birthday");
+
+                                 //   Log.e("fb_email",email + "");
+
+                                    // if (Connectivity.isConnected(SignupScreenActivity.this)){
+
+                                   // SocialLoginApi(social_email,social_id,social_name);
+                                    //  }else {
+                                    //Toast.makeText(SignupScreenActivity.this, "Please check Internet", Toast.LENGTH_SHORT).show();
+                                    // }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            });
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields",
+                            "id,name,email,gender, birthday");
+                    request.setParameters(parameters);
+                    request.executeAsync();
+                }
+
+                    @Override
+                    public void onCancel() {
+                        System.out.println("onCancel");
+                        Toast.makeText(Login_Activity.this, getString(R.string.cancel), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        System.out.println("onError");
+                        Toast.makeText(Login_Activity.this, getString(R.string.fail), Toast.LENGTH_SHORT).show();
+                        //  Log.e("LoginActivity", exception.toString());
+                        // Log.e("LoginActivity", exception.getMessage());
+                    }
+                });
 
         binding.tvRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +196,12 @@ public class Login_Activity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void onClick(View v) {
+        if (v == binding.ivFb) {
+            binding.btnFb.performClick();
+        }
     }
 
     @SuppressLint("CheckResult")
@@ -180,4 +300,141 @@ public class Login_Activity extends AppCompatActivity {
 
         return true;
     }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==RC_SIGN_IN){
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+    }
+    private void handleSignInResult(GoogleSignInResult result){
+        if(result.isSuccess()){
+
+            GoogleSignInAccount acct = result.getSignInAccount();
+            assert acct != null;
+            social_name = acct.getDisplayName();
+            social_email = acct.getEmail();
+
+            if (acct.getPhotoUrl() != null) {
+                social_img = acct.getPhotoUrl().toString();
+            } else {
+                social_img = "";
+            }
+            Log.e("social_img ", " " + social_img);
+            social_id = acct.getId();
+
+            acct.getId();
+            Log.e("GoogleResult", social_id + "------" + social_name + "------" + social_email);
+
+            if (Connectivity.isConnected(Login_Activity.this)){
+                gotoHome();
+            }else {
+                Toast.makeText(this, "Please check Internet", Toast.LENGTH_SHORT).show();
+            }
+
+        }else{
+            Toast.makeText(getApplicationContext(),"Sign in cancel",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void gotoHome() {
+        if (!social_email.isEmpty() && !social_id.isEmpty()) {
+
+            if (!Patterns.EMAIL_ADDRESS.matcher(social_email).matches()) {
+                Toast.makeText(Login_Activity.this, "Email not valid", Toast.LENGTH_SHORT).show();
+            } else {
+
+                if (Connectivity.isConnected(Login_Activity.this)) {
+                   // SocialLoginApi(social_email,social_id,social_name);
+
+                } else {
+                    Toast.makeText(Login_Activity.this, "Please check internet", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else {
+            Toast.makeText(Login_Activity.this, "Please try again", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+//    @SuppressLint("CheckResult")
+//    private void SocialLoginApi(String social_email, String social_id, String social_name) {
+//        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, R.style.MyGravity);
+//        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+//        progressDialog.show();
+//
+//        Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
+//
+//        apiInterface.LoginSocialUser(social_email, String.valueOf(roll_type_int),social_id,social_name,"google",session.getDeviceId(),session.getTokenId())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeWith(new DisposableObserver<LoginModel>() {
+//                    @Override
+//                    public void onNext(LoginModel response) {
+//                        //Handle logic
+//                        try {
+//                            progressDialog.dismiss();
+//                            Log.e("result_my_test", "" + response.getStatus());
+//                            Toast.makeText(LoginActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+//                            if (response.getStatus() == 1) {
+//                                session.createSession(response.getResponse());
+//
+//                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                                startActivity(intent);
+//                                finish();
+//                            }
+//
+//                        } catch (Exception e) {
+//                            progressDialog.dismiss();
+//                        }
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        //Handle error
+//                        progressDialog.dismiss();
+//                        Log.e("mr_product_error", e.toString());
+//                        // Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+//                        if (e instanceof HttpException) {
+//                            int code = ((HttpException) e).code();
+//                            switch (code) {
+//                                case 403:
+//                                    break;
+//                                case 404:
+//                                    Toast.makeText(LoginActivity.this, R.string.invalid_login, Toast.LENGTH_SHORT).show();
+//                                    break;
+//                                case 409:
+//                                    break;
+//                                default:
+//                                    Toast.makeText(LoginActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+//                                    break;
+//                            }
+//                        } else {
+//                            if (TextUtils.isEmpty(e.getMessage())) {
+//                                Toast.makeText(LoginActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                        e.printStackTrace();
+//
+//                    }
+//
+//
+//                    @Override
+//                    public void onComplete() {
+//                        progressDialog.dismiss();
+//                    }
+//                });
+//
+//    }
 }

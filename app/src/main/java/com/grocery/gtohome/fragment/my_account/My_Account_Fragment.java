@@ -4,10 +4,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +18,17 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.activity.Splash_Activity;
@@ -33,9 +46,11 @@ import com.grocery.gtohome.session.SessionManager;
 /**
  * Created by Raghvendra Sahu on 08-Apr-20.
  */
-public class My_Account_Fragment extends Fragment {
+public class My_Account_Fragment extends Fragment  implements GoogleApiClient.OnConnectionFailedListener{
     FragmentMyAccountBinding binding;
     SessionManager sessionManager;
+    private GoogleApiClient googleApiClient;
+    private GoogleSignInOptions gso;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -60,6 +75,20 @@ public class My_Account_Fragment extends Fragment {
                 }
             });
         }
+
+        gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        googleApiClient=new GoogleApiClient.Builder(getActivity())
+                .enableAutoManage(getActivity(),  new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        // connection failed, should be handled
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
+                .build();
 
         binding.llEditInfo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -338,7 +367,18 @@ public class My_Account_Fragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
 
-                sessionManager.logout();
+                if (googleApiClient != null && googleApiClient.isConnected()) {
+                    // signed in. Show the "sign out" button and explanation.
+                    google_logout();
+                    disconnectFromFacebook();
+                } else{
+                    Log.e("logout_app", "local login logout");
+                    // not signed in. Show the "sign in" button and explanation.
+                    disconnectFromFacebook();
+
+                    sessionManager.logout();
+
+                }
 
             }
 
@@ -347,4 +387,54 @@ public class My_Account_Fragment extends Fragment {
         alert.show();
     }
 
+    private void disconnectFromFacebook() {
+
+        Log.e("logout_app_fb", "fb login logout");
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return; // already logged out
+        }
+
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/",
+                null, HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+
+                LoginManager.getInstance().logOut();
+
+                sessionManager.logout();
+
+            }
+        }).executeAsync();
+    }
+
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+
+    private void google_logout() {
+        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        if (status.isSuccess()){
+                            Log.e("logout_app_gmail", "google login logout");
+                            sessionManager.logout();
+
+                        }else{
+                            Toast.makeText(getActivity(),"Session not close",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        googleApiClient.stopAutoManage(getActivity());
+        googleApiClient.disconnect();
+    }
 }

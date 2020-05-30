@@ -267,8 +267,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     colors = session.getCategoryData().get(i).getChildren();
 
                 }
-                mExpandableListData.put(mExpandableListTitle.get(i),
-                        colors);
+                mExpandableListData.put(mExpandableListTitle.get(i), colors);
 
             }
 
