@@ -46,7 +46,7 @@ import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
  */
 public class All_Product_Fragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     FragmentAllProductsBinding binding;
-    String SubCategory_Id,GH_Offer="";
+    String SubCategory_Id,GH_Offer="",manufacturer_id="";
     private Utilities utilities;
     List<FilterBy> filterByModelList = new ArrayList<>();
     ArrayList<String> filterName = new ArrayList<>();
@@ -56,6 +56,7 @@ public class All_Product_Fragment extends Fragment implements SwipeRefreshLayout
         All_Product_Fragment fragmentAction = new All_Product_Fragment();
         Bundle args = new Bundle();
         args.putString("SubCategory_Id", SubCategory_Id);
+        args.putString("manufacturer_id", "");
         fragmentAction.setArguments(args);
 
         return fragmentAction;
@@ -76,6 +77,7 @@ public class All_Product_Fragment extends Fragment implements SwipeRefreshLayout
 
         if (getArguments() != null) {
             SubCategory_Id = getArguments().getString("SubCategory_Id");
+            manufacturer_id = getArguments().getString("manufacturer_id");
             GH_Offer = getArguments().getString("GH_Offer");
             Log.e("selectedID",SubCategory_Id);
         }
@@ -285,6 +287,7 @@ public class All_Product_Fragment extends Fragment implements SwipeRefreshLayout
         map.put("category_id", SubCategory_Id);
         map.put("sort", sort);
         map.put("order", order);
+        map.put("manufacturer_id", manufacturer_id);
 
         apiInterface.CategoryProductApi(map)
                 .subscribeOn(Schedulers.io())

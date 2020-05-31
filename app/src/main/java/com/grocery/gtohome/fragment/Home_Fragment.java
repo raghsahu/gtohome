@@ -208,21 +208,6 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
         });
 
-//        binding.tvViewallFruit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                All_Product_Fragment fragment2 = new All_Product_Fragment();
-//                Bundle bundle = new Bundle();
-//                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
-//                //   bundle.putString("Title",dataModel.getCategory_name());
-//                FragmentManager manager = getActivity().getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = manager.beginTransaction();
-//                fragmentTransaction.replace(R.id.frame, fragment2);
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
-//                fragment2.setArguments(bundle);
-//            }
-//        });
 
         binding.tvViewAllFeature.setOnClickListener(new View.OnClickListener() {
             @Override

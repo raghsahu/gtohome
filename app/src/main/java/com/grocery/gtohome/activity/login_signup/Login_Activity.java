@@ -21,6 +21,7 @@ import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.Login;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -51,11 +52,11 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.adapter.rxjava2.HttpException;
 
-public class Login_Activity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class Login_Activity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     ActivityLoginBinding binding;
     private Utilities utilities;
     private Context context;
-    String Et_Pw,Et_Email;
+    String Et_Pw, Et_Email;
     SessionManager session;
     private GoogleApiClient googleApiClient;
     CallbackManager callbackManager;
@@ -73,12 +74,12 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
         session = new SessionManager(Login_Activity.this);
 
         //******google sign in
-        GoogleSignInOptions gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
-        googleApiClient=new GoogleApiClient.Builder(this)
-                .enableAutoManage(this,this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
         //*****fb login
@@ -89,61 +90,77 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
             @Override
             public void onClick(View v) {
                 Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                startActivityForResult(intent,RC_SIGN_IN);
+                startActivityForResult(intent, RC_SIGN_IN);
             }
         });
 
 
         binding.btnFb.registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {@Override
-                public void onSuccess(LoginResult loginResult) {
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
 
-                    System.out.println("onSuccess");
-                    Toast.makeText(Login_Activity.this, "success", Toast.LENGTH_SHORT).show();
+                        System.out.println("onSuccess");
+                       // Toast.makeText(Login_Activity.this, "success", Toast.LENGTH_SHORT).show();
 
-                    String accessToken = loginResult.getAccessToken()
-                            .getToken();
-                    Log.i("accessToken", accessToken);
+                        String accessToken = loginResult.getAccessToken()
+                                .getToken();
+                        Log.i("accessToken", accessToken);
 
-                    GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
-                            new GraphRequest.GraphJSONObjectCallback() {@Override
-                            public void onCompleted(JSONObject object, GraphResponse response) {
+                        GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
+                                new GraphRequest.GraphJSONObjectCallback() {
+                                    @Override
+                                    public void onCompleted(JSONObject object, GraphResponse response) {
 
-                                Log.i("LoginActivity",response.toString());
-                                try {
-                                    social_id = object.getString("id");
-                                    try {
-                                        URL profile_pic = new URL(
-                                                "http://graph.facebook.com/" + social_id + "/picture?type=large");
-                                        Log.i("profile_pic",profile_pic + "");
+                                        Log.i("Login_FB", response.toString());
+                                        try {
+                                            social_id = object.getString("id");
+                                            try {
+                                                URL profile_pic = new URL(
+                                                        "http://graph.facebook.com/" + social_id + "/picture?type=large");
+                                                Log.i("profile_pic", profile_pic + "");
 
-                                    } catch (MalformedURLException e) {
-                                        e.printStackTrace();
+                                            } catch (MalformedURLException e) {
+                                                e.printStackTrace();
+                                            }
+                                            social_name = object.getString("name");
+                                            String first_name = object.getString("first_name");
+                                            String last_name = object.getString("last_name");
+
+                                            if (object.has("email"))
+                                            {
+                                               social_email = object.getString("email");
+                                            }
+                                            else
+                                            {
+                                                social_email = "";
+                                            }
+
+                                            Log.e("fb_name",first_name + " "+last_name);
+                                            //  Log.e("fb_email",social_email + "");
+
+                                              if (social_email!=null && !social_email.isEmpty()){
+                                                  if (Connectivity.isConnected(Login_Activity.this)) {
+                                                      SocialLoginApi(social_email, social_id, first_name,last_name, "facebook");
+                                                  } else {
+                                                      Toast.makeText(Login_Activity.this, "Please check Internet", Toast.LENGTH_SHORT).show();
+                                                  }
+                                              }else {
+                                                  utilities.dialogOK(context, getString(R.string.validation_title), "Email id not found, Please try other Facebook login", getString(R.string.ok), false);
+                                                  LoginManager.getInstance().logOut();
+                                              }
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
-                                    social_name = object.getString("name");
-                                   // String email = object.getString("email");
-                                    // String gender = object.getString("gender");
-                                    //String birthday = object.getString("birthday");
-
-                                 //   Log.e("fb_email",email + "");
-
-                                    // if (Connectivity.isConnected(SignupScreenActivity.this)){
-
-                                   // SocialLoginApi(social_email,social_id,social_name);
-                                    //  }else {
-                                    //Toast.makeText(SignupScreenActivity.this, "Please check Internet", Toast.LENGTH_SHORT).show();
-                                    // }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            });
-                    Bundle parameters = new Bundle();
-                    parameters.putString("fields",
-                            "id,name,email,gender, birthday");
-                    request.setParameters(parameters);
-                    request.executeAsync();
-                }
+                                });
+                        Bundle parameters = new Bundle();
+                       // parameters.putString("fields","id,name,email,gender, birthday");
+                        parameters.putString("fields", "id,name,first_name, last_name, email,link");
+                        request.setParameters(parameters);
+                        request.executeAsync();
+                    }
 
                     @Override
                     public void onCancel() {
@@ -185,9 +202,9 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
                 Et_Pw = binding.etPw.getText().toString();
 
                 if (isValid()) {
-                    if (Connectivity.isConnected(context)){
+                    if (Connectivity.isConnected(context)) {
                         CallLoginApi();
-                    }else {
+                    } else {
                         // Toast.makeText(context, getString(R.string.please_check_internet), Toast.LENGTH_SHORT).show();
                         utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
                     }
@@ -212,7 +229,7 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
 
         Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
 
-        apiInterface.LoginUser(Et_Email,Et_Pw)
+        apiInterface.LoginUser(Et_Email, Et_Pw)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<LoginModel>() {
@@ -227,7 +244,7 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
                                 Log.e("result_my_test", "" + response.getCustomerInfo().getCustomerId());
                                 session.createSession(response.getCustomerInfo());
                                 Toast.makeText(context, response.getMsg(), Toast.LENGTH_SHORT).show();
-                                Intent intent=new Intent(Login_Activity.this, MainActivity.class);
+                                Intent intent = new Intent(Login_Activity.this, MainActivity.class);
                                 startActivity(intent);
 
                             } else {
@@ -282,13 +299,13 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
             utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_enter_email), getString(R.string.ok), false);
             binding.etEmail.requestFocus();
             return false;
-        }else if (Et_Email !=null && !Et_Email.equals("") && !Et_Email.isEmpty()) {
+        } else if (Et_Email != null && !Et_Email.equals("") && !Et_Email.isEmpty()) {
             if (!utilities.checkEmail(Et_Email)) {
                 utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_enter_valid_email), getString(R.string.ok), false);
                 binding.etEmail.requestFocus();
                 return false;
             }
-        }else if (Et_Pw.trim().length() == 0) {
+        } else if (Et_Pw.trim().length() == 0) {
             utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_enter_password), getString(R.string.ok), false);
             binding.etPw.requestFocus();
             return false;
@@ -310,18 +327,22 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==RC_SIGN_IN){
+        if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
     }
-    private void handleSignInResult(GoogleSignInResult result){
-        if(result.isSuccess()){
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        if (result.isSuccess()) {
 
             GoogleSignInAccount acct = result.getSignInAccount();
             assert acct != null;
             social_name = acct.getDisplayName();
             social_email = acct.getEmail();
+
+            String lastname=acct.getFamilyName();
+            String firstname=acct.getGivenName();
 
             if (acct.getPhotoUrl() != null) {
                 social_img = acct.getPhotoUrl().toString();
@@ -333,19 +354,20 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
 
             acct.getId();
             Log.e("GoogleResult", social_id + "------" + social_name + "------" + social_email);
+            Log.e("GoogleResult1", firstname + "-" + lastname);
 
-            if (Connectivity.isConnected(Login_Activity.this)){
-                gotoHome();
-            }else {
+            if (Connectivity.isConnected(Login_Activity.this)) {
+                gotoHome(firstname,lastname);
+            } else {
                 Toast.makeText(this, "Please check Internet", Toast.LENGTH_SHORT).show();
             }
 
-        }else{
-            Toast.makeText(getApplicationContext(),"Sign in cancel",Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "Sign in cancel", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void gotoHome() {
+    private void gotoHome(String firstname, String lastname) {
         if (!social_email.isEmpty() && !social_id.isEmpty()) {
 
             if (!Patterns.EMAIL_ADDRESS.matcher(social_email).matches()) {
@@ -353,7 +375,7 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
             } else {
 
                 if (Connectivity.isConnected(Login_Activity.this)) {
-                   // SocialLoginApi(social_email,social_id,social_name);
+                  SocialLoginApi(social_email, social_id, firstname,lastname, "gplus");
 
                 } else {
                     Toast.makeText(Login_Activity.this, "Please check internet", Toast.LENGTH_SHORT).show();
@@ -365,76 +387,81 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
 
     }
 
-//    @SuppressLint("CheckResult")
-//    private void SocialLoginApi(String social_email, String social_id, String social_name) {
-//        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, R.style.MyGravity);
-//        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-//        progressDialog.show();
-//
-//        Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
-//
-//        apiInterface.LoginSocialUser(social_email, String.valueOf(roll_type_int),social_id,social_name,"google",session.getDeviceId(),session.getTokenId())
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeWith(new DisposableObserver<LoginModel>() {
-//                    @Override
-//                    public void onNext(LoginModel response) {
-//                        //Handle logic
-//                        try {
-//                            progressDialog.dismiss();
-//                            Log.e("result_my_test", "" + response.getStatus());
-//                            Toast.makeText(LoginActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
-//                            if (response.getStatus() == 1) {
-//                                session.createSession(response.getResponse());
-//
-//                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                                startActivity(intent);
-//                                finish();
-//                            }
-//
-//                        } catch (Exception e) {
-//                            progressDialog.dismiss();
-//                        }
-//
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        //Handle error
-//                        progressDialog.dismiss();
-//                        Log.e("mr_product_error", e.toString());
-//                        // Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
-//                        if (e instanceof HttpException) {
-//                            int code = ((HttpException) e).code();
-//                            switch (code) {
-//                                case 403:
-//                                    break;
-//                                case 404:
-//                                    Toast.makeText(LoginActivity.this, R.string.invalid_login, Toast.LENGTH_SHORT).show();
-//                                    break;
-//                                case 409:
-//                                    break;
-//                                default:
-//                                    Toast.makeText(LoginActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
-//                                    break;
-//                            }
-//                        } else {
-//                            if (TextUtils.isEmpty(e.getMessage())) {
-//                                Toast.makeText(LoginActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
-//                            } else {
-//                                Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                        e.printStackTrace();
-//
-//                    }
-//
-//
-//                    @Override
-//                    public void onComplete() {
-//                        progressDialog.dismiss();
-//                    }
-//                });
-//
-//    }
+    @SuppressLint("CheckResult")
+    private void SocialLoginApi(String social_email, String social_id, String firstname, String lastname, String social_type) {
+        final ProgressDialog progressDialog = new ProgressDialog(Login_Activity.this, R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
+
+        apiInterface.LoginSocialUser(firstname,lastname,social_email,social_id,social_type)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<LoginModel>() {
+                    @Override
+                    public void onNext(LoginModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_my_test", "" + response.getStatus());
+                            Toast.makeText(Login_Activity.this, "" + response.getMsg(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+                                session.createSession(response.getCustomerInfo());
+                                Toast.makeText(context, response.getMsg(), Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(Login_Activity.this, MainActivity.class);
+                                startActivity(intent);
+                            }else {
+
+                                if (response.getError().getApproved()!=null){
+                                    utilities.dialogOK(context, getString(R.string.validation_title),
+                                            response.getError().getApproved(), getString(R.string.ok), false);
+                                }
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("mr_product_error", e.toString());
+                        // Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //  Toast.makeText(Login_Activity.this, R.string.invalid_login, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(Login_Activity.this, R.string.cb_snooze_network_error, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(Login_Activity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(Login_Activity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        e.printStackTrace();
+
+                    }
+
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
+
+    }
 }

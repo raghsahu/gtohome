@@ -60,6 +60,7 @@ public class FruitVeg_Adapter extends RecyclerView.Adapter<FruitVeg_Adapter.View
                 Bundle bundle = new Bundle();
                 // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
                  bundle.putString("SubCategory_Id",dataModel.getCategory_id());
+                bundle.putString("manufacturer_id","");
                 FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = manager.beginTransaction();
                 fragmentTransaction.replace(R.id.frame, fragment2);

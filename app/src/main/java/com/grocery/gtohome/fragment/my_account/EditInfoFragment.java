@@ -27,6 +27,7 @@ import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.FragmentEditInfoBinding;
 import com.grocery.gtohome.databinding.FragmentMyAccountBinding;
 import com.grocery.gtohome.model.SimpleResultModel;
+import com.grocery.gtohome.model.login_model.LoginModel;
 import com.grocery.gtohome.model.register_model.RegistrationModel;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
@@ -118,9 +119,9 @@ public class EditInfoFragment extends Fragment {
         apiInterface.UpdateUser(first_name, lastname, mobile, email, Customer_id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<SimpleResultModel>() {
+                .subscribeWith(new DisposableObserver<LoginModel>() {
                     @Override
-                    public void onNext(SimpleResultModel response) {
+                    public void onNext(LoginModel response) {
                         //Handle logic
                         try {
                             progressDialog.dismiss();
@@ -129,12 +130,7 @@ public class EditInfoFragment extends Fragment {
                             if (response.getStatus()) {
                                 // Log.e("result_my_test", "" + response.getData().getCustomerId());
                                 utilities.dialogOKOnBack(context, getString(R.string.validation_title), response.getMsg(), getString(R.string.ok), true);
-
-                                sessionManager.getUser().setFirstname(first_name);
-                                sessionManager.getUser().setLastname(lastname);
-                                sessionManager.getUser().setTelephone(mobile);
-                                sessionManager.getUser().setEmail(email);
-
+                                sessionManager.createSession(response.getCustomerInfo());
 
                             } else {
                                 Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();

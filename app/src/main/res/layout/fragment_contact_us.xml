@@ -190,6 +190,7 @@
 
 
                 <EditText
+                    android:id="@+id/et_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
@@ -216,6 +217,7 @@
 
 
                 <EditText
+                    android:id="@+id/et_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
@@ -256,7 +258,7 @@
                         android:singleLine="false"
                         android:isScrollContainer="true"
                         android:focusable="true"
-                        android:id="@+id/et_comments"
+                        android:id="@+id/et_enquiry"
                         android:hint="@string/enquiry"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -288,9 +290,6 @@
                 android:layout_height="wrap_content"
                 >
             </TextView>
-
-
-
 
         </LinearLayout>
 

@@ -64,6 +64,7 @@ public class PopularBrand_Adapter extends RecyclerView.Adapter<PopularBrand_Adap
                     Bundle bundle = new Bundle();
                     // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
                     bundle.putString("SubCategory_Id",dataModel.getCategoryId());
+                    bundle.putString("manufacturer_id",dataModel.getManufacturer_id());
                     FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = manager.beginTransaction();
                     fragmentTransaction.replace(R.id.frame, fragment2);

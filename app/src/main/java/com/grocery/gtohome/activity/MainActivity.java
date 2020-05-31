@@ -219,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
                 bundle.putString("SubCategory_Id","");
                 bundle.putString("GH_Offer","Special");
+                bundle.putString("manufacturer_id","");
                 FragmentManager manager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = manager.beginTransaction();
                 fragmentTransaction.replace(R.id.frame, fragment2);

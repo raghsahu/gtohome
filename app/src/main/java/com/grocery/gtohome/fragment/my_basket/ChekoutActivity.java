@@ -36,6 +36,7 @@ import com.grocery.gtohome.api_client.Base_Url;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.FragmentDeliveryAddressBinding;
 import com.grocery.gtohome.fragment.Information_Fragment;
+import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.model.confirm_order_model.Confirm_Order_Model;
 import com.grocery.gtohome.model.country_model.CountryData;
 import com.grocery.gtohome.model.country_model.CountryModel;
@@ -52,6 +53,7 @@ import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.GPSTracker;
 import com.grocery.gtohome.utils.Utilities;
 import com.razorpay.Checkout;
+import com.razorpay.CheckoutActivity;
 import com.razorpay.PaymentResultListener;
 
 import org.json.JSONObject;
@@ -113,6 +115,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
     private Double lat;
     private Double lng;
     String address,city,postalCode,country_loc,state_loc,knownName;
+    private String Order_status_id,Order_Id;
 
     @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -827,6 +830,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
 
+                                Order_status_id=response.getOrder_status_id();
                                 if (response.getOrders().getProducts()!=null){
                                     HistoryItemList_Adapter friendsAdapter = new HistoryItemList_Adapter(response.getOrders().getProducts(),ChekoutActivity.this);
                                     binding.setMyOrderAdapter(friendsAdapter);//set databinding adapter
@@ -935,6 +939,8 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                             Log.e("result_order", "" + response.getStatus());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
+                                Order_Id=response.getOrderId().toString();
+
                                 if (payment_code.equals("cod")){
                                     Intent intent = new Intent(ChekoutActivity.this, OrderSuccess_Activity.class);
                                     intent.putExtra("OrderId",response.getOrderId().toString());
@@ -942,8 +948,9 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                                 }else  if (payment_code.equals("payu")){
 
                                     Intent intent = new Intent(ChekoutActivity.this, PayUMoneyActivity.class);
-                                    //intent.putExtra("OrderId",response.getOrderId().toString());
+                                    intent.putExtra("OrderId",response.getOrderId().toString());
                                     intent.putExtra("amount",Finalamount);
+                                    intent.putExtra("Order_status_id",Order_status_id);
                                     startActivity(intent);
 
                                     // CallPaymentgateway();
@@ -1336,7 +1343,6 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         alertDialog.show();
     }
 
-
     private void OpenDialogDelivery(Context activity, String string, final Integer addrId, String save_delivery_address_successful, String ok) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setTitle("");
@@ -1367,8 +1373,6 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-
-
 
     @SuppressLint("CheckResult")
     private void getCountryWiseState(String country_id) {
@@ -1646,8 +1650,82 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
     @Override
     public void onPaymentSuccess(String razorpayPaymentID) {
-        Toast.makeText(this, "Payment successfully done! " + razorpayPaymentID, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this, "Payment successfully done! " + razorpayPaymentID, Toast.LENGTH_SHORT).show();
+        UpdateOrderStatus("RazorPay: "+razorpayPaymentID);
 
+    }
+
+    @SuppressLint("CheckResult")
+    private void UpdateOrderStatus(String razorpayPaymentID) {
+        final ProgressDialog progressDialog = new ProgressDialog(context, R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        // progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
+
+        apiInterface.UpdateOrderStatus(Customer_Id,Order_status_id,Order_Id,razorpayPaymentID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<SimpleResultModel>() {
+                    @Override
+                    public void onNext(SimpleResultModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+                                Toast.makeText(ChekoutActivity.this, "Payment successfully done! " + razorpayPaymentID, Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(ChekoutActivity.this, OrderSuccess_Activity.class);
+                                intent.putExtra("OrderId",Order_Id);
+                                startActivity(intent);
+                            } else {
+                                //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                                utilities.dialogOK(context, getString(R.string.validation_title),
+                                        response.getMsg(), getString(R.string.ok), false);
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("Categ_product_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
     }
 
     @Override

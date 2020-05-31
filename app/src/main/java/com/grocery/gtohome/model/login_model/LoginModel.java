@@ -13,6 +13,9 @@ public class LoginModel {
     @SerializedName("msg")
     @Expose
     private String msg;
+    @SerializedName("error")
+    @Expose
+    private LoginError error;
     @SerializedName("api_token")
     @Expose
     private String apiToken;
@@ -22,6 +25,14 @@ public class LoginModel {
 
     public Boolean getStatus() {
         return status;
+    }
+
+    public LoginError getError() {
+        return error;
+    }
+
+    public void setError(LoginError error) {
+        this.error = error;
     }
 
     public void setStatus(Boolean status) {

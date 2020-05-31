@@ -20,6 +20,9 @@ public class PopularBanner {
     @SerializedName("category_id")
     @Expose
     private String categoryId;
+    @SerializedName("manufacturer_id")
+    @Expose
+    private String manufacturer_id;
     @SerializedName("image")
     @Expose
     private String image;
@@ -38,6 +41,14 @@ public class PopularBanner {
 
     public void setSortOrder(String sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    public String getManufacturer_id() {
+        return manufacturer_id;
+    }
+
+    public void setManufacturer_id(String manufacturer_id) {
+        this.manufacturer_id = manufacturer_id;
     }
 
     public String getTitle() {

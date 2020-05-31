@@ -159,7 +159,7 @@ public interface Api_Call {
 
     @FormUrlEncoded
     @POST("index.php?route=restapi/customer/edit_account")
-    Observable<SimpleResultModel> UpdateUser(
+    Observable<LoginModel> UpdateUser(
             @Field ("firstname")  String first_name,
             @Field ("lastname")String lastname,
             @Field ("telephone") String mobile,
@@ -286,4 +286,28 @@ public interface Api_Call {
     @FormUrlEncoded
     @POST("index.php?route=restapi/return/info")
     Observable<ReturnDetailsModel> ReturnItemDetails(@FieldMap  HashMap<String, String> map);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/orders/success")
+    Observable<SimpleResultModel>  UpdateOrderStatus(
+            @Field("customer_id") String customer_id,
+            @Field("order_status_id") String order_status_id,
+            @Field("order_id") String order_id,
+            @Field("message") String razorpayPaymentID);
+
+
+    @GET("index.php?route=restapi/auth/social_login")
+    Observable<LoginModel>  LoginSocialUser(
+            @Query("firstname") String firstname,
+            @Query("lastname") String lastname,
+            @Query("email") String social_email,
+            @Query("oauthid") String social_id,
+            @Query("oauth_provider")  String gplus);
+
+
+    @GET("index.php?route=restapi/information/send_contact")
+    Observable<SimpleResultModel>  SendEnquiry(
+            @Query("name")  String name,
+            @Query("email")  String email,
+            @Query("enquiry") String et_enquiry);
 }

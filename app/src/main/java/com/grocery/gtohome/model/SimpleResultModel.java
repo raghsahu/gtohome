@@ -16,6 +16,10 @@ public class SimpleResultModel {
     @SerializedName("cartCount")
     @Expose
     private Integer cartCount;
+
+    @SerializedName("error")
+    @Expose
+    private EnquiryError error;
     @SerializedName("status")
     @Expose
     private Boolean status;
@@ -50,5 +54,13 @@ public class SimpleResultModel {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public EnquiryError getError() {
+        return error;
+    }
+
+    public void setError(EnquiryError error) {
+        this.error = error;
     }
 }

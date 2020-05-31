@@ -3,11 +3,13 @@ package com.grocery.gtohome.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -17,6 +19,10 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.grocery.gtohome.R;
+import com.grocery.gtohome.api_client.Api_Call;
+import com.grocery.gtohome.api_client.RxApiClient;
+import com.grocery.gtohome.fragment.my_basket.ChekoutActivity;
+import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Utilities;
 import com.payumoney.core.PayUmoneySdkInitializer;
@@ -34,6 +40,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.adapter.rxjava2.HttpException;
+
+import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
+
 @SuppressLint({"AddJavascriptInterface", "SetJavaScriptEnabled", "JavascriptInterface"})
 public class PayUMoneyActivity extends AppCompatActivity {
     WebView webView;
@@ -47,11 +60,12 @@ public class PayUMoneyActivity extends AppCompatActivity {
     private String hash = "";
     //******************************************
     String TAG ="PayuMoney_Activity";
-    String txnid ="", amount ="", phone ="7879014631",
-            prodname ="Grocery", firstname ="", email ="rrr@gmail.com",
+    String txnid ="", amount ="", phone ="",
+            prodname ="Grocery", firstname ="", email ="",
             merchantId ="5733850", merchantkey="HBzjus8Q", salt="4YxPZIqeAl";
     String SUCCESS_URL="https://www.payumoney.com/mobileapp/payumoney/success.php";
     String Failer_URL="https://www.payumoney.com/mobileapp/payumoney/failure.php";
+    private String OrderId, Order_status_id,Customer_Id;
 
 
     @SuppressLint({"WrongConstant", "JavascriptInterface"})
@@ -66,10 +80,13 @@ public class PayUMoneyActivity extends AppCompatActivity {
         phone = sessionManager.getUser().getTelephone();
         firstname = sessionManager.getUser().getFirstname();
         email = sessionManager.getUser().getEmail();
+        Customer_Id = sessionManager.getUser().getCustomerId();
         webView=findViewById(R.id.webview);
 
         if (getIntent()!=null){
-            amount=getIntent().getStringExtra("amount");
+           amount=getIntent().getStringExtra("amount");
+            OrderId=getIntent().getStringExtra("OrderId");
+            Order_status_id=getIntent().getStringExtra("Order_status_id");
         }
 
         Random rand = new Random();
@@ -150,14 +167,23 @@ public class PayUMoneyActivity extends AppCompatActivity {
                 }
                 return super.shouldOverrideUrlLoading(view, url);
             }
-            //
-            // @Override
-            // public void onPageFinished(WebView view, String url) {
-            // super.onPageFinished(view, url);
-            //
-            // Toast.makeText(PayMentGateWay.this, "" + url,
-            // Toast.LENGTH_SHORT).show();
-            // }
+
+             @Override
+             public void onPageFinished(WebView view, String url) {
+             super.onPageFinished(view, url);
+
+          //   Toast.makeText(PayMentGateWay.this, "" + url, Toast.LENGTH_SHORT).show();
+
+                     if (url.equals(SUCCESS_URL)) {
+                         UpdateOrderStatus("PayU: "+txnid);
+
+                     } else if (url.equals(Failer_URL)) {
+                         Toast.makeText(PayUMoneyActivity.this, "Fail: " + url, Toast.LENGTH_SHORT).show();
+                     }
+                     super.onPageFinished(view, url);
+                 }
+
+
         });
 
         webView.setVisibility(View.VISIBLE);
@@ -209,6 +235,79 @@ public class PayUMoneyActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("CheckResult")
+    private void UpdateOrderStatus(String PaymentID) {
+        final ProgressDialog progressDialog = new ProgressDialog(PayUMoneyActivity.this, R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        // progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
+
+        apiInterface.UpdateOrderStatus(Customer_Id,Order_status_id,OrderId,PaymentID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<SimpleResultModel>() {
+                    @Override
+                    public void onNext(SimpleResultModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+                                Toast.makeText(PayUMoneyActivity.this, "Payment successfully done! " + PaymentID, Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(PayUMoneyActivity.this, OrderSuccess_Activity.class);
+                                intent.putExtra("OrderId",OrderId);
+                                startActivity(intent);
+                            } else {
+                                //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                                utilities.dialogOK(PayUMoneyActivity.this, getString(R.string.validation_title),
+                                        response.getMsg(), getString(R.string.ok), false);
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("Categ_product_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+
     public String hashCal(String type,String str){
         byte[] hashseq=str.getBytes();
         StringBuffer hexString = new StringBuffer();
@@ -231,8 +330,6 @@ public class PayUMoneyActivity extends AppCompatActivity {
 
     }
 
-
-
     public class PayUJavaScriptInterface {
         Context mContext;
 
@@ -247,10 +344,9 @@ public class PayUMoneyActivity extends AppCompatActivity {
 
                 public void run() {
                     mHandler = null;
-                    Toast.makeText(PayUMoneyActivity.this, "Success",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayUMoneyActivity.this, "Success", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(PayUMoneyActivity.this, OrderSuccess_Activity.class);
-                    intent.putExtra("OrderId","");
+                    intent.putExtra("OrderId",OrderId);
                     startActivity(intent);
                 }
             });
@@ -281,5 +377,37 @@ public class PayUMoneyActivity extends AppCompatActivity {
             return true;
         else
             return false;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result Code is -1 send from Payumoney activity
+        Log.d("MainActivity", "request code " + requestCode + " resultcode " + resultCode);
+        if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
+            TransactionResponse transactionResponse = data.getParcelableExtra( PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE );
+
+            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
+
+                if(transactionResponse.getTransactionStatus().equals( TransactionResponse.TransactionStatus.SUCCESSFUL )){
+                    //Success Transaction
+                } else{
+                    //Failure Transaction
+                }
+
+                // Response from Payumoney
+                String payuResponse = transactionResponse.getPayuResponse();
+
+                // Response from SURl and FURL
+                String merchantResponse = transactionResponse.getTransactionDetails();
+            }
+           // else if (resultModel != null && resultModel.getError() != null) {
+            //    Log.d(TAG, "Error response : " + resultModel.getError().getTransactionResponse());
+           // }
+        else {
+                Log.d(TAG, "Both objects are null!");
+            }
+        }
     }
 }
