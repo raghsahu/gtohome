@@ -25,6 +25,7 @@ import com.grocery.gtohome.model.return_model.ReturnModel;
 import com.grocery.gtohome.model.return_reason_model.ReturnReasonModel;
 import com.grocery.gtohome.model.shipping_method.ShippingMethod;
 import com.grocery.gtohome.model.slot_model.Slot_Model;
+import com.grocery.gtohome.model.wallet_model.WalletModelList;
 import com.grocery.gtohome.model.wishlist_model.Wishlist_Model;
 
 import java.util.HashMap;
@@ -310,4 +311,15 @@ public interface Api_Call {
             @Query("name")  String name,
             @Query("email")  String email,
             @Query("enquiry") String et_enquiry);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/wallet/add_money")
+    Observable<SimpleResultModel>  UpdateWalletStatus(
+            @Field("customer_id")  String customerId,
+            @Field("amount")  String amount,
+            @Field("description")  String razorpayPaymentID);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/wallet")
+    Observable<WalletModelList>  GetWalletApi(@Field("customer_id") String customerId);
 }

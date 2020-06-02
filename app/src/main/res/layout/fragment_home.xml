@@ -512,7 +512,7 @@
 
 
                         <LinearLayout
-                            android:weightSum="6"
+                            android:weightSum="5"
                             android:layout_marginLeft="@dimen/_5sdp"
                             android:layout_marginRight="@dimen/_5sdp"
                             android:layout_gravity="center"
@@ -525,7 +525,7 @@
                             <ImageView
                                 android:weightSum="1"
                                 android:layout_marginRight="@dimen/_5sdp"
-                                android:src="@drawable/mastercard"
+                                android:src="@drawable/credit_card"
                                 android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
@@ -536,39 +536,9 @@
                                 android:weightSum="1"
                                 android:layout_marginLeft="@dimen/_5sdp"
                                 android:layout_marginRight="@dimen/_5sdp"
-                                android:src="@drawable/discover"
+                                android:src="@drawable/upi_icon"
                                 android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_35sdp"
-                                android:scaleType="fitXY"
-                                >
-                            </ImageView>
-                            <ImageView
-                                android:weightSum="1"
-                                android:layout_marginLeft="@dimen/_5sdp"
-                                android:layout_marginRight="@dimen/_5sdp"
-                                android:src="@drawable/ameraican_express"
-                                android:layout_width="@dimen/_40sdp"
-                                android:layout_height="@dimen/_35sdp"
-                                android:scaleType="fitXY"
-                                >
-                            </ImageView>
-                            <ImageView
-                                android:weightSum="1"
-                                android:layout_marginLeft="@dimen/_5sdp"
-                                android:layout_marginRight="@dimen/_5sdp"
-                                android:src="@drawable/paypal"
-                                android:layout_width="@dimen/_40sdp"
-                                android:layout_height="@dimen/_35sdp"
-                                android:scaleType="fitXY"
-                                >
-                            </ImageView>
-                            <ImageView
-                                android:weightSum="1"
-                                android:layout_marginLeft="@dimen/_5sdp"
-                                android:layout_marginRight="@dimen/_5sdp"
-                                android:src="@drawable/visa_icon"
-                                android:layout_width="@dimen/_40sdp"
-                                android:layout_height="@dimen/_30sdp"
                                 android:scaleType="fitXY"
                                 >
                             </ImageView>
@@ -576,9 +546,30 @@
                             <ImageView
                                 android:weightSum="1"
                                 android:layout_marginLeft="@dimen/_5sdp"
-                                android:src="@drawable/cod_icon1"
-                                android:layout_width="@dimen/_50sdp"
-                                android:layout_height="@dimen/_30sdp"
+                                android:layout_marginRight="@dimen/_5sdp"
+                                android:src="@drawable/netbanking"
+                                android:layout_width="@dimen/_40sdp"
+                                android:layout_height="@dimen/_35sdp"
+                                android:scaleType="fitXY"
+                                >
+                            </ImageView>
+                            <ImageView
+                                android:weightSum="1"
+                                android:layout_marginLeft="@dimen/_5sdp"
+                                android:layout_marginRight="@dimen/_5sdp"
+                                android:src="@drawable/debit_card"
+                                android:layout_width="@dimen/_40sdp"
+                                android:layout_height="@dimen/_35sdp"
+                                android:scaleType="fitXY"
+                                >
+                            </ImageView>
+
+                            <ImageView
+                                android:weightSum="1"
+                                android:layout_marginLeft="@dimen/_5sdp"
+                                android:src="@drawable/cod1"
+                                android:layout_width="@dimen/_40sdp"
+                                android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
                                 >
                             </ImageView>
@@ -607,7 +598,7 @@
 
 
                         <LinearLayout
-                            android:weightSum="5"
+                            android:weightSum="6"
                             android:layout_marginLeft="@dimen/_5sdp"
                             android:layout_marginRight="@dimen/_5sdp"
                             android:layout_gravity="center"
@@ -652,7 +643,7 @@
                                 android:layout_marginLeft="@dimen/_5sdp"
                                 android:layout_marginRight="@dimen/_5sdp"
                                 android:layout_weight="1"
-                                android:src="@drawable/rss"
+                                android:src="@drawable/gmail_icon"
                                 android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
@@ -669,6 +660,16 @@
                                 >
                             </ImageView>
 
+                            <ImageView
+                                android:layout_marginLeft="@dimen/_5sdp"
+                                android:layout_marginRight="@dimen/_5sdp"
+                                android:layout_weight="1"
+                                android:src="@drawable/whatsapp"
+                                android:layout_width="@dimen/_40sdp"
+                                android:layout_height="@dimen/_35sdp"
+                                android:scaleType="fitXY"
+                                >
+                            </ImageView>
 
                         </LinearLayout>
 

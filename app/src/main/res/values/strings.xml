@@ -145,6 +145,7 @@
     <string name="free_shipping">Free Shipping</string>
     <string name="select_shipping_prefer">Please select the preferred shipping method to use on this order.</string>
     <string name="select_payment_method">Please select the preferred payment method to use on this order.</string>
+    <string name="select_payment_wallet">Please select the preferred payment method to add money.</string>
     <string name="cash_on_delivery">Cash On Delivery</string>
     <string name="razor_pay">Razor Pay</string>
     <string name="payu_money">PayUMoney</string>
@@ -331,6 +332,7 @@
     <string name="fb_login_protocol_scheme">fb1646789842135119</string>
     <string name="cancel">Cancel</string>
     <string name="fail">Fail</string>
+    <string name="addmoney">Add money</string>
 
 
 </resources>

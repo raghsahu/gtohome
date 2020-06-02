@@ -66,6 +66,7 @@ public class PayUMoneyActivity extends AppCompatActivity {
     String SUCCESS_URL="https://www.payumoney.com/mobileapp/payumoney/success.php";
     String Failer_URL="https://www.payumoney.com/mobileapp/payumoney/failure.php";
     private String OrderId, Order_status_id,Customer_Id;
+    private String PaymentType;
 
 
     @SuppressLint({"WrongConstant", "JavascriptInterface"})
@@ -87,6 +88,7 @@ public class PayUMoneyActivity extends AppCompatActivity {
            amount=getIntent().getStringExtra("amount");
             OrderId=getIntent().getStringExtra("OrderId");
             Order_status_id=getIntent().getStringExtra("Order_status_id");
+            PaymentType=getIntent().getStringExtra("PaymentType");
         }
 
         Random rand = new Random();
@@ -175,7 +177,12 @@ public class PayUMoneyActivity extends AppCompatActivity {
           //   Toast.makeText(PayMentGateWay.this, "" + url, Toast.LENGTH_SHORT).show();
 
                      if (url.equals(SUCCESS_URL)) {
-                         UpdateOrderStatus("PayU: "+txnid);
+                         if (PaymentType.equalsIgnoreCase("Wallet")){
+                             UpdatePaymentStatus("PayU: "+txnid);
+                         }else {
+                             UpdateOrderStatus("PayU: "+txnid);
+                         }
+
 
                      } else if (url.equals(Failer_URL)) {
                          Toast.makeText(PayUMoneyActivity.this, "Fail: " + url, Toast.LENGTH_SHORT).show();
@@ -233,6 +240,78 @@ public class PayUMoneyActivity extends AppCompatActivity {
         webview_ClientPost(webView, action1, mapParams.entrySet());
 
 
+    }
+
+    @SuppressLint("CheckResult")
+    private void UpdatePaymentStatus(String razorpayPaymentID) {
+        final ProgressDialog progressDialog = new ProgressDialog(PayUMoneyActivity.this, R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        // progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
+
+        apiInterface.UpdateWalletStatus(Customer_Id,amount,razorpayPaymentID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<SimpleResultModel>() {
+                    @Override
+                    public void onNext(SimpleResultModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+                                utilities.dialogOKOnBack(PayUMoneyActivity.this, getString(R.string.validation_title),
+                                        response.getMsg(), getString(R.string.ok), true);
+
+                            } else {
+                                //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                                utilities.dialogOK(PayUMoneyActivity.this, getString(R.string.validation_title),
+                                        response.getMsg(), getString(R.string.ok), false);
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("Categ_product_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
     }
 
     @SuppressLint("CheckResult")

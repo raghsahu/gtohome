@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
+            android:orientation="vertical"
+            android:padding="@dimen/_5sdp">
+
+            <TextView
+                style="@style/text_14_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Amount" />
+
+
+            <EditText
+                android:id="@+id/et_amount"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@drawable/edit_text_bg"
+                android:hint="Enter Amount"
+                android:inputType="number"
+                android:padding="@dimen/_10sdp"
+                android:textColor="@color/black" />
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/rectangle_bg_border"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <TextView
+                    style="@style/text_12_black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/select_payment_wallet" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_5sdp">
+
+                    <RadioGroup
+                        android:id="@+id/rg_payment_method"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:id="@+id/radio_rozarpay"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/razor_pay">
+                        </RadioButton>
+
+                        <RadioButton
+                            android:id="@+id/radio_payu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/payu_money">
+                        </RadioButton>
+
+
+                    </RadioGroup>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_add_money"
+                android:background="@drawable/rectangle_bg_primary"
+                android:padding="@dimen/_10sdp"
+             android:layout_marginTop="@dimen/_30sdp"
+                style="@style/textview12white"
+                android:text="Add money to wallet"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+            </TextView>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>

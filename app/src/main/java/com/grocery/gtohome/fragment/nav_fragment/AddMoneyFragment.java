@@ -1,7 +1,9 @@
 package com.grocery.gtohome.fragment.nav_fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -9,53 +11,49 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
-import com.grocery.gtohome.adapter.CategoryList_Adapter;
-import com.grocery.gtohome.adapter.CreditList_Adapter;
-import com.grocery.gtohome.adapter.DebitList_Adapter;
+import com.grocery.gtohome.activity.PayUMoneyActivity;
 import com.grocery.gtohome.api_client.Api_Call;
-import com.grocery.gtohome.api_client.Base_Url;
 import com.grocery.gtohome.api_client.RxApiClient;
-import com.grocery.gtohome.databinding.FragmentBlogBinding;
-import com.grocery.gtohome.databinding.FragmentWalletBinding;
-import com.grocery.gtohome.model.category_model.CategoryModel;
-import com.grocery.gtohome.model.wallet_model.WalletModelList;
+import com.grocery.gtohome.databinding.FragmentAddMoneyBinding;
+import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.session.SessionManager;
-import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
+import com.razorpay.Checkout;
+import com.razorpay.PaymentResultListener;
+
+import org.json.JSONObject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.adapter.rxjava2.HttpException;
 
-public class Wallet_Fragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-    FragmentWalletBinding binding;
+import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
+
+public class AddMoneyFragment extends Fragment implements PaymentResultListener {
+    FragmentAddMoneyBinding binding;
     private Utilities utilities;
     SessionManager session;
     private String CustomerId;
+    private String amount;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_wallet, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_money, container, false);
         View root = binding.getRoot();
         utilities = Utilities.getInstance(getActivity());
         session = new SessionManager(getActivity());
-        CustomerId = session.getUser().getCustomerId();
-        // binding.swipeToRefresh.setColorSchemeResources(R.color.colorPrimaryDark);
-        // binding.swipeToRefresh.setOnRefreshListener(this);
+        CustomerId=session.getUser().getCustomerId();
 
         try {
-            ((MainActivity) getActivity()).Update_header(getString(R.string.wallet));
+            ((MainActivity) getActivity()).Update_header(getString(R.string.addmoney));
 
         } catch (Exception e) {
         }
@@ -73,67 +71,116 @@ public class Wallet_Fragment extends Fragment implements SwipeRefreshLayout.OnRe
             });
         }
 
-        if (Connectivity.isConnected(getActivity())) {
-            getWalletHistory();
-        } else {
-            utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
-        }
-
         binding.tvAddMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddMoneyFragment fragment2 = new AddMoneyFragment();
-                Bundle bundle = new Bundle();
-                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
-                // bundle.putString("SubCategory_Id","");
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = manager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame, fragment2);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                fragment2.setArguments(bundle);
+               amount= binding.etAmount.getText().toString();
+
+               if (!amount.isEmpty()){
+                   if (!binding.radioPayu.isChecked() && !binding.radioRozarpay.isChecked()){
+                       utilities.dialogOK(getActivity(), getString(R.string.validation_title),
+                               "Please select payment method", getString(R.string.ok), false);
+                   }else {
+                       if (binding.radioPayu.isChecked()){
+                           Intent intent = new Intent(getActivity(), PayUMoneyActivity.class);
+                           intent.putExtra("OrderId","");
+                           intent.putExtra("amount",amount);
+                           intent.putExtra("Order_status_id","");
+                           intent.putExtra("PaymentType","Wallet");
+                           startActivity(intent);
+
+                       }else {
+                           startPayment(amount);
+                       }
+                   }
+
+               }else {
+                   utilities.dialogOK(getActivity(), getString(R.string.validation_title),
+                           "Please enter amount", getString(R.string.ok), false);
+               }
+
             }
         });
+
 
         return root;
 
     }
 
+    private void startPayment(String finalamount) {
+        final Checkout co = new Checkout();
+
+        try {
+            JSONObject options = new JSONObject();
+            options.put("name", "Razorpay Corp");
+            options.put("description", "Product Charges");
+            //You can omit the image option to fetch the image from dashboard
+            options.put("image", "https://rzp-mobile.s3.amazonaws.com/images/rzp.png");
+            options.put("currency", "INR");
+
+            // String payment = editTextPayment.getText().toString();
+
+            double total = Double.parseDouble(finalamount);
+            total = total * 100;
+            options.put("amount", total);
+
+            JSONObject preFill = new JSONObject();
+            preFill.put("email", session.getUser().getEmail());
+            preFill.put("contact", session.getUser().getTelephone());
+
+            options.put("prefill", preFill);
+
+            co.open(getActivity(), options);
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), "Error in payment: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPaymentSuccess(String razorpayPaymentID) {
+        // Toast.makeText(this, "Payment successfully done! " + razorpayPaymentID, Toast.LENGTH_SHORT).show();
+        UpdatePaymentStatus("RazorPay: "+razorpayPaymentID);
+
+    }
+
+    @Override
+    public void onPaymentError(int code, String response) {
+        try {
+            Toast.makeText(getActivity(), "Payment error please try again", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("OnPaymentError", "Exception in onPaymentError", e);
+        }
+    }
+
     @SuppressLint("CheckResult")
-    private void getWalletHistory() {
+    private void UpdatePaymentStatus(String razorpayPaymentID) {
         final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        progressDialog.setCancelable(false);
+        // progressDialog.setCancelable(false);
         progressDialog.show();
 
-        Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
+        Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
 
-        apiInterface.GetWalletApi(CustomerId)
+        apiInterface.UpdateWalletStatus(CustomerId,amount,razorpayPaymentID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<WalletModelList>() {
+                .subscribeWith(new DisposableObserver<SimpleResultModel>() {
                     @Override
-                    public void onNext(WalletModelList response) {
+                    public void onNext(SimpleResultModel response) {
                         //Handle logic
                         try {
                             progressDialog.dismiss();
-                            Log.e("result_my_test", "" + response.getMsg());
+                            Log.e("result_", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
+                                utilities.dialogOKOnBack(getActivity(), getString(R.string.validation_title),
+                                        response.getMsg(), getString(R.string.ok), true);
 
-                                binding.tvWalletAmount.setText(response.getBalance());
-                                CreditList_Adapter friendsAdapter = new CreditList_Adapter(response.getCredits(), getActivity());
-                                binding.setWalletCreditAdapter(friendsAdapter);//set databinding adapter
-                                friendsAdapter.notifyDataSetChanged();
-
-                                DebitList_Adapter debitAdapter = new DebitList_Adapter(response.getDebits(), getActivity());
-                                binding.setWalletDebitAdapter(debitAdapter);//set databinding adapter
-                                debitAdapter.notifyDataSetChanged();
-
-                                // binding.swipeToRefresh.setVisibility(View.VISIBLE);
                             } else {
-                                //   binding.swipeToRefresh.setVisibility(View.GONE);
                                 //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                                utilities.dialogOK(getActivity(), getString(R.string.validation_title),
+                                        response.getMsg(), getString(R.string.ok), false);
                             }
 
                         } catch (Exception e) {
@@ -146,7 +193,7 @@ public class Wallet_Fragment extends Fragment implements SwipeRefreshLayout.OnRe
                     public void onError(Throwable e) {
                         //Handle error
                         progressDialog.dismiss();
-                        Log.e("mr_product_error", e.toString());
+                        Log.e("Categ_product_error", e.toString());
 
                         if (e instanceof HttpException) {
                             int code = ((HttpException) e).code();
@@ -176,18 +223,5 @@ public class Wallet_Fragment extends Fragment implements SwipeRefreshLayout.OnRe
                         progressDialog.dismiss();
                     }
                 });
-
-
-    }
-
-    @Override
-    public void onRefresh() {
-        // binding.swipeToRefresh.setRefreshing(false);
-
-        if (Connectivity.isConnected(getActivity())) {
-            getWalletHistory();
-        } else {
-            utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
-        }
     }
 }

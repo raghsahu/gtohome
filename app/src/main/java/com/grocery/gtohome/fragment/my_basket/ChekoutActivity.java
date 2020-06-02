@@ -367,7 +367,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                                 "Please select shipping method", getString(R.string.ok), false);
                     } else if (Delivery_Date!=null && !Delivery_Date.isEmpty()){
                         if(timeslot_name!=null && !timeslot_name.isEmpty()) {
-                            Et_Comment_Deliver=binding.etComments.getText().toString();
+                           // Et_Comment_Deliver=binding.etCommentsOrder.getText().toString();
 
                             binding.llDeliveryMethod.setVisibility(View.GONE);
                             deliver_method=false;
@@ -402,7 +402,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                             utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
                                     "Please accept Terms & Conditions", getString(R.string.ok), false);
                         } else {
-                           Et_Comment_Order=binding.etCommentsOrder.getText().toString();
+                           Et_Comment_Order=binding.etComments.getText().toString();
 
                             binding.llPaymentMethod.setVisibility(View.GONE);
                             payment_method=false;
@@ -951,6 +951,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                                     intent.putExtra("OrderId",response.getOrderId().toString());
                                     intent.putExtra("amount",Finalamount);
                                     intent.putExtra("Order_status_id",Order_status_id);
+                                    intent.putExtra("PaymentType","Order");
                                     startActivity(intent);
 
                                     // CallPaymentgateway();
