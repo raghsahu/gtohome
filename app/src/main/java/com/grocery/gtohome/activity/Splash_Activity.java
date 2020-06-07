@@ -91,7 +91,7 @@ public class Splash_Activity extends AppCompatActivity {
                             startActivity(mainIntent);
                             finish();
                         } else {
-                            Intent mainIntent = new Intent(Splash_Activity.this, Login_Activity.class);
+                            Intent mainIntent = new Intent(Splash_Activity.this, WelcomeActivity.class);
                             startActivity(mainIntent);
                             finish();
                         }
@@ -138,7 +138,7 @@ public class Splash_Activity extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        Log.e("sess_logi1", "" + session.isLoggedIn());
+                      //  Log.e("sess_logi1", "" + session.isLoggedIn());
                         if (session.isLoggedIn()) {
 
                             Intent intent1 = new Intent(Splash_Activity.this, MainActivity.class);
@@ -147,8 +147,8 @@ public class Splash_Activity extends AppCompatActivity {
 
 
                         } else {
-                            Log.e("sess_logi1", "" + session.isLoggedIn());
-                            Intent mainIntent = new Intent(Splash_Activity.this, Login_Activity.class);
+                            //Log.e("sess_logi1", "" + session.isLoggedIn());
+                            Intent mainIntent = new Intent(Splash_Activity.this, WelcomeActivity.class);
                             startActivity(mainIntent);
                             finish();
                         }

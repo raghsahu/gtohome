@@ -2,7 +2,9 @@ package com.grocery.gtohome.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,6 +59,7 @@ public class Search_Fragment extends Fragment {
     private Utilities utilities;
     private ArrayList<String> catList= new ArrayList<>();
     private List<CategoryNameId> categoryChildList= new ArrayList<>();
+    private List<CategoryNameId> AllcategoryList= new ArrayList<>();
     private String category_id;
     private String sub_category="0",description="0";
 
@@ -100,22 +103,31 @@ public class Search_Fragment extends Fragment {
         if (session.getCategoryData() != null && !session.getCategoryData().isEmpty()) {
             for (int i=0; i<session.getCategoryData().size(); i++){
                 for (int j=0; j<session.getCategoryData().get(i).getChildren().size(); j++){
-
-                        catList.add(session.getCategoryData().get(i).getChildren().get(j).getName());
-                        categoryChildList.add(new CategoryNameId(session.getCategoryData().get(i).getChildren().get(j).getName(),
+                    categoryChildList.add(new CategoryNameId(session.getCategoryData().get(i).getChildren().get(j).getName(),
                                 session.getCategoryData().get(i).getChildren().get(j).getCategory_id() ));
 
                 }
             }
 
-//            if (j==0){
-//                CategoryNameId hero = new CategoryNameId("All Categories", " ");
-//                categoryChildList.add(0,hero);
-//                catList.add("All Categories");
-//            }
+            //new list for spinner subcategory item
+            AllcategoryList.add(0,new CategoryNameId("All Categories",""));
+            for (int i=0; i<categoryChildList.size(); i++){
+                AllcategoryList.add(new CategoryNameId(categoryChildList.get(i).getName(),
+                        categoryChildList.get(i).getCategory_id()));
+            }
 
+            for (int i=0; i<AllcategoryList.size(); i++){
+                String cat_name;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                   cat_name= String.valueOf(Html.fromHtml(AllcategoryList.get(i).getName(), Html.FROM_HTML_MODE_COMPACT));
+                } else {
+                   cat_name= String.valueOf(Html.fromHtml(AllcategoryList.get(i).getName()));
+                }
 
-            ArrayAdapter<String> aa = new ArrayAdapter<String>(getActivity(), R.layout.list_item_spinner, catList) {
+                catList.add(cat_name);
+            }
+
+            ArrayAdapter<String> aa = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, catList) {
                 @NonNull
                 @Override
                 //set hint text by default in center
@@ -143,12 +155,12 @@ public class Search_Fragment extends Fragment {
             public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
                 String selecteditem = adapter.getItemAtPosition(i).toString();
 
-                if (categoryChildList != null && !categoryChildList.isEmpty()) {
-                    if (selecteditem.equalsIgnoreCase(categoryChildList.get(i).getName())){
-                        if (categoryChildList.get(i).getName().equalsIgnoreCase("All Categories")){
+                if (AllcategoryList != null && !AllcategoryList.isEmpty()) {
+                    if (selecteditem.equalsIgnoreCase(AllcategoryList.get(i).getName())){
+                        if (AllcategoryList.get(i).getName().equalsIgnoreCase("All Categories")){
                             category_id = "";
                         }else {
-                            category_id = categoryChildList.get(i).getCategory_id();
+                            category_id = AllcategoryList.get(i).getCategory_id();
                         }
 
                     }
@@ -165,6 +177,9 @@ public class Search_Fragment extends Fragment {
         binding.tvSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                String search_text=binding.etSearch.getText().toString();
+
                 if (binding.checkSubCategory.isChecked()){
                     sub_category="1";
                 }else {
@@ -179,12 +194,20 @@ public class Search_Fragment extends Fragment {
                 if (binding.etSearch.getText().toString().isEmpty()){
                     Toast.makeText(getActivity(), "Please enter text", Toast.LENGTH_SHORT).show();
                 }else {
-                    if (Connectivity.isConnected(getActivity())){
-                        getSearchProduct(Customer_Id,category_id,sub_category,description,binding.etSearch.getText().toString());
-                    }else {
-                        utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet),
-                                getString(R.string.ok), false);
-                    }
+
+                   // if (search_text.length()<3){
+                     //   utilities.dialogOK(getActivity(), getString(R.string.validation_title), "Please enter minimum 3 character",
+                     //           getString(R.string.ok), false);
+                  //  }else {
+                        if (Connectivity.isConnected(getActivity())){
+                            getSearchProduct(Customer_Id,category_id,sub_category,description,binding.etSearch.getText().toString());
+                        }else {
+                            utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet),
+                                    getString(R.string.ok), false);
+                        }
+                  //  }
+
+
 
                 }
 

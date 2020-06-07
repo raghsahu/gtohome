@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +26,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
@@ -52,9 +56,12 @@ import com.grocery.gtohome.model.category_product_model.CategoryProductModel;
 import com.grocery.gtohome.model.home_slider.HomeSliderBanner;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
+import com.grocery.gtohome.utils.SpeedyLinearLayoutManager;
 import com.grocery.gtohome.utils.Utilities;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
@@ -86,6 +93,19 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         return fragmentAction;
     }
+    //*********************
+    SpeedyLinearLayoutManager scrollManager;
+    final int duration = 10;
+    final int pixelsToMove = 30;
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Runnable SCROLLING_RUNNABLE = new Runnable() {
+
+        @Override
+        public void run() {
+            binding.recyclerPopularBrand.smoothScrollBy(pixelsToMove, 0);
+            mHandler.postDelayed(this, duration);
+        }
+    };
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -518,13 +538,14 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
 
+                               // scrollManager =   new SpeedyLinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false, 100);
+                              //  binding.recyclerPopularBrand.setLayoutManager(scrollManager);
                                 friendsAdapter = new PopularBrand_Adapter(response.getResponse().getBanners(), getActivity());
-                                binding.setPopularBrandAdapter(friendsAdapter);//set databinding adapter
-                                friendsAdapter.notifyDataSetChanged();
+                                 binding.setPopularBrandAdapter(friendsAdapter);//set databinding adapter
+                                binding.recyclerPopularBrand.setAdapter(friendsAdapter);
+
 
                             } else {
-
-
                             }
 
                         } catch (Exception e) {
@@ -570,6 +591,7 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
     }
+
 
     @SuppressLint("CheckResult")
     private void SliderListArray() {
@@ -738,4 +760,6 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
             utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
         }
     }
+
+
 }
