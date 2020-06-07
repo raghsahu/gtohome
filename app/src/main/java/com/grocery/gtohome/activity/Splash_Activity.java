@@ -79,34 +79,21 @@ public class Splash_Activity extends AppCompatActivity {
                 // If any permission aboe not allowed by user, this condition will execute every tim, else your else part will work
             } else {
 
-                ViewAnimator
-                        .animate(splash_logo_image)
-                        .translationY(-1000, 0)
-                        .alpha(0, 1)
-                        .thenAnimate(splash_logo_image)
-                        .scale(1f, 0.5f, 1f)
-                        .accelerate()
-                        .duration(1000)
-                        .start();
 
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
 
-                        Animatoo.animateZoom(Splash_Activity.this);
-                        //  Log.e("sess_logi", session.getUserId());
                         if (session.isLoggedIn()) {
 
                             Intent mainIntent = new Intent(Splash_Activity.this, MainActivity.class);
                             startActivity(mainIntent);
                             finish();
-                            Animatoo.animateFade(Splash_Activity.this);
                         } else {
                             Intent mainIntent = new Intent(Splash_Activity.this, Login_Activity.class);
                             startActivity(mainIntent);
                             finish();
-                            Animatoo.animateFade(Splash_Activity.this);
                         }
 
 
@@ -146,21 +133,11 @@ public class Splash_Activity extends AppCompatActivity {
                     grantResults[7] == PackageManager.PERMISSION_GRANTED
             ) {
 
-                ViewAnimator
-                        .animate(splash_logo_image)
-                        .translationY(-1000, 0)
-                        .alpha(0, 1)
-                        .thenAnimate(splash_logo_image)
-                        .scale(1f, 0.5f, 1f)
-                        .accelerate()
-                        .duration(1000)
-                        .start();
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
 
-                        Animatoo.animateZoom(Splash_Activity.this);
                         Log.e("sess_logi1", "" + session.isLoggedIn());
                         if (session.isLoggedIn()) {
 
@@ -168,19 +145,17 @@ public class Splash_Activity extends AppCompatActivity {
                             startActivity(intent1);
                             finish();
 
-                            Animatoo.animateFade(Splash_Activity.this);
 
                         } else {
                             Log.e("sess_logi1", "" + session.isLoggedIn());
                             Intent mainIntent = new Intent(Splash_Activity.this, Login_Activity.class);
                             startActivity(mainIntent);
                             finish();
-                            Animatoo.animateFade(Splash_Activity.this);
                         }
 
 
                     }
-                }, 5000);
+                }, 3000);
 
             } else {
                 Toast.makeText(Splash_Activity.this, "Denied", Toast.LENGTH_SHORT).show();

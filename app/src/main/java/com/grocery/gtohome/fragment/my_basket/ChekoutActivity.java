@@ -964,7 +964,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                             } else {
                                 //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
                                 utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
-                                        "Order not submit, error", getString(R.string.ok), true);
+                                        "Order not submit, error", getString(R.string.ok), false);
                             }
 
                         } catch (Exception e) {
@@ -1570,7 +1570,8 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
                                 AddressModelList = response.getAddresses();
                                 for (int i = 0; i < response.getAddresses().size(); i++) {
-                                    AddressName.add(response.getAddresses().get(i).getAddress1() + " " + response.getAddresses().get(i).getAddress2()
+                                    AddressName.add(response.getAddresses().get(i).getFirstname() + " " +response.getAddresses().get(i).getLastname() + " " +
+                                            response.getAddresses().get(i).getAddress1() + " " + response.getAddresses().get(i).getAddress2()
                                             + " " + response.getAddresses().get(i).getCity() + " " + response.getAddresses().get(i).getZoneCode()
                                             + " " + response.getAddresses().get(i).getCountry() + " " + response.getAddresses().get(i).getPostcode());
                                 }
@@ -1580,7 +1581,9 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                                 //delivery spin
                                 AddressDeliveryList = response.getAddresses();
                                 for (int i = 0; i < response.getAddresses().size(); i++) {
-                                    AddressDeliveryName.add(response.getAddresses().get(i).getAddress1() + " " + response.getAddresses().get(i).getAddress2()
+                                    AddressDeliveryName.add(response.getAddresses().get(i).getFirstname() + " " +response.getAddresses().get(i).getLastname() + " " +
+                                            response.getAddresses().get(i).getAddress1() + " " +
+                                            response.getAddresses().get(i).getAddress2()
                                             + " " + response.getAddresses().get(i).getCity() + " " + response.getAddresses().get(i).getZoneCode()
                                             + " " + response.getAddresses().get(i).getCountry() + " " + response.getAddresses().get(i).getPostcode());
                                 }

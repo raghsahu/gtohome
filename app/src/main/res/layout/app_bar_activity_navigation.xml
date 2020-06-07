@@ -60,9 +60,9 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:layout_alignParentEnd="true"
-                android:layout_width="@dimen/_100sdp"
+                android:layout_width="@dimen/_80sdp"
                 android:layout_height="@dimen/_35sdp"
-                app:srcCompat="@drawable/logo" />
+                android:src="@drawable/gtohome_top_logo"  />
 
         </RelativeLayout>
 

@@ -100,11 +100,20 @@ public class Search_Fragment extends Fragment {
         if (session.getCategoryData() != null && !session.getCategoryData().isEmpty()) {
             for (int i=0; i<session.getCategoryData().size(); i++){
                 for (int j=0; j<session.getCategoryData().get(i).getChildren().size(); j++){
-                    catList.add(session.getCategoryData().get(i).getChildren().get(j).getName());
-                    categoryChildList.add(new CategoryNameId(session.getCategoryData().get(i).getChildren().get(j).getName(),
-                            session.getCategoryData().get(i).getChildren().get(j).getCategory_id() ));
+
+                        catList.add(session.getCategoryData().get(i).getChildren().get(j).getName());
+                        categoryChildList.add(new CategoryNameId(session.getCategoryData().get(i).getChildren().get(j).getName(),
+                                session.getCategoryData().get(i).getChildren().get(j).getCategory_id() ));
+
                 }
             }
+
+//            if (j==0){
+//                CategoryNameId hero = new CategoryNameId("All Categories", " ");
+//                categoryChildList.add(0,hero);
+//                catList.add("All Categories");
+//            }
+
 
             ArrayAdapter<String> aa = new ArrayAdapter<String>(getActivity(), R.layout.list_item_spinner, catList) {
                 @NonNull
@@ -136,7 +145,12 @@ public class Search_Fragment extends Fragment {
 
                 if (categoryChildList != null && !categoryChildList.isEmpty()) {
                     if (selecteditem.equalsIgnoreCase(categoryChildList.get(i).getName())){
-                        category_id = categoryChildList.get(i).getCategory_id();
+                        if (categoryChildList.get(i).getName().equalsIgnoreCase("All Categories")){
+                            category_id = "";
+                        }else {
+                            category_id = categoryChildList.get(i).getCategory_id();
+                        }
+
                     }
 
                 }

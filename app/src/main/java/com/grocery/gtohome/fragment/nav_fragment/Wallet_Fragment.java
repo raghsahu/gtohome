@@ -75,6 +75,7 @@ public class Wallet_Fragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         if (Connectivity.isConnected(getActivity())) {
             getWalletHistory();
+            binding.tvCredit.setTextColor(getResources().getColor(R.color.colorPrimary));
         } else {
             utilities.dialogOK(getActivity(), getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
         }
@@ -92,6 +93,26 @@ public class Wallet_Fragment extends Fragment implements SwipeRefreshLayout.OnRe
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 fragment2.setArguments(bundle);
+            }
+        });
+
+        binding.tvCredit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.tvCredit.setTextColor(getResources().getColor(R.color.colorPrimary));
+                binding.tvDebit.setTextColor(getResources().getColor(R.color.black));
+                binding.recyclerCredit.setVisibility(View.VISIBLE);
+                binding.recyclerDebit.setVisibility(View.GONE);
+            }
+        });
+
+        binding.tvDebit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.tvDebit.setTextColor(getResources().getColor(R.color.colorPrimary));
+                binding.tvCredit.setTextColor(getResources().getColor(R.color.black));
+                binding.recyclerCredit.setVisibility(View.GONE);
+                binding.recyclerDebit.setVisibility(View.VISIBLE);
             }
         });
 

@@ -78,7 +78,7 @@
         <TextView
             android:id="@+id/tv_wallet"
             android:background="@drawable/rectangle_bg_border"
-            android:drawableStart="@drawable/round_bright_res"
+            android:drawableStart="@drawable/ic_wallet_svg"
             android:layout_weight="0.5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
         <TextView
             android:id="@+id/tv_offer"
             android:background="@drawable/rectangle_bg_border"
-            android:drawableStart="@drawable/ic_brightness_"
+            android:drawableStart="@drawable/ic_discount"
             android:layout_weight="0.5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
         <TextView
             android:id="@+id/tv_prime"
             android:background="@drawable/rectangle_bg_border"
-            android:drawableStart="@drawable/round_bright_res"
+            android:drawableStart="@drawable/ic_prize_svg"
             android:layout_weight="0.5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
         <TextView
             android:id="@+id/tv_blog"
             android:background="@drawable/rectangle_bg_border"
-            android:drawableStart="@drawable/ic_brightness_"
+            android:drawableStart="@drawable/ic_blogger_svg"
             android:layout_weight="0.5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

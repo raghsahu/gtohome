@@ -168,7 +168,7 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     String toNumber = "8848566995"; // Replace with mobile phone number without +Sign or leading zeros, but with country code.
                     //Suppose your country is India and your phone number is “xxxxxxxxxx”, then you need to send “91xxxxxxxxxx”.
 
-                    Intent sendIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + "" + toNumber + "?body=" + "Hi"));
+                    Intent sendIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + "" + toNumber));
                     sendIntent.setPackage("com.whatsapp");
                     startActivity(sendIntent);
                 } catch (Exception e) {

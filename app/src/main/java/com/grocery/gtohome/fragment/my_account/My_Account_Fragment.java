@@ -270,16 +270,6 @@ public class My_Account_Fragment extends Fragment  implements GoogleApiClient.On
                 intent.putExtra("Info","Terms");
                 startActivity(intent);
 
-//                Information_Fragment fragment2 = new Information_Fragment();
-//                Bundle bundle = new Bundle();
-//                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
-//                bundle.putString("Info","Terms");
-//                FragmentManager manager = getActivity().getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = manager.beginTransaction();
-//                fragmentTransaction.replace(R.id.frame, fragment2);
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
-//                fragment2.setArguments(bundle);
             }
         });
 
@@ -290,16 +280,6 @@ public class My_Account_Fragment extends Fragment  implements GoogleApiClient.On
                 intent.putExtra("Info","DeliveryInfo");
                 startActivity(intent);
 
-//                Information_Fragment fragment2 = new Information_Fragment();
-//                Bundle bundle = new Bundle();
-//                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
-//                bundle.putString("Info","DeliveryInfo");
-//                FragmentManager manager = getActivity().getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = manager.beginTransaction();
-//                fragmentTransaction.replace(R.id.frame, fragment2);
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
-//                fragment2.setArguments(bundle);
             }
         });
 
@@ -310,16 +290,6 @@ public class My_Account_Fragment extends Fragment  implements GoogleApiClient.On
                 intent.putExtra("Info","Privacy");
                 startActivity(intent);
 
-//                Information_Fragment fragment2 = new Information_Fragment();
-//                Bundle bundle = new Bundle();
-//                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
-//                bundle.putString("Info","Privacy");
-//                FragmentManager manager = getActivity().getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = manager.beginTransaction();
-//                fragmentTransaction.replace(R.id.frame, fragment2);
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
-//                fragment2.setArguments(bundle);
             }
         });
 
