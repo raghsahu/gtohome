@@ -23,7 +23,7 @@ public class ShippingMethodAdapter extends RecyclerView.Adapter<ShippingMethodAd
     private List<ShippingMethodData> dataModelList;
     Context context;
     private int lastCheckedPosition = -1;
-     String subTitle,subCode;
+     String subTitle,subCode,ship_cost;
     AdapterCallback mAdapterCallback;
 
     public ShippingMethodAdapter(List<ShippingMethodData> dataModelList, Context ctx) {
@@ -74,13 +74,14 @@ public class ShippingMethodAdapter extends RecyclerView.Adapter<ShippingMethodAd
                 if (dataModel.getCode().equalsIgnoreCase("flat")){
                     subTitle=dataModel.getQuote().getFlat().getTitle();
                     subCode=dataModel.getQuote().getFlat().getCode();
+                    ship_cost=dataModel.getQuote().getFlat().getCost();
                 }else if (dataModel.getCode().equalsIgnoreCase("free")){
                     subTitle=dataModel.getQuote().getFree().getTitle();
                     subCode=dataModel.getQuote().getFree().getCode();
+                    ship_cost=dataModel.getQuote().getFree().getCost();
                 }
 
-
-                mAdapterCallback.onMethodCallback(subTitle,subCode);
+                mAdapterCallback.onMethodCallback(subTitle,subCode,ship_cost);
                 notifyDataSetChanged();
 
             }
@@ -89,7 +90,7 @@ public class ShippingMethodAdapter extends RecyclerView.Adapter<ShippingMethodAd
     }
 
     public interface AdapterCallback {
-        void onMethodCallback(String subTitle, String subCode);
+        void onMethodCallback(String subTitle, String subCode, String ship_cost);
     }
 
 

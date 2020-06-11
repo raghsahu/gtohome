@@ -20,11 +20,11 @@
 
             <TextView
                 android:id="@+id/tv_new_address"
-                style="@style/text_12_black"
+                style="@style/textview12white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:background="@drawable/rectangle_bg_solid"
+                android:background="@drawable/rectangle_bg_primary"
                 android:gravity="center"
                 android:padding="@dimen/_10sdp"
                 android:text="@string/new_address">

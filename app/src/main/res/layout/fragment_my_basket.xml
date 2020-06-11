@@ -21,11 +21,11 @@
     <TextView
         android:layout_alignParentEnd="true"
         android:id="@+id/tv_clear_cart"
-        style="@style/text_12_black"
+        style="@style/textview12white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:background="@drawable/rectangle_bg_solid"
+        android:background="@drawable/rectangle_bg_primary"
         android:gravity="center"
         android:padding="@dimen/_5sdp"
         android:layout_margin="@dimen/_5sdp"

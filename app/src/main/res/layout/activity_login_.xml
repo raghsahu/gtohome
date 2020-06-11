@@ -45,7 +45,7 @@
                     style="@style/text_14_black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/email_address" />
+                    android:text="E-Mail Address/Mobile" />
 
 
                 <EditText
@@ -53,8 +53,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
-                    android:inputType="textEmailAddress"
-                    android:hint="@string/email_address"
+                    android:inputType="text"
+                    android:hint="E-Mail Address/Mobile"
                     android:background="@drawable/edit_text_bg"
                     android:padding="@dimen/_10sdp"
                     android:textColor="@color/black" />

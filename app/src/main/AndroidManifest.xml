@@ -25,12 +25,11 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="q">
-        <activity android:name=".activity.WelcomeActivity"></activity>
+        <activity android:name=".activity.WelcomeActivity" />
         <activity android:name=".activity.PayUMoneyActivity" />
         <activity android:name=".fragment.my_basket.ChekoutActivity" />
         <activity android:name=".fragment.Information_Fragment" />
         <activity android:name=".activity.OrderSuccess_Activity" />
-        <activity android:name=".activity.PaymentMethod_Activity" />
         <activity android:name=".activity.login_signup.Forgot_Pw_Activity" />
         <activity android:name=".activity.login_signup.Register_Success_Activity" />
         <activity android:name=".activity.login_signup.Register_Activity" />

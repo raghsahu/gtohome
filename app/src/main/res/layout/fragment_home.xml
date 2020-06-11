@@ -431,16 +431,52 @@
 
                     </LinearLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_popular_brand"
-                        android:adapter="@{popularBrandAdapter}"
+<!--                    <androidx.recyclerview.widget.RecyclerView-->
+<!--                        android:id="@+id/recycler_popular_brand"-->
+<!--                        android:adapter="@{popularBrandAdapter}"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:scrollbars="none"-->
+<!--                        android:orientation="horizontal"-->
+<!--                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--                        >-->
+<!--                    </androidx.recyclerview.widget.RecyclerView>-->
+
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:scrollbars="none"
-                        android:orientation="horizontal"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         >
-                    </androidx.recyclerview.widget.RecyclerView>
+                        <androidx.viewpager.widget.ViewPager
+                            android:layout_marginTop="@dimen/_2sdp"
+                            android:background="@color/transparent"
+                            android:layout_gravity="center"
+                            android:id="@+id/slider_popular_brand"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_150sdp"
+                            android:visibility="visible" />
+
+                        <ImageView
+                            android:id="@+id/iv_left_arrow"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_centerVertical="true"
+                            app:srcCompat="@drawable/ic_keyboard_arrow"
+                            android:layout_width="@dimen/_40sdp"
+                            android:layout_height="@dimen/_40sdp">
+
+                        </ImageView>
+
+                        <ImageView
+                            android:id="@+id/iv_right_arrow"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:srcCompat="@drawable/ic_keyboard_arrow_right_"
+                            android:layout_width="@dimen/_40sdp"
+                            android:layout_height="@dimen/_40sdp">
+
+                        </ImageView>
+
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:layout_marginTop="@dimen/_5sdp"
@@ -472,6 +508,8 @@
                                 android:hint="@string/email_address"
                                 android:inputType="textEmailAddress"
                                 android:padding="@dimen/_10sdp"
+                                android:layout_marginStart="@dimen/_5sdp"
+                                android:layout_marginEnd="@dimen/_5sdp"
                                 android:textColor="@color/black" />
 
                         </LinearLayout>

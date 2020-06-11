@@ -42,11 +42,13 @@ import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.adapter.CategoryList_Adapter;
 import com.grocery.gtohome.adapter.CategoryProduct_Adapter;
 import com.grocery.gtohome.adapter.PopularBrand_Adapter;
+import com.grocery.gtohome.adapter.SlidePopularAdapter;
 import com.grocery.gtohome.adapter.SliderAdapter_range;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.Base_Url;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.FragmentHomeBinding;
+import com.grocery.gtohome.model.popular_brand.PopularBanner;
 import com.grocery.gtohome.model.popular_brand.PopularBrandModel;
 import com.grocery.gtohome.model.SampleModel;
 import com.grocery.gtohome.model.SimpleResultModel;
@@ -60,6 +62,7 @@ import com.grocery.gtohome.utils.SpeedyLinearLayoutManager;
 import com.grocery.gtohome.utils.Utilities;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -85,6 +88,13 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private FloatingActionButton fab, fab_call, fab_sms;
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
 
+    List<PopularBanner>popularBannerList=new ArrayList<>();
+    //********************
+    int currentPage = 0;
+    Timer timer;
+    final long DELAY_MS = 500;
+    final long PERIOD_MS = 4000;
+
     public static Home_Fragment newInstance(String movieTitle) {
         Home_Fragment fragmentAction = new Home_Fragment();
         Bundle args = new Bundle();
@@ -93,19 +103,6 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         return fragmentAction;
     }
-    //*********************
-    SpeedyLinearLayoutManager scrollManager;
-    final int duration = 10;
-    final int pixelsToMove = 30;
-    private final Handler mHandler = new Handler(Looper.getMainLooper());
-    private final Runnable SCROLLING_RUNNABLE = new Runnable() {
-
-        @Override
-        public void run() {
-            binding.recyclerPopularBrand.smoothScrollBy(pixelsToMove, 0);
-            mHandler.postDelayed(this, duration);
-        }
-    };
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -156,6 +153,31 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         getPopularBrandList();//popular brand list
         getFeatureProduct();
+
+        // Images left navigation
+        binding.ivLeftArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (currentPage > 0) {
+                    binding.sliderPopularBrand.setCurrentItem(currentPage--, true);
+                } else if (currentPage == 0) {
+                    binding.sliderPopularBrand.setCurrentItem(currentPage, true);
+                }
+            }
+        });
+
+        // Images right navigatin
+        binding.ivRightArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentPage == popularBannerList.size()-1) {
+                    currentPage = 0;
+                }
+                binding.sliderPopularBrand.setCurrentItem(currentPage++, true);
+            }
+        });
+        //*******************************************
 
         if (session.getCategoryData() != null && !session.getCategoryData().isEmpty()) {
             CategoryList_Adapter friendsAdapter = new CategoryList_Adapter(session.getCategoryData(), getActivity());
@@ -537,13 +559,37 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             Log.e("result_my_test", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
+                                popularBannerList=response.getResponse().getBanners();
 
-                               // scrollManager =   new SpeedyLinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false, 100);
-                              //  binding.recyclerPopularBrand.setLayoutManager(scrollManager);
-                                friendsAdapter = new PopularBrand_Adapter(response.getResponse().getBanners(), getActivity());
-                                 binding.setPopularBrandAdapter(friendsAdapter);//set databinding adapter
-                                binding.recyclerPopularBrand.setAdapter(friendsAdapter);
+//                                friendsAdapter = new PopularBrand_Adapter(response.getResponse().getBanners(), getActivity());
+//                                 binding.setPopularBrandAdapter(friendsAdapter);//set databinding adapter
+//                                binding.recyclerPopularBrand.setAdapter(friendsAdapter);
+                                //********************
+                                SlidePopularAdapter slidePopularAdapter = new SlidePopularAdapter(getActivity(),popularBannerList);
+                                    binding.sliderPopularBrand.setAdapter(slidePopularAdapter);
+                                    binding.sliderPopularBrand.setPageTransformer(true, new ZoomOutSlideTransformer());
+                                    binding.sliderPopularBrand.setCurrentItem(0);
+                                    binding.sliderPopularBrand.addOnPageChangeListener(pageChangeListener_brand);
 
+                                    ///*********************
+                                /*After setting the adapter use the timer */
+                                final Handler handler = new Handler();
+                                final Runnable Update = new Runnable() {
+                                    public void run() {
+                                        if (currentPage == popularBannerList.size()-1) {
+                                            currentPage = 0;
+                                        }
+                                        binding.sliderPopularBrand.setCurrentItem(currentPage++, true);
+                                    }
+                                };
+
+                                timer = new Timer(); // This will create a new Thread
+                                timer.schedule(new TimerTask() { // task to be scheduled
+                                    @Override
+                                    public void run() {
+                                        handler.post(Update);
+                                    }
+                                }, DELAY_MS, PERIOD_MS);
 
                             } else {
                             }
@@ -748,6 +794,25 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         dotes[0].setImageResource(R.drawable.circle_active);
 
     }
+
+
+    //***********popular brand slide
+    ViewPager.OnPageChangeListener pageChangeListener_brand = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 
 
     @Override

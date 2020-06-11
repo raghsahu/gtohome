@@ -30,7 +30,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private SliderAdapter sliderAdapter;
     private int dotsCount;
     private ImageView[] dotes;
-    private TextView tv_skip;
+    private TextView tv_next,tv_skip;
     private int currentPage=0;
 
     @Override
@@ -39,9 +39,24 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
         viewPager = findViewById(R.id.slider_pager);
         linearLayout = findViewById(R.id.linear_layout);
+        tv_next = findViewById(R.id.tv_next);
         tv_skip = findViewById(R.id.tv_skip);
-        
+
         SetWelcomeContent();
+
+        tv_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentPage+1==dotsCount){
+                    Intent intent = new Intent(WelcomeActivity.this, Login_Activity.class);
+                    startActivity(intent);
+                    finish();
+                }else {
+                    viewPager.setCurrentItem(currentPage+1, true);
+                }
+
+            }
+        });
 
         tv_skip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,37 +72,40 @@ public class WelcomeActivity extends AppCompatActivity {
     private void SetWelcomeContent() {
         ArrayList<WelcomeModel> welcome_array = new ArrayList<>();
 
-        welcome_array.add(new WelcomeModel("",R.drawable.logo));
-        welcome_array.add(new WelcomeModel("",R.drawable.logo_transparent));
-        welcome_array.add(new WelcomeModel("",R.drawable.logo_payu));
+        welcome_array.add(new WelcomeModel("",R.drawable.welcome1));
+        welcome_array.add(new WelcomeModel("",R.drawable.welcome2));
+        welcome_array.add(new WelcomeModel("",R.drawable.welcome3));
+        welcome_array.add(new WelcomeModel("",R.drawable.welcome4));
+        welcome_array.add(new WelcomeModel("",R.drawable.welcome5));
+        welcome_array.add(new WelcomeModel("",R.drawable.welcome6));
 
         //dotesIndicater(0);
         sliderAdapter = new SliderAdapter(WelcomeActivity.this,welcome_array);
         viewPager.setAdapter(sliderAdapter);
         viewPager.setPageTransformer(true, new ZoomOutSlideTransformer());
-        viewPager.setCurrentItem(0);
+        viewPager.setCurrentItem(currentPage, true);
         viewPager.addOnPageChangeListener(pageChangeListener);
         dotesIndicater();
 
-        Handler handler = new Handler();
 
-        Runnable update = new Runnable() {
-            public void run() {
-                if (currentPage == 3) {
-                    currentPage = 3;
-                }
-                viewPager.setCurrentItem(currentPage++, true);
-            }
-        };
+       // Handler handler = new Handler();
 
+//        Runnable update = new Runnable() {
+//            public void run() {
+//                if (currentPage == 6) {
+//                    currentPage = 6;
+//                }
+//                viewPager.setCurrentItem(currentPage++, true);
+//            }
+//        };
 
-        new Timer().schedule(new TimerTask() {
-
-            @Override
-            public void run() {
-                handler.post(update);
-            }
-        }, 1000*2, 1000*2);
+//        new Timer().schedule(new TimerTask() {
+//
+//            @Override
+//            public void run() {
+//                handler.post(update);
+//            }
+//        }, 1000*2, 1000*2);
     }
 
 
@@ -106,23 +124,27 @@ public class WelcomeActivity extends AppCompatActivity {
 
             dotes[position].setImageResource(R.drawable.circle_active);
 
-            if (position + 1 == dotsCount) {
-                // tv_skip.setText("Get Start");
-                tv_skip.setVisibility(View.VISIBLE);
+//            if (position + 1 == dotsCount) {
+//                tv_skip.setVisibility(View.VISIBLE);
+//
+//            } else {
+//                tv_skip.setVisibility(View.INVISIBLE);
+//
+//            }
 
-            } else {
-                // tv_skip.setText("Skip");
-                tv_skip.setVisibility(View.INVISIBLE);
-
-            }
-
-            //****
+            //******************************
             if (position==0){
                 currentPage=0;
             }else if (position==1){
                 currentPage=1;
             }else if (position==2){
                 currentPage=2;
+            }else if (position==3){
+                currentPage=3;
+            }else if (position==4){
+                currentPage=4;
+            }else if (position==5){
+                currentPage=5;
             }
         }
 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/ll_brand"
+        android:layout_margin="@dimen/_5sdp"
+        android:background="@drawable/rectangle_bg_border"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+
+        <ImageView
+            android:id="@+id/popular_image"
+            android:src="@drawable/placeholder_image"
+            android:layout_width="@dimen/_150sdp"
+            android:scaleType="center"
+            android:layout_height="@dimen/_150sdp"
+            >
+        </ImageView>
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -296,16 +296,18 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
     private boolean isValid() {
 
         if (Et_Email == null || Et_Email.equals("")) {
-            utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_enter_email), getString(R.string.ok), false);
+            utilities.dialogOK(context, getString(R.string.validation_title), "Please enter your email or mobile no.", getString(R.string.ok), false);
             binding.etEmail.requestFocus();
             return false;
-        } else if (Et_Email != null && !Et_Email.equals("") && !Et_Email.isEmpty()) {
-            if (!utilities.checkEmail(Et_Email)) {
-                utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_enter_valid_email), getString(R.string.ok), false);
-                binding.etEmail.requestFocus();
-                return false;
-            }
-        } else if (Et_Pw.trim().length() == 0) {
+        }
+//        else if (Et_Email != null && !Et_Email.equals("") && !Et_Email.isEmpty()) {
+//            if (!utilities.checkEmail(Et_Email)) {
+//                utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_enter_valid_email), getString(R.string.ok), false);
+//                binding.etEmail.requestFocus();
+//                return false;
+//            }
+//        }
+        else if (Et_Pw.trim().length() == 0) {
             utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_enter_password), getString(R.string.ok), false);
             binding.etPw.requestFocus();
             return false;

@@ -27,7 +27,6 @@ import androidx.databinding.DataBindingUtil;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.OrderSuccess_Activity;
 import com.grocery.gtohome.activity.PayUMoneyActivity;
-import com.grocery.gtohome.activity.PaymentMethod_Activity;
 import com.grocery.gtohome.adapter.HistoryItemList_Adapter;
 import com.grocery.gtohome.adapter.ShippingMethodAdapter;
 import com.grocery.gtohome.adapter.TotalAmount_Adapter;
@@ -48,6 +47,7 @@ import com.grocery.gtohome.model.address_model.SaveAddressModel;
 import com.grocery.gtohome.model.create_order.CreateOrderModel;
 import com.grocery.gtohome.model.shipping_method.ShippingMethod;
 import com.grocery.gtohome.model.slot_model.Slot_Model;
+import com.grocery.gtohome.model.wallet_model.WalletModelList;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.GPSTracker;
@@ -103,7 +103,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
     String address_delivery_id, country_delivery_id, zone_delivery_id;
 
     private String TotalPrice,SubTotal,amount ="",Et_Coupan ="",Et_gift ="",FinalTotalPrice, Finalamount="";
-    private String SubTitle="",SubCode="";
+    private String SubTitle="",SubCode="", Ship_cost="";
     String payment_code="", payment_title="";
     boolean biling_delivery_charge=false;
 
@@ -116,6 +116,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
     private Double lng;
     String address,city,postalCode,country_loc,state_loc,knownName;
     private String Order_status_id,Order_Id;
+    private String WalletBalance;
 
     @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -167,6 +168,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         if (Connectivity.isConnected(context)) {
             getExistingAddress(Customer_Id);
             getCountryName();
+            getWalletHistory();
 
         } else {
             //Toast.makeText(getActivity(), "Please check Internet", Toast.LENGTH_SHORT).show();
@@ -375,6 +377,19 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                             binding.tvPaymentMethod.setEnabled(true);
                             binding.llPaymentMethod.setVisibility(View.VISIBLE);
                             payment_method=true;
+                            //*************check wallet
+                            if (Double.parseDouble(WalletBalance)>0){
+                                binding.llWallet.setVisibility(View.VISIBLE);
+                                if (SubTotal!=null && !SubTotal.isEmpty()){
+                                   String total_cartamount = SubTotal.replace("₹", "").replace(",", "");
+
+                                    double total_amount= Double.parseDouble(total_cartamount)+Double.parseDouble(Ship_cost);
+                                    binding.tvWalletCartAmt.setText(("(Wallet: ₹"+WalletBalance+" , "+"Cart Total: ₹"+total_amount+")"));
+                                }
+
+                            }
+
+
                         }else {
                             utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
                                     "Please select timeslot", getString(R.string.ok), false);
@@ -658,6 +673,9 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
             }
         });
 
+        //***********************wallet check option
+//        binding.checkWallet.setOnCheckedChangeListener(new O);
+
         //*********************tv delivery method expand**********************
         binding.tvPaymentMethod.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -756,6 +774,79 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                 }
             }
         });
+
+    }
+
+
+    @SuppressLint("CheckResult")
+    private void getWalletHistory() {
+        final ProgressDialog progressDialog = new ProgressDialog(ChekoutActivity.this, R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
+
+        apiInterface.GetWalletApi(Customer_Id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<WalletModelList>() {
+                    @Override
+                    public void onNext(WalletModelList response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_my_test", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+                                String balance=response.getBalance();
+                                WalletBalance = balance.replace("₹", "").replace(",", "");
+
+                            } else {
+                                //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("mr_product_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
+
 
     }
 
@@ -1639,11 +1730,12 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
     }
 
     @Override
-    public void onMethodCallback(String subTitle, String subCode) {
+    public void onMethodCallback(String subTitle, String subCode, String ship_cost) {
         SubTitle=subTitle;
         SubCode=subCode;
+        Ship_cost=ship_cost;
 
-        Log.e("shipping_method",SubCode+" "+SubTitle);
+        Log.e("shipping_method",SubCode+" "+SubTitle+" "+Ship_cost);
     }
 
 

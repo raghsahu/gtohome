@@ -436,11 +436,11 @@
 
             <TextView
                 android:id="@+id/tv_continue"
-                android:background="@drawable/rectangle_bg_solid"
+                android:background="@drawable/rectangle_bg_primary"
                 android:padding="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
-                style="@style/text_12_black"
+                style="@style/textview12white"
                 android:text="@string/submit"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_gravity="end"

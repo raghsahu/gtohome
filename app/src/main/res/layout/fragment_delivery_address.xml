@@ -1071,6 +1071,38 @@
                   </View>
 
                   <LinearLayout
+                      android:visibility="gone"
+                      android:id="@+id/ll_wallet"
+                      android:background="@drawable/rectangle_bg_solid"
+                      android:orientation="horizontal"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+
+                      <CheckBox
+                          android:id="@+id/check_wallet"
+                          android:padding="@dimen/_5sdp"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Use Wallet"
+                          style="@style/text_12_black"
+                          android:textStyle="bold"
+                          >
+                      </CheckBox>
+
+                      <TextView
+                          android:id="@+id/tv_wallet_cart_amt"
+                          style="@style/text_12_black"
+                          android:text="(Wallet balance: 200, Cart total:100)"
+                          android:layout_width="wrap_content"
+                          android:layout_gravity="center"
+                          android:gravity="center"
+                          android:layout_height="wrap_content"
+                          >
+                      </TextView>
+
+                  </LinearLayout>
+
+                  <LinearLayout
                       android:layout_marginTop="@dimen/_10sdp"
                       android:background="@drawable/rectangle_bg_border"
                       android:orientation="vertical"
