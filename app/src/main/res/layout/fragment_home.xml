@@ -249,7 +249,7 @@
 
                                         <ImageView
                                             android:layout_gravity="center"
-                                            app:srcCompat="@drawable/compare_arrows"
+                                            app:srcCompat="@drawable/returnpolicy_icon"
                                             android:layout_width="@dimen/_24sdp"
                                             android:layout_height="@dimen/_24sdp"
                                             >

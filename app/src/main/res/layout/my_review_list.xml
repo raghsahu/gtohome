@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+
+        <variable
+            name="model"
+            type="com.grocery.gtohome.model.review_model.ReviewModelData" />
+    </data>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:weightSum="1"
+        android:id="@+id/ll_veg"
+        android:layout_margin="@dimen/_3sdp"
+        android:background="@drawable/rectangle_bg_border"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:layout_weight="0.5"
+            style="@style/text_12_black"
+            android:background="@color/light_white1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_5sdp"
+            android:text="@{model.author}"
+            android:textAlignment="textStart"
+            android:textStyle="bold">
+
+        </TextView>
+
+        <TextView
+            android:layout_weight="0.5"
+            style="@style/text_12_black"
+            android:background="@color/light_white1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_5sdp"
+            android:text="@{model.dateAdded}"
+            android:textAlignment="textEnd"
+            android:textStyle="normal">
+        </TextView>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginStart="@dimen/_3sdp"
+        android:layout_marginEnd="@dimen/_3sdp"
+        style="@style/text_12_black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_5sdp"
+        android:text="@{model.text}"
+        android:textAlignment="textStart"
+        android:textStyle="normal">
+    </TextView>
+
+    <RatingBar
+        style="@style/customRatingBar"
+        android:layout_gravity="start"
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:saveEnabled="true"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:numStars="5"
+        android:rating="@{model.rating}"
+        tools:ignore="RtlSymmetry" />
+
+    <View
+        android:background="@color/light_white"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp">
+    </View>
+
+</LinearLayout>
+</layout>

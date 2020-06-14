@@ -27,6 +27,8 @@ import com.bumptech.glide.Glide;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.adapter.CategoryProduct_Adapter;
+import com.grocery.gtohome.adapter.MyOrder_Adapter;
+import com.grocery.gtohome.adapter.Review_Adapter;
 import com.grocery.gtohome.adapter.TestimonialSliderAdapter;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.RxApiClient;
@@ -35,6 +37,7 @@ import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.model.SliderModel;
 import com.grocery.gtohome.model.category_product_model.ProductOptionValue;
 import com.grocery.gtohome.model.product_details.Product_Details_Model;
+import com.grocery.gtohome.model.review_model.ReviewModel;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
@@ -98,6 +101,7 @@ public class Product_Details_Fragment extends Fragment {
 
         if (Connectivity.isConnected(getActivity())) {
             getProductDetails();
+            getReviewList();
         } else {
             Toast.makeText(getActivity(), "Please check Internet", Toast.LENGTH_SHORT).show();
         }
@@ -167,8 +171,261 @@ public class Product_Details_Fragment extends Fragment {
             }
         });
 
+        binding.tvReviewSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String name= binding.etName.getText().toString();
+                String review= binding.etReview.getText().toString();
+                float rating_bar_value = binding.ratingBar.getRating();
+                if (!name.isEmpty() && !review.isEmpty() ){
+                    if ( rating_bar_value!=0.0){
+                        SendReview(name,review,String.valueOf(rating_bar_value));
+                    }else {
+                        Toast.makeText(getActivity(), "Please select rating point", Toast.LENGTH_SHORT).show();
+                    }
+
+                }else {
+                    Toast.makeText(getActivity(), "Please enter all fields", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        binding.tvCheckAvail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String pincode= binding.etPincode.getText().toString();
+                if (!pincode.isEmpty() ){
+                        CheckAvailProduct(pincode);
+                }else {
+                    Toast.makeText(getActivity(), "Please enter pincode", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         return root;
+
+    }
+
+    @SuppressLint("CheckResult")
+    private void CheckAvailProduct(String pincode) {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        // progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
+
+        apiInterface.CheckAvailProduct(pincode, Product_Id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<SimpleResultModel>() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onNext(SimpleResultModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                          //  Log.e("result_add_cart", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+                                utilities.dialogOK(getActivity(), getString(R.string.validation_title),
+                                        response.getMessage(), getString(R.string.ok), false);
+
+                            } else {
+                                utilities.dialogOK(getActivity(), getString(R.string.validation_title),
+                                        response.getMessage(), getString(R.string.ok), false);
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("product_details_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
+
+    }
+
+    @SuppressLint("CheckResult")
+    private void SendReview(String name, String review, String rating_point) {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        // progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
+
+        apiInterface.RatingPost(name,review,rating_point,Product_Id,Customer_Id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<SimpleResultModel>() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onNext(SimpleResultModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_add_cart", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+                                utilities.dialogOK(getActivity(), getString(R.string.validation_title),
+                                        response.getMsg(), getString(R.string.ok), false);
+                                binding.etReview.getText().clear();
+                                binding.etName.getText().clear();
+                                binding.ratingBar.setRating(0);
+
+                            } else {
+                                utilities.dialogOK(getActivity(), getString(R.string.validation_title),
+                                        response.getMsg(), getString(R.string.ok), false);
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("product_details_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
+
+    }
+
+    @SuppressLint("CheckResult")
+    private void getReviewList() {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        // progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
+
+        apiInterface.ReviewList(Product_Id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<ReviewModel>() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onNext(ReviewModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_add_cart", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+
+                                Review_Adapter friendsAdapter = new Review_Adapter(response.getReviews(),getActivity());
+                                binding.setReviewAdapter(friendsAdapter);//set databinding adapter
+                                friendsAdapter.notifyDataSetChanged();
+                            } else {
+                                //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("product_details_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
 
     }
 
@@ -362,6 +619,10 @@ public class Product_Details_Fragment extends Fragment {
                                     binding.tvReward.setText(response.getProducts().get(i).getReward().toString());
                                     binding.tvStockStatus.setText(response.getProducts().get(i).getStockStatus());
                                     binding.tvProcode.setText(response.getProducts().get(i).getModel());
+                                    binding.tvReviews.setText(response.getProducts().get(i).getReviews());
+
+                                    binding.rating.setRating(response.getProducts().get(i).getRating());
+                                    binding.tvReviewText.setText(response.getProducts().get(i).getTab_review());
 
                                     Glide    //image loading
                                             .with(getActivity())
@@ -375,7 +636,7 @@ public class Product_Details_Fragment extends Fragment {
                                         for (int k = 0; k < response.getProducts().get(i).getOptions().size(); k++) {
                                             product_option_id=response.getProducts().get(i).getOptions().get(k).getProductOptionId();
                                             ArrayList<String> QtyNameList = new ArrayList<>();
-                                            for (int j = 0; j < response.getProducts().get(i).getOptions().get(i).getProductOptionValue().size(); j++) {
+                                            for (int j = 0; j < response.getProducts().get(i).getOptions().get(k).getProductOptionValue().size(); j++) {
                                                 String QtyName = response.getProducts().get(i).getOptions().get(k).getProductOptionValue().get(j).getName();
                                                 String QtyPrice = response.getProducts().get(i).getOptions().get(k).getProductOptionValue().get(j).getPrice();
                                                 String QtyOptionValueId = response.getProducts().get(i).getOptions().get(k).getProductOptionValue().get(j).getOptionValueId();

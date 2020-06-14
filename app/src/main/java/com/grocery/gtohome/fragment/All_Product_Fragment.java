@@ -216,6 +216,7 @@ public class All_Product_Fragment extends Fragment implements SwipeRefreshLayout
                         //Handle logic
                         try {
                             filterByModelList.clear();
+                            filterName.clear();
                            progressDialog.dismiss();
                             Log.e("result_category_pro", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();

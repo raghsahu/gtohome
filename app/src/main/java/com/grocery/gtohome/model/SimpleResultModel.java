@@ -13,6 +13,9 @@ public class SimpleResultModel {
     @SerializedName("msg")
     @Expose
     private String msg;
+    @SerializedName("message")
+    @Expose
+    private String message;
     @SerializedName("cartCount")
     @Expose
     private Integer cartCount;
@@ -34,6 +37,14 @@ public class SimpleResultModel {
 
     public String getMsg() {
         return msg;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Boolean getStatus() {

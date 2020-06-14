@@ -1103,6 +1103,7 @@
                   </LinearLayout>
 
                   <LinearLayout
+                      android:id="@+id/ll_payment_gateway"
                       android:layout_marginTop="@dimen/_10sdp"
                       android:background="@drawable/rectangle_bg_border"
                       android:orientation="vertical"

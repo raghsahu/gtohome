@@ -1,5 +1,6 @@
 package com.grocery.gtohome.api_client;
 
+import com.grocery.gtohome.model.WalletUseModel;
 import com.grocery.gtohome.model.blog_model.BlogModel;
 import com.grocery.gtohome.model.company_info_model.Company_infoModel;
 import com.grocery.gtohome.model.confirm_order_model.Confirm_Order_Model;
@@ -23,6 +24,7 @@ import com.grocery.gtohome.model.register_model.RegistrationModel;
 import com.grocery.gtohome.model.return_model.ReturnDetailsModel;
 import com.grocery.gtohome.model.return_model.ReturnModel;
 import com.grocery.gtohome.model.return_reason_model.ReturnReasonModel;
+import com.grocery.gtohome.model.review_model.ReviewModel;
 import com.grocery.gtohome.model.shipping_method.ShippingMethod;
 import com.grocery.gtohome.model.slot_model.Slot_Model;
 import com.grocery.gtohome.model.wallet_model.WalletModelList;
@@ -322,4 +324,35 @@ public interface Api_Call {
     @FormUrlEncoded
     @POST("index.php?route=restapi/wallet")
     Observable<WalletModelList>  GetWalletApi(@Field("customer_id") String customerId);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/payment/use_wallet")
+    Observable<WalletUseModel>  UseWalletApi(
+            @Field("customer_id")  String customer_id,
+            @Field("isWallet")  String isWallet,
+            @Field("wk_cart_amount") String subTotal,
+            @Field("shipping_method[title]")  String subTitle,
+            @Field("shipping_method[code]")  String subCode,
+            @Field("subtotal")  String subTotal1,
+            @Field("address_id")  String address_id);
+
+
+    @GET("index.php?route=restapi/product/review_list")
+    Observable<ReviewModel>  ReviewList(
+            @Query("product_id")  String product_id);
+
+    @FormUrlEncoded
+    @POST("index.php?route=restapi/product/add_review")
+    Observable<SimpleResultModel> RatingPost(
+            @Field("name") String name,
+            @Field("text") String review,
+            @Field("rating") String rating_point,
+            @Field("product_id") String product_id,
+            @Field("customer_id") String customer_id);
+
+    @FormUrlEncoded
+    @POST("index.php?route=kbzipcodeavailability/kbzipcodeavailability")
+    Observable<SimpleResultModel> CheckAvailProduct(
+            @Field("zipcode") String pincode,
+            @Field("product_id") String product_Id);
 }

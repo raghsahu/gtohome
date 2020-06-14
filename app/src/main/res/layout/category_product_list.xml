@@ -103,6 +103,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/ll_spin"
                     android:background="@drawable/rectangle_border"
                     android:layout_width="match_parent"

@@ -30,6 +30,7 @@ import com.grocery.gtohome.databinding.CategoryProductListBinding;
 import com.grocery.gtohome.fragment.Product_Details_Fragment;
 import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.model.category_product_model.CategoryProduct_List;
+import com.grocery.gtohome.model.category_product_model.ProductOptionValue;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
@@ -62,7 +63,7 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
     private Utilities utilities;
     SessionManager sessionManager;
     private CountDownTimer newtimer;
-    // List<ProductOptionValue> productOptionValueList = new ArrayList<>();
+   // List<ProductOptionValue> productOptionValueList = new ArrayList<>();
 
     public CategoryProduct_Adapter(List<CategoryProduct_List> dataModelList, Context ctx, String special) {
         this.dataModelList = dataModelList;
@@ -134,23 +135,26 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
 
         //***********************set quantity in spinner*******************
         if (dataModel.getOptions()!=null && !dataModel.getOptions().isEmpty()){
+            holder.itemRowBinding.llSpin.setVisibility(View.VISIBLE);
+            ArrayList<String> QtyNameList = new ArrayList<>();
             for (int i=0; i<dataModel.getOptions().size(); i++){
-                ArrayList<String> QtyNameList = new ArrayList<>();
                 for (int j=0; j<dataModel.getOptions().get(i).getProductOptionValue().size(); j++){
                     String QtyName=dataModel.getOptions().get(i).getProductOptionValue().get(j).getName();
                     String QtyPrice=dataModel.getOptions().get(i).getProductOptionValue().get(j).getPrice();
                     String QtyOptionValueId=dataModel.getOptions().get(i).getProductOptionValue().get(j).getOptionValueId();
                     String QtyProductOptionValueId=dataModel.getOptions().get(i).getProductOptionValue().get(j).getProductOptionValueId();
 
-                    //   productOptionValueList.add(new ProductOptionValue(QtyName,QtyPrice,QtyOptionValueId,QtyProductOptionValueId));
+                      // productOptionValueList.add(new ProductOptionValue(QtyName,QtyPrice,QtyOptionValueId,QtyProductOptionValueId));
                     QtyNameList.add(QtyName);
+                   // Log.e("grambu1",""+dataModel.getName()+" name-"+QtyName);
                 }
                 ArrayAdapter<String> adp = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, QtyNameList);
                 holder.itemRowBinding.spinnerQty.setAdapter(adp);
 
             }
         }else {
-            holder.itemRowBinding.llSpin.setVisibility(View.GONE);
+           // Log.e("grambu",""+dataModel.getName());
+          holder.itemRowBinding.llSpin.setVisibility(View.GONE);
             if (!dataModel.getSpecial().equalsIgnoreCase("false")){
                 holder.itemRowBinding.tvSpecialPrice.setVisibility(View.VISIBLE);
                 holder.itemRowBinding.tvSpecialPrice.setText(dataModel.getSpecial());
@@ -162,32 +166,40 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
             }
         }
 
-
         holder.itemRowBinding.spinnerQty.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
                 String  selecteditem =  adapter.getItemAtPosition(i).toString();
 
-                if (dataModel.getOptions()!=null && !dataModel.getOptions().isEmpty() && dataModel.getOptions().get(0).getProductOptionValue().size()>1){
+                if (dataModel.getOptions()!=null && !dataModel.getOptions().isEmpty()){
                     for (int k=0; k<dataModel.getOptions().size(); k++) {
-                        for (int j = 0; j < dataModel.getOptions().get(k).getProductOptionValue().size(); j++) {
-                            String QtyName = dataModel.getOptions().get(k).getProductOptionValue().get(j).getName();
-                            String QtyPrice = dataModel.getOptions().get(k).getProductOptionValue().get(j).getPrice();
-                            QtyOptionValueId = dataModel.getOptions().get(k).getProductOptionValue().get(j).getProductOptionValueId();
-                            if (selecteditem.equals(QtyName)){
-                                holder.itemRowBinding.tvPrice.setText(QtyPrice);
-                            }
+                        if (dataModel.getOptions().get(k).getProductOptionValue().size()>1){
+                            for (int j = 0; j < dataModel.getOptions().get(k).getProductOptionValue().size(); j++) {
+                                String QtyName = dataModel.getOptions().get(k).getProductOptionValue().get(j).getName();
+                                String QtyPrice = dataModel.getOptions().get(k).getProductOptionValue().get(j).getPrice();
+                                QtyOptionValueId = dataModel.getOptions().get(k).getProductOptionValue().get(j).getProductOptionValueId();
 
+                               // Log.e("gram_koduk",""+dataModel.getName()+" qty-"+QtyName);
+                                if (selecteditem.equals(QtyName)){
+                                    holder.itemRowBinding.tvPrice.setText(QtyPrice);
+                                   // Log.e("gram_koduk",""+dataModel.getName()+" qty-"+QtyName);
+                                }
+
+                            }
+                        }else {
+
+                            if (!dataModel.getSpecial().equalsIgnoreCase("false")){
+                                holder.itemRowBinding.tvSpecialPrice.setVisibility(View.VISIBLE);
+                                holder.itemRowBinding.tvSpecialPrice.setText(dataModel.getSpecial());
+                                holder.itemRowBinding.tvPrice.setText(dataModel.getPrice());
+                                holder.itemRowBinding.tvPrice.setTextColor(Color.RED);
+                                holder.itemRowBinding.tvPrice.setPaintFlags(holder.itemRowBinding.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                            }else {
+                                holder.itemRowBinding.tvPrice.setText(dataModel.getPrice());
+                            }
                         }
-                    }
-                }else {
-                    if (!dataModel.getSpecial().equalsIgnoreCase("false")){
-                        holder.itemRowBinding.tvSpecialPrice.setVisibility(View.VISIBLE);
-                        holder.itemRowBinding.tvSpecialPrice.setText(dataModel.getSpecial());
-                        holder.itemRowBinding.tvPrice.setText(dataModel.getPrice());
-                        holder.itemRowBinding.tvPrice.setTextColor(Color.RED);
-                        holder.itemRowBinding.tvPrice.setPaintFlags(holder.itemRowBinding.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
                     }
                 }
             }

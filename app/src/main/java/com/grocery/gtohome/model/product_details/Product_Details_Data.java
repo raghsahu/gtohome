@@ -42,6 +42,12 @@ public class Product_Details_Data {
     @SerializedName("minimum")
     @Expose
     private String minimum;
+    @SerializedName("reviews")
+    @Expose
+    private String reviews;
+    @SerializedName("tab_review")
+    @Expose
+    private String tab_review;
     @SerializedName("rating")
     @Expose
     private Integer rating;
@@ -108,6 +114,22 @@ public class Product_Details_Data {
 
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
+    }
+
+    public String getReviews() {
+        return reviews;
+    }
+
+    public String getTab_review() {
+        return tab_review;
+    }
+
+    public void setTab_review(String tab_review) {
+        this.tab_review = tab_review;
+    }
+
+    public void setReviews(String reviews) {
+        this.reviews = reviews;
     }
 
     public String getDescription() {
