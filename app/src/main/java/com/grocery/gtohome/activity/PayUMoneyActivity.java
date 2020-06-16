@@ -21,11 +21,9 @@ import android.widget.Toast;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.RxApiClient;
-import com.grocery.gtohome.fragment.my_basket.ChekoutActivity;
 import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Utilities;
-import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 
@@ -66,7 +64,7 @@ public class PayUMoneyActivity extends AppCompatActivity {
     String SUCCESS_URL="https://www.payumoney.com/mobileapp/payumoney/success.php";
     String Failer_URL="https://www.payumoney.com/mobileapp/payumoney/failure.php";
     private String OrderId, Order_status_id,Customer_Id;
-    private String PaymentType;
+    private String PaymentType,WalletDeductAmount,wk_wallet_payment;
 
 
     @SuppressLint({"WrongConstant", "JavascriptInterface"})
@@ -89,6 +87,8 @@ public class PayUMoneyActivity extends AppCompatActivity {
             OrderId=getIntent().getStringExtra("OrderId");
             Order_status_id=getIntent().getStringExtra("Order_status_id");
             PaymentType=getIntent().getStringExtra("PaymentType");
+            WalletDeductAmount=getIntent().getStringExtra("walletDeductAmount");
+            wk_wallet_payment=getIntent().getStringExtra("wk_wallet_payment");
         }
 
         Random rand = new Random();
@@ -323,7 +323,7 @@ public class PayUMoneyActivity extends AppCompatActivity {
 
         Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
 
-        apiInterface.UpdateOrderStatus(Customer_Id,Order_status_id,OrderId,PaymentID)
+        apiInterface.UpdateOrderStatus(Customer_Id,Order_status_id,OrderId,PaymentID, WalletDeductAmount, wk_wallet_payment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<SimpleResultModel>() {

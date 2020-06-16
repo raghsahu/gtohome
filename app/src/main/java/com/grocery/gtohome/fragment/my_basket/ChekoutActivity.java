@@ -84,6 +84,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
     private SessionManager sessionManager;
     private String Customer_Id;
     ShippingMethodAdapter friendsAdapter;
+    HistoryItemList_Adapter historyItemListAdapter;
 
     List<AddressData> AddressModelList = new ArrayList<>();
     ArrayList<String> AddressName = new ArrayList<>();
@@ -104,6 +105,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
     private String TotalPrice, SubTotal, amount = "", Et_Coupan = "", Et_gift = "", FinalTotalPrice, Finalamount = "";
     private String SubTitle = "", SubCode = "", Ship_cost = "";
     String payment_code = "", payment_title = "";
+    String payment_code_wallet = "", payment_title_wallet = "";
     boolean biling_delivery_charge = false;
     boolean ll_wallet_status = false;
 
@@ -119,7 +121,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
     private String WalletBalance;
     double wk_cart_total_amount;
     private String WalletDeductAmount="";
-    private String total_cartamount;
+    private String total_cartamount,wk_wallet_payment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -382,8 +384,8 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                         //*************check wallet
                         if (Double.parseDouble(WalletBalance) > 0) {
                             binding.llWallet.setVisibility(View.VISIBLE);
-                            if (SubTotal != null && !SubTotal.isEmpty()) {
-                                total_cartamount = SubTotal.replace("₹", "").replace(",", "");
+                            if (TotalPrice != null && !TotalPrice.isEmpty()) {
+                                total_cartamount = TotalPrice.replace("₹", "").replace(",", "");
 
                                 wk_cart_total_amount = Double.parseDouble(total_cartamount) + Double.parseDouble(Ship_cost);
                                 binding.tvWalletCartAmt.setText(("(Wallet: ₹" + WalletBalance + " , " + "Cart Total: ₹" + wk_cart_total_amount + ")"));
@@ -426,20 +428,17 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                         binding.llDeliveryConfirm.setVisibility(View.VISIBLE);
                         confirm_order = true;
 
-                                //***paymrnt code & title
-                        payment_code = "wk_wallet_system_payment";
-                        payment_title = "GH Wallet";
-
                         if (Connectivity.isConnected(ChekoutActivity.this)) {
-                            GetTotalProduct_Amount(Customer_Id, SubTotal, address_id, SubCode, SubTitle, Et_Coupan, Et_gift);
+                            GetTotalProduct_Amount(Customer_Id, SubTotal, address_id, SubCode, SubTitle, Et_Coupan, Et_gift,wk_wallet_payment);
                         } else {
                             utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title), getString(R.string.please_check_internet),
                                     getString(R.string.ok), false);
                         }
                     }
-                }else if (payment_code.isEmpty() && payment_code.equals("")) {
+                }else if ( payment_code.equals("") && payment_code.isEmpty() ) {
                     utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
                             "Please select payment method", getString(R.string.ok), false);
+
                 } else {
                     if (!binding.checkTerms.isChecked()) {
                         utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
@@ -455,13 +454,18 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                         confirm_order = true;
 
                         if (binding.checkWallet.isChecked()){
-                            WalletDeductAmount= String.valueOf(total_cartamount);
+                            WalletDeductAmount= String.valueOf(WalletBalance);
                         }else {
                             WalletDeductAmount= "";
                         }
 
+                        if (wk_wallet_payment.equalsIgnoreCase("1")){
+                            payment_code = payment_code + " + "+ payment_code_wallet;
+                            payment_title = payment_title + " + "+ payment_title_wallet;
+                        }
+
                         if (Connectivity.isConnected(ChekoutActivity.this)) {
-                            GetTotalProduct_Amount(Customer_Id, SubTotal, address_id, SubCode, SubTitle, Et_Coupan, Et_gift);
+                            GetTotalProduct_Amount(Customer_Id, SubTotal, address_id, SubCode, SubTitle, Et_Coupan, Et_gift,  wk_wallet_payment );
                         } else {
                             utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title), getString(R.string.please_check_internet),
                                     getString(R.string.ok), false);
@@ -477,12 +481,15 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
             @Override
             public void onClick(View v) {
                 if (Connectivity.isConnected(ChekoutActivity.this)) {
+                    if (payment_code.isEmpty() && payment_code.equalsIgnoreCase("")){
+                        payment_code=payment_code_wallet;
+                        payment_title=payment_title_wallet;
+                    }
                     CreateOrder(Customer_Id, Et_Comment_Order, address_id, address_delivery_id, payment_code, payment_title, SubCode, SubTitle, SubTotal);
                 } else {
                     utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title), getString(R.string.please_check_internet),
                             getString(R.string.ok), false);
                 }
-
             }
         });
 
@@ -713,8 +720,16 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
                 if (binding.checkWallet.isChecked()){
                     UseWallet("true");
+                    wk_wallet_payment = "1";
+                    //***paymrnt code & title
+                    payment_code_wallet = "wk_wallet_system_payment";
+                    payment_title_wallet = "GH Wallet";
                 }else {
                     UseWallet("false");
+                    wk_wallet_payment = "0";
+                    //***paymrnt code & title
+                    payment_code_wallet = "";
+                    payment_title_wallet = "";
                 }
 
          }
@@ -1002,12 +1017,14 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
     @SuppressLint("CheckResult")
     private void GetTotalProduct_Amount(String customer_id, String subTotal, String address_id, String subCode, String subTitle,
-                                        String et_coupan, String et_gift) {
+                                        String et_coupan, String et_gift, String wk_wallet_payment) {
 
         final ProgressDialog progressDialog = new ProgressDialog(ChekoutActivity.this, R.style.MyGravity);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         // progressDialog.setCancelable(false);
         progressDialog.show();
+
+
 
         Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
 
@@ -1019,6 +1036,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         map.put("subtotal", subTotal);
         map.put("coupon", et_coupan);
         map.put("voucher", et_gift);
+        map.put("wk_wallet_payment", wk_wallet_payment);
 
         apiInterface.ConfirmOrder(map)
                 .subscribeOn(Schedulers.io())
@@ -1035,9 +1053,9 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
                                 Order_status_id = response.getOrder_status_id();
                                 if (response.getOrders().getProducts() != null) {
-                                    HistoryItemList_Adapter friendsAdapter = new HistoryItemList_Adapter(response.getOrders().getProducts(), ChekoutActivity.this);
-                                    binding.setMyOrderAdapter(friendsAdapter);//set databinding adapter
-                                    friendsAdapter.notifyDataSetChanged();
+                                    historyItemListAdapter = new HistoryItemList_Adapter(response.getOrders().getProducts(), ChekoutActivity.this);
+                                    binding.setMyOrderAdapter(historyItemListAdapter);//set databinding adapter
+                                    historyItemListAdapter.notifyDataSetChanged();
                                 }
 
                                 for (int i = 0; i < response.getOrders().getTotals().size(); i++) {
@@ -1130,6 +1148,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         map.put("coupon", Et_Coupan);
         map.put("voucher", Et_gift);
         map.put("wallet_deduction", WalletDeductAmount);
+        map.put("wk_wallet_payment", wk_wallet_payment);
 
         apiInterface.CreateOrder(map)
                 .subscribeOn(Schedulers.io())
@@ -1157,6 +1176,8 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                                     intent.putExtra("amount", Finalamount);
                                     intent.putExtra("Order_status_id", Order_status_id);
                                     intent.putExtra("PaymentType", "Order");
+                                    intent.putExtra("wk_wallet_payment", wk_wallet_payment);
+                                    intent.putExtra("walletDeductAmount", WalletDeductAmount);
                                     startActivity(intent);
 
                                     // CallPaymentgateway();
@@ -1879,7 +1900,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
         Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
 
-        apiInterface.UpdateOrderStatus(Customer_Id, Order_status_id, Order_Id, razorpayPaymentID)
+        apiInterface.UpdateOrderStatus(Customer_Id, Order_status_id, Order_Id, razorpayPaymentID,WalletDeductAmount,wk_wallet_payment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<SimpleResultModel>() {

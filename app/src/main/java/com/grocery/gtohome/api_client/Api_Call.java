@@ -20,7 +20,6 @@ import com.grocery.gtohome.model.order_history.OrderHistory;
 import com.grocery.gtohome.model.order_history.OrderHistoryDetails;
 import com.grocery.gtohome.model.popular_brand.PopularBrandModel;
 import com.grocery.gtohome.model.product_details.Product_Details_Model;
-import com.grocery.gtohome.model.register_model.RegistrationModel;
 import com.grocery.gtohome.model.return_model.ReturnDetailsModel;
 import com.grocery.gtohome.model.return_model.ReturnModel;
 import com.grocery.gtohome.model.return_reason_model.ReturnReasonModel;
@@ -32,7 +31,6 @@ import com.grocery.gtohome.model.wishlist_model.Wishlist_Model;
 
 import java.util.HashMap;
 
-import io.reactivex.Completable;
 import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
@@ -296,7 +294,9 @@ public interface Api_Call {
             @Field("customer_id") String customer_id,
             @Field("order_status_id") String order_status_id,
             @Field("order_id") String order_id,
-            @Field("message") String razorpayPaymentID);
+            @Field("message") String razorpayPaymentID,
+            @Field("wallet_deduction")  String walletDeductAmount,
+            @Field("wk_wallet_payment")  String wk_wallet_payment);
 
 
     @GET("index.php?route=restapi/auth/social_login")
