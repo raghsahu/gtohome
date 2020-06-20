@@ -20,6 +20,7 @@ import com.grocery.gtohome.model.order_history.OrderHistory;
 import com.grocery.gtohome.model.order_history.OrderHistoryDetails;
 import com.grocery.gtohome.model.popular_brand.PopularBrandModel;
 import com.grocery.gtohome.model.product_details.Product_Details_Model;
+import com.grocery.gtohome.model.product_slider.Product_Slider_Model;
 import com.grocery.gtohome.model.return_model.ReturnDetailsModel;
 import com.grocery.gtohome.model.return_model.ReturnModel;
 import com.grocery.gtohome.model.return_reason_model.ReturnReasonModel;
@@ -31,6 +32,7 @@ import com.grocery.gtohome.model.wishlist_model.Wishlist_Model;
 
 import java.util.HashMap;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
@@ -355,4 +357,7 @@ public interface Api_Call {
     Observable<SimpleResultModel> CheckAvailProduct(
             @Field("zipcode") String pincode,
             @Field("product_id") String product_Id);
+
+    @GET("index.php?route=restapi/home/banners")
+    Observable<Product_Slider_Model> ProductSlideApi();
 }

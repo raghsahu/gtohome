@@ -41,7 +41,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="200dp" />
 
-
                     <androidx.viewpager.widget.ViewPager
                         android:id="@+id/slider_pager"
                         android:layout_width="match_parent"
@@ -308,7 +307,8 @@
                             android:layout_height="match_parent"
                             android:adapter="@{categoryAdapter}"
                             android:scrollbars="none"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"></androidx.recyclerview.widget.RecyclerView>
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+                        </androidx.recyclerview.widget.RecyclerView>
 
                         <LinearLayout
                             android:visibility="gone"
@@ -350,6 +350,33 @@
                         android:layout_height="wrap_content"
                         >
                     </TextView>
+
+                    <LinearLayout
+                        android:background="@drawable/rectangle_bg_border"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <androidx.viewpager.widget.ViewPager
+                            android:layout_margin="@dimen/_10sdp"
+                            android:id="@+id/product_slider_pager"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_120sdp"
+                            android:layout_gravity="center"
+                            android:visibility="visible" />
+
+                        <LinearLayout
+                            android:id="@+id/linear_layout1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
 
                     <LinearLayout
@@ -456,6 +483,7 @@
                             android:visibility="visible" />
 
                         <ImageView
+                            android:visibility="gone"
                             android:id="@+id/iv_left_arrow"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_centerVertical="true"
@@ -466,6 +494,7 @@
                         </ImageView>
 
                         <ImageView
+                            android:visibility="gone"
                             android:id="@+id/iv_right_arrow"
                             android:layout_marginEnd="@dimen/_10sdp"
                             android:layout_alignParentEnd="true"

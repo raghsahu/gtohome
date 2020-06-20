@@ -1,6 +1,7 @@
 package com.grocery.gtohome.fragment.my_orders;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 
@@ -24,6 +26,7 @@ import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.FragmentMyAccountBinding;
 import com.grocery.gtohome.databinding.FragmentReturnProductBinding;
+import com.grocery.gtohome.fragment.my_basket.ChekoutActivity;
 import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.model.order_history.OrderHistory;
 import com.grocery.gtohome.model.return_reason_model.ReturnReasonModel;
@@ -31,7 +34,10 @@ import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
@@ -107,6 +113,15 @@ public class ReturnProduct_Fragment extends Fragment {
             }
         });
 
+        //*************select calendar order date
+        binding.etOrderdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Select_date();
+            }
+        });
+
         //********************click continue return
         binding.tvContinue.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,12 +154,37 @@ public class ReturnProduct_Fragment extends Fragment {
                     utilities.dialogOK(getActivity(), getString(R.string.validation_title), "Please enter all fields", getString(R.string.ok), false);
 
                 }
-
             }
         });
 
         return root;
     }
+
+        private void Select_date() {
+            Calendar mcurrentDate = Calendar.getInstance();
+            final int[] mYear = {mcurrentDate.get(Calendar.YEAR)};
+            final int[] mMonth = {mcurrentDate.get(Calendar.MONTH)};
+            final int[] mDay = {mcurrentDate.get(Calendar.DAY_OF_MONTH)};
+            DatePickerDialog mDatePicker = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                    Calendar myCalendar = Calendar.getInstance();
+                    myCalendar.set(Calendar.YEAR, selectedyear);
+                    myCalendar.set(Calendar.MONTH, selectedmonth);
+                    myCalendar.set(Calendar.DAY_OF_MONTH, selectedday);
+                    String myFormat = "dd-MM-yyyy"; //Change as you need
+                    SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
+                    binding.etOrderdate.setText(sdf.format(myCalendar.getTime()));
+                   // Delivery_Date = sdf.format(myCalendar.getTime());
+
+                    mDay[0] = selectedday;
+                    mMonth[0] = selectedmonth;
+                    mYear[0] = selectedyear;
+                }
+            }, mYear[0], mMonth[0], mDay[0]);
+            //mDatePicker.setTitle("Select date");
+            mDatePicker.show();
+        }
+
 
     @SuppressLint("CheckResult")
     private void CalReturnApi(String firstname, String lastname, String email, String telephone, String orderid, String orderdate,

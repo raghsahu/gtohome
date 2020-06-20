@@ -460,7 +460,6 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                         }
 
                         if (wk_wallet_payment.equalsIgnoreCase("1")){
-                            payment_code = payment_code + " + "+ payment_code_wallet;
                             payment_title = payment_title + " + "+ payment_title_wallet;
                         }
 

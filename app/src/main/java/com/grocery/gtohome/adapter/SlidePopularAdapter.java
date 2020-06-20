@@ -94,4 +94,10 @@ public class SlidePopularAdapter extends PagerAdapter {
     public void destroyItem(@NonNull ViewGroup container, int position, Object object) {
         container.removeView((LinearLayout) object);
     }
+
+    @Override
+    public float getPageWidth(int position) {
+        //return super.getPageWidth(position);
+        return (0.5f);
+    }
 }

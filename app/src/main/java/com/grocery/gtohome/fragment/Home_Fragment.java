@@ -43,6 +43,7 @@ import com.grocery.gtohome.adapter.CategoryList_Adapter;
 import com.grocery.gtohome.adapter.CategoryProduct_Adapter;
 import com.grocery.gtohome.adapter.PopularBrand_Adapter;
 import com.grocery.gtohome.adapter.SlidePopularAdapter;
+import com.grocery.gtohome.adapter.SliderAdapter_pro;
 import com.grocery.gtohome.adapter.SliderAdapter_range;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.Base_Url;
@@ -56,6 +57,8 @@ import com.grocery.gtohome.model.SliderModel;
 import com.grocery.gtohome.model.category_model.CategoryModel;
 import com.grocery.gtohome.model.category_product_model.CategoryProductModel;
 import com.grocery.gtohome.model.home_slider.HomeSliderBanner;
+import com.grocery.gtohome.model.product_slider.ProductBannerImage;
+import com.grocery.gtohome.model.product_slider.Product_Slider_Model;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.SpeedyLinearLayoutManager;
@@ -77,8 +80,12 @@ import retrofit2.adapter.rxjava2.HttpException;
 public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     FragmentHomeBinding binding;
     SliderAdapter_range sliderAdapter_range;
+    SliderAdapter_pro sliderAdapter_pro;
     private int dotsCount;
     private ImageView[] dotes;
+    private int dotsCount1;
+    private ImageView[] dotes1;
+
     PopularBrand_Adapter friendsAdapter;
     private Utilities utilities;
     ArrayList<SampleModel> sampleModels;
@@ -93,7 +100,7 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
     int currentPage = 0;
     Timer timer;
     final long DELAY_MS = 500;
-    final long PERIOD_MS = 4000;
+    final long PERIOD_MS = 3000;
 
     public static Home_Fragment newInstance(String movieTitle) {
         Home_Fragment fragmentAction = new Home_Fragment();
@@ -150,6 +157,7 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         //side slide bar
         setHorizontalSliderItem();
+        setProductSlider();
 
         getPopularBrandList();//popular brand list
         getFeatureProduct();
@@ -286,6 +294,125 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
         return root;
+
+    }
+
+    @SuppressLint("CheckResult")
+    private void setProductSlider() {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
+
+        apiInterface.ProductSlideApi()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<Product_Slider_Model>() {
+                    @Override
+                    public void onNext(Product_Slider_Model response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_my_test", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+
+                                List<ProductBannerImage>productBannerImageslist=new ArrayList<>();
+
+                                for (int i = 0; i < response.getResponse().size(); i++) {
+                                    for (int j=0; j<response.getResponse().get(i).getBannerImages().size(); j++){
+                                        productBannerImageslist.add(new ProductBannerImage(response.getResponse().get(i).getBannerImages()
+                                        .get(j).getImage()));
+                                    }
+                                }
+
+                                sliderAdapter_pro = new SliderAdapter_pro(getActivity(), productBannerImageslist);
+                                binding.productSliderPager.setAdapter(sliderAdapter_pro);
+                                binding.productSliderPager.setPageTransformer(true, new ZoomOutSlideTransformer());
+                                binding.productSliderPager.setCurrentItem(0);
+                                binding.productSliderPager.addOnPageChangeListener(pageChangeListener_pro);
+                                dotesIndicater1();
+
+                            } else {
+                                binding.productSliderPager.setVisibility(View.GONE);
+
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("mr_product_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void dotesIndicater1() {
+        dotsCount1 = sliderAdapter_pro.getCount();
+        dotes1 = new ImageView[dotsCount1];
+        binding.linearLayout1.removeAllViews();
+        for (int i = 0; i < dotsCount1; i++) {
+            dotes1[i] = new ImageView(getActivity());
+            dotes1[i].setImageResource(R.drawable.circle_inactive);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    20,
+                    20
+            );
+
+            params.setMargins(4, 0, 4, 0);
+
+            final int presentPosition = i;
+            dotes1[presentPosition].setOnTouchListener(new View.OnTouchListener() {
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    binding.productSliderPager.setCurrentItem(presentPosition);
+                    return true;
+                }
+
+            });
+
+            binding.linearLayout1.addView(dotes1[i], params);
+
+        }
+        dotes1[0].setImageResource(R.drawable.circle_active);
 
     }
 
@@ -752,6 +879,29 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
 
             dotes[position].setImageResource(R.drawable.circle_active);
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
+
+    ViewPager.OnPageChangeListener pageChangeListener_pro = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+
+            for (int i = 0; i < dotsCount1; i++) {
+                dotes1[i].setImageDrawable(getResources().getDrawable(R.drawable.circle_inactive));
+            }
+
+            dotes1[position].setImageResource(R.drawable.circle_active);
 
         }
 
