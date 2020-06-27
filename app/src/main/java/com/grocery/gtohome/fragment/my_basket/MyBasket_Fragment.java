@@ -265,19 +265,22 @@ public class MyBasket_Fragment extends Fragment implements SwipeRefreshLayout.On
                                             break;
                                         }else {
 
-                                            CartCoopanFragment fragment2 = new CartCoopanFragment();
-                                            //  DeliveryAddressFragment fragment2 = new DeliveryAddressFragment();
-                                            Bundle bundle = new Bundle();
-                                           // bundle.putSerializable("Cart_Total", (Serializable) response.getTotals());
-                                            bundle.putSerializable("Cart_Total", (Serializable) response.getTotals());
-                                          //  bundle.putString("TotalPrice",total_amount);
-                                           // bundle.putString("SubTotal",sub_total);
-                                            FragmentManager manager = getActivity().getSupportFragmentManager();
-                                            FragmentTransaction fragmentTransaction = manager.beginTransaction();
-                                            fragmentTransaction.replace(R.id.frame, fragment2);
-                                            fragmentTransaction.addToBackStack(null);
-                                            fragmentTransaction.commit();
-                                            fragment2.setArguments(bundle);
+                                            if(j == response.getProducts().size() - 1){
+                                                CartCoopanFragment fragment2 = new CartCoopanFragment();
+                                                //  DeliveryAddressFragment fragment2 = new DeliveryAddressFragment();
+                                                Bundle bundle = new Bundle();
+                                                // bundle.putSerializable("Cart_Total", (Serializable) response.getTotals());
+                                                bundle.putSerializable("Cart_Total", (Serializable) response.getTotals());
+                                                //  bundle.putString("TotalPrice",total_amount);
+                                                // bundle.putString("SubTotal",sub_total);
+                                                FragmentManager manager = getActivity().getSupportFragmentManager();
+                                                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                                                fragmentTransaction.replace(R.id.frame, fragment2);
+                                                fragmentTransaction.addToBackStack(null);
+                                                fragmentTransaction.commit();
+                                                fragment2.setArguments(bundle);
+                                            }
+
 
                                         }
                                     }

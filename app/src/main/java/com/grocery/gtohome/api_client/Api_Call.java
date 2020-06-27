@@ -5,7 +5,7 @@ import com.grocery.gtohome.model.blog_model.BlogModel;
 import com.grocery.gtohome.model.company_info_model.Company_infoModel;
 import com.grocery.gtohome.model.confirm_order_model.Confirm_Order_Model;
 import com.grocery.gtohome.model.country_model.CountryModel;
-import com.grocery.gtohome.fragment.state_model.StateModel;
+import com.grocery.gtohome.model.state_model.StateModel;
 import com.grocery.gtohome.model.FilterByModel;
 import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.model.address_model.AddressModel;
@@ -32,7 +32,6 @@ import com.grocery.gtohome.model.wishlist_model.Wishlist_Model;
 
 import java.util.HashMap;
 
-import io.reactivex.Completable;
 import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
