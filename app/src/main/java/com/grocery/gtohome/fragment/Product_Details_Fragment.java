@@ -628,7 +628,7 @@ public class Product_Details_Fragment extends Fragment {
                                             .with(getActivity())
                                             .load(response.getProducts().get(i).getThumb())
                                             //.centerCrop()
-                                            .placeholder(R.drawable.placeholder_image)
+                                            .placeholder(R.drawable.logo_transparent)
                                             .into(binding.ivProductImg);
 
                                     //set spinner

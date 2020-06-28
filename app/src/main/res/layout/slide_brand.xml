@@ -19,9 +19,8 @@
 
         <ImageView
             android:id="@+id/popular_image"
-            android:src="@drawable/placeholder_image"
+            android:src="@drawable/logo_transparent"
             android:layout_width="@dimen/_150sdp"
-            android:scaleType="center"
             android:layout_height="@dimen/_150sdp"
             >
         </ImageView>

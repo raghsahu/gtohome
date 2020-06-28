@@ -852,11 +852,11 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private void setHorizontalSliderItem() {
         ArrayList<SliderModel> listarray1 = new ArrayList<>();
 
+        listarray1.add(new SliderModel("", R.drawable.side_baner4));
         listarray1.add(new SliderModel("Wide Collection \nRefreshments", R.drawable.side_baner1));
         listarray1.add(new SliderModel("Break The Chain", R.drawable.side_baner2));
-        listarray1.add(new SliderModel("Get California RED \n @ 12$ \n Shop for $200", R.drawable.sub_banner3));
 
-        //**********
+        //*****************
         sliderAdapter_range = new SliderAdapter_range(getActivity(), listarray1);
         binding.sliderPager.setAdapter(sliderAdapter_range);
         binding.sliderPager.setPageTransformer(true, new ZoomOutSlideTransformer());

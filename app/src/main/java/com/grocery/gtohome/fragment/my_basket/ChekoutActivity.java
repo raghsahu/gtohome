@@ -1,30 +1,53 @@
 package com.grocery.gtohome.fragment.my_basket;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentManager;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.OrderSuccess_Activity;
 import com.grocery.gtohome.activity.PayUMoneyActivity;
@@ -54,6 +77,7 @@ import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.GPSTracker;
 import com.grocery.gtohome.utils.Utilities;
+import com.grocery.gtohome.utils.WorkaroundMapFragment;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
 
@@ -77,7 +101,7 @@ import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
 /**
  * Created by Raghvendra Sahu on 09-Apr-20.
  */
-public class ChekoutActivity extends AppCompatActivity implements ShippingMethodAdapter.AdapterCallback, PaymentResultListener {
+public class ChekoutActivity extends AppCompatActivity implements ShippingMethodAdapter.AdapterCallback, PaymentResultListener, OnMapReadyCallback {
     FragmentDeliveryAddressBinding binding;
     private Utilities utilities;
     Context context;
@@ -120,8 +144,16 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
     private String Order_status_id, Order_Id;
     private String WalletBalance;
     double wk_cart_total_amount;
-    private String WalletDeductAmount="";
-    private String total_cartamount,wk_wallet_payment;
+    private String WalletDeductAmount = "";
+    private String total_cartamount, wk_wallet_payment="0";
+
+    GoogleMap mMap;
+    LatLng latLng;
+    Geocoder geocoder;
+    Marker marker;
+    TextView tv_map_address;
+    Dialog dialog;
+    boolean map_show_biling=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +167,9 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         Customer_Id = sessionManager.getUser().getCustomerId();
         binding.toolbar.tvToolbar.setText("Checkout");
         tracker = new GPSTracker(ChekoutActivity.this);
+
+        geocoder = new Geocoder(this, Locale.getDefault());
+
 
         //set clickable true false
         binding.tvDeliveryDetails.setEnabled(false);
@@ -197,7 +232,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
             @Override
             public void onClick(View v) {
                 biling_delivery_charge = false;
-                if (!binding.radioExistAddress.isChecked() && !binding.radioOtherAddress.isChecked() && !binding.radioCurrentLoc.isChecked()) {
+                if (!binding.radioExistAddress.isChecked() && !binding.radioOtherAddress.isChecked() && !binding.radioCurrentLoc.isChecked() && !binding.radioMapBiling.isChecked()) {
                     utilities.dialogOK(context, getString(R.string.validation_title), "Please select shipping address", getString(R.string.ok), false);
                 } else {
                     if (binding.radioExistAddress.isChecked()) {
@@ -261,11 +296,16 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                             String City = city;
                             String post_code = postalCode;
 
-                            if (Connectivity.isConnected(context)) {
-                                SaveAddressApi(first_name, last_name, company_name, address1, address2, City, post_code, false);
-                            } else {
-                                utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+                            if (!City.isEmpty() && City.length()>1){
+                                if (Connectivity.isConnected(context)) {
+                                    SaveAddressApi(first_name, last_name, company_name, address1, address2, City, post_code, false);
+                                } else {
+                                    utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+                                }
+                            }else {
+                                Toast.makeText(ChekoutActivity.this, "City must be between 2 and 128 characters!", Toast.LENGTH_SHORT).show();
                             }
+
 
                         } else {
                             utilities.dialogOK(context, getString(R.string.validation_title), "Current address not found", getString(R.string.ok), false);
@@ -282,7 +322,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
             @Override
             public void onClick(View v) {
 
-                if (!binding.radioExistDelivery.isChecked() && !binding.radioOtherDelivery.isChecked() && !binding.radioCurrentLoc1.isChecked()) {
+                if (!binding.radioExistDelivery.isChecked() && !binding.radioOtherDelivery.isChecked() && !binding.radioCurrentLoc1.isChecked() && !binding.radioMapDelivery.isChecked()) {
                     utilities.dialogOK(context, getString(R.string.validation_title), "Please select delivery address", getString(R.string.ok), false);
                 } else {
                     if (binding.radioExistDelivery.isChecked()) {
@@ -347,12 +387,17 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                             String City = city;
                             String post_code = postalCode;
 
-                            if (Connectivity.isConnected(context)) {
-                                biling_delivery_charge = true;
-                                SaveAddressApi(first_name, last_name, company_name, address1, address2, City, post_code, true);
-                            } else {
-                                utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+                            if (!City.isEmpty() && City.length()>1){
+                                if (Connectivity.isConnected(context)) {
+                                    biling_delivery_charge = true;
+                                    SaveAddressApi(first_name, last_name, company_name, address1, address2, City, post_code, true);
+                                } else {
+                                    utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+                                }
+                            }else {
+                                Toast.makeText(ChekoutActivity.this, "City must be between 2 and 128 characters!", Toast.LENGTH_SHORT).show();
                             }
+
                         } else {
                             utilities.dialogOK(context, getString(R.string.validation_title), "Current address not found", getString(R.string.ok), false);
                         }
@@ -413,8 +458,8 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
             @Override
             public void onClick(View v) {
 
-                if (ll_wallet_status){
-                    WalletDeductAmount= String.valueOf(wk_cart_total_amount);
+                if (ll_wallet_status) {
+                    WalletDeductAmount = String.valueOf(wk_cart_total_amount);
                     if (!binding.checkTerms.isChecked()) {
                         utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
                                 "Please accept Terms & Conditions", getString(R.string.ok), false);
@@ -429,13 +474,13 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                         confirm_order = true;
 
                         if (Connectivity.isConnected(ChekoutActivity.this)) {
-                            GetTotalProduct_Amount(Customer_Id, SubTotal, address_id, SubCode, SubTitle, Et_Coupan, Et_gift,wk_wallet_payment);
+                            GetTotalProduct_Amount(Customer_Id, SubTotal, address_id, SubCode, SubTitle, Et_Coupan, Et_gift, wk_wallet_payment);
                         } else {
                             utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title), getString(R.string.please_check_internet),
                                     getString(R.string.ok), false);
                         }
                     }
-                }else if ( payment_code.equals("") && payment_code.isEmpty() ) {
+                } else if (payment_code.equals("") && payment_code.isEmpty()) {
                     utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title),
                             "Please select payment method", getString(R.string.ok), false);
 
@@ -453,18 +498,18 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                         binding.llDeliveryConfirm.setVisibility(View.VISIBLE);
                         confirm_order = true;
 
-                        if (binding.checkWallet.isChecked()){
-                            WalletDeductAmount= String.valueOf(WalletBalance);
-                        }else {
-                            WalletDeductAmount= "";
+                        if (binding.checkWallet.isChecked()) {
+                            WalletDeductAmount = String.valueOf(WalletBalance);
+                        } else {
+                            WalletDeductAmount = "";
                         }
 
-                        if (wk_wallet_payment.equalsIgnoreCase("1")){
-                            payment_title = payment_title + " + "+ payment_title_wallet;
+                        if (wk_wallet_payment!=null && wk_wallet_payment.equalsIgnoreCase("1")) {
+                            payment_title = payment_title + " + " + payment_title_wallet;
                         }
 
                         if (Connectivity.isConnected(ChekoutActivity.this)) {
-                            GetTotalProduct_Amount(Customer_Id, SubTotal, address_id, SubCode, SubTitle, Et_Coupan, Et_gift,  wk_wallet_payment );
+                            GetTotalProduct_Amount(Customer_Id, SubTotal, address_id, SubCode, SubTitle, Et_Coupan, Et_gift, wk_wallet_payment);
                         } else {
                             utilities.dialogOK(ChekoutActivity.this, getString(R.string.validation_title), getString(R.string.please_check_internet),
                                     getString(R.string.ok), false);
@@ -480,9 +525,9 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
             @Override
             public void onClick(View v) {
                 if (Connectivity.isConnected(ChekoutActivity.this)) {
-                    if (payment_code.isEmpty() && payment_code.equalsIgnoreCase("")){
-                        payment_code=payment_code_wallet;
-                        payment_title=payment_title_wallet;
+                    if (payment_code.isEmpty() && payment_code.equalsIgnoreCase("")) {
+                        payment_code = payment_code_wallet;
+                        payment_title = payment_title_wallet;
                     }
                     CreateOrder(Customer_Id, Et_Comment_Order, address_id, address_delivery_id, payment_code, payment_title, SubCode, SubTitle, SubTotal);
                 } else {
@@ -595,18 +640,36 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.radio_exist_address:
+                        binding.llMapBiling.setVisibility(View.GONE);
                         binding.llOtherAddress.setVisibility(View.GONE);
                         break;
                     case R.id.radio_other_address:
+                        binding.llMapBiling.setVisibility(View.GONE);
                         binding.llOtherAddress.setVisibility(View.VISIBLE);
                         break;
                     case R.id.radio_current_loc:
-                        for (int i = 0; i < CountryModelList.size(); i++) {
-                            if (country_loc.equalsIgnoreCase(CountryModelList.get(i).getName())) {
-                                country_id = CountryModelList.get(i).getCountryId();
-                                getCountryWiseState(country_id);
+                        binding.llMapBiling.setVisibility(View.GONE);
+                        binding.llOtherAddress.setVisibility(View.GONE);
+                        getAddress(lat, lng);
+                        if (country_loc!=null){
+                            for (int i = 0; i < CountryModelList.size(); i++) {
+                                if (country_loc.equalsIgnoreCase(CountryModelList.get(i).getName())) {
+                                    country_id = CountryModelList.get(i).getCountryId();
+                                    getCountryWiseState(country_id);
+                                }
                             }
                         }
+                        break;
+                    case R.id.radio_map_biling:
+                       // OpenMapDialog();
+                        map_show_biling=true;
+                        binding.llMapBiling.setVisibility(View.VISIBLE);
+                        binding.llOtherAddress.setVisibility(View.GONE);
+
+                        FragmentManager myFragmentManager = getSupportFragmentManager();
+                        SupportMapFragment mySupportMapFragment =  (WorkaroundMapFragment)myFragmentManager.findFragmentById(R.id.map);
+                        mySupportMapFragment.getMapAsync(ChekoutActivity.this);
+
                         break;
                 }
             }
@@ -618,12 +681,18 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.radio_exist_delivery:
+                        binding.llMapDelivery.setVisibility(View.GONE);
                         binding.llOtherDelivery.setVisibility(View.GONE);
                         break;
                     case R.id.radio_other_delivery:
+                        binding.llMapDelivery.setVisibility(View.GONE);
                         binding.llOtherDelivery.setVisibility(View.VISIBLE);
                         break;
                     case R.id.radio_current_loc1:
+                        binding.llMapDelivery.setVisibility(View.GONE);
+                        binding.llOtherDelivery.setVisibility(View.GONE);
+                        getAddress(lat, lng);
+
                         for (int i = 0; i < CountryModelList.size(); i++) {
                             if (country_loc.equalsIgnoreCase(CountryModelList.get(i).getName())) {
                                 country_id = CountryModelList.get(i).getCountryId();
@@ -631,7 +700,16 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                             }
                         }
                         break;
+                    case R.id.radio_map_delivery:
+                        map_show_biling=false;
+                        binding.llMapDelivery.setVisibility(View.VISIBLE);
+                        binding.llOtherDelivery.setVisibility(View.GONE);
+                        FragmentManager myFragmentManager = getSupportFragmentManager();
+                        SupportMapFragment mySupportMapFragment =  (WorkaroundMapFragment)myFragmentManager.findFragmentById(R.id.map1);
+                        mySupportMapFragment.getMapAsync(ChekoutActivity.this);
 
+
+                        break;
                 }
             }
         });
@@ -714,25 +792,25 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
         //***********************wallet check option
         binding.checkWallet.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                                           @Override
+                                                           public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if (binding.checkWallet.isChecked()){
-                    UseWallet("true");
-                    wk_wallet_payment = "1";
-                    //***paymrnt code & title
-                    payment_code_wallet = "wk_wallet_system_payment";
-                    payment_title_wallet = "GH Wallet";
-                }else {
-                    UseWallet("false");
-                    wk_wallet_payment = "0";
-                    //***paymrnt code & title
-                    payment_code_wallet = "";
-                    payment_title_wallet = "";
-                }
+                                                               if (binding.checkWallet.isChecked()) {
+                                                                   UseWallet("true");
+                                                                   wk_wallet_payment = "1";
+                                                                   //***paymrnt code & title
+                                                                   payment_code_wallet = "wk_wallet_system_payment";
+                                                                   payment_title_wallet = "GH Wallet";
+                                                               } else {
+                                                                   UseWallet("false");
+                                                                   wk_wallet_payment = "0";
+                                                                   //***paymrnt code & title
+                                                                   payment_code_wallet = "";
+                                                                   payment_title_wallet = "";
+                                                               }
 
-         }
-        }
+                                                           }
+                                                       }
         );
 
         //*********************tv delivery method expand**********************
@@ -834,6 +912,53 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
     }
 
+    private void OpenMapDialog() {
+        geocoder = new Geocoder(this, Locale.getDefault());
+        dialog= new Dialog(ChekoutActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        /////make map clear
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        dialog.setContentView(R.layout.dialogmap);////your custom content
+
+        tv_map_address=dialog.findViewById(R.id.tv_map_address);
+       TextView tv_cancel=dialog.findViewById(R.id.tv_cancel_map);
+       TextView tv_ok=dialog.findViewById(R.id.tv_ok_map);
+        //*****************************
+        geocoder = new Geocoder(this, Locale.getDefault());
+        FragmentManager myFragmentManager = getSupportFragmentManager();
+        SupportMapFragment mySupportMapFragment = (SupportMapFragment) myFragmentManager.findFragmentById(R.id.map);
+        mySupportMapFragment.getMapAsync(this);
+
+//// if button is clicked, close the custom dialog
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        tv_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!tv_map_address.getText().toString().isEmpty()){
+                    binding.tvMapLocBil.setText(address);
+                    dialog.dismiss();
+                }else {
+                    Toast.makeText(ChekoutActivity.this, "Please choose address", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        try {
+            if (!ChekoutActivity.this.isFinishing()){
+                dialog.show();
+            }
+        }
+        catch (WindowManager.BadTokenException e) {
+            //use a log message
+        }
+    }
+
     @SuppressLint("CheckResult")
     private void UseWallet(String isWallet) {
         final ProgressDialog progressDialog = new ProgressDialog(ChekoutActivity.this, R.style.MyGravity);
@@ -843,7 +968,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
         Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
 
-        apiInterface.UseWalletApi(Customer_Id,isWallet,String.valueOf(wk_cart_total_amount),SubTitle,SubCode,SubTotal,address_id)
+        apiInterface.UseWalletApi(Customer_Id, isWallet, String.valueOf(wk_cart_total_amount), SubTitle, SubCode, SubTotal, address_id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<WalletUseModel>() {
@@ -852,12 +977,12 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                         //Handle logic
                         try {
                             progressDialog.dismiss();
-                            if (response.getText()!=null){
+                            if (response.getText() != null) {
                                 binding.llPaymentGateway.setVisibility(View.VISIBLE);
-                                ll_wallet_status=false;
-                            }else {
+                                ll_wallet_status = false;
+                            } else {
                                 binding.llPaymentGateway.setVisibility(View.GONE);
-                                ll_wallet_status=true;
+                                ll_wallet_status = true;
                             }
 
                         } catch (Exception e) {
@@ -1024,7 +1149,6 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         progressDialog.show();
 
 
-
         Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
 
         HashMap<String, String> map = new HashMap<String, String>();
@@ -1183,7 +1307,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                                 } else if (payment_code.equals("razorpay")) {
 
                                     startPayment(Finalamount);
-                                }else {
+                                } else {
                                     Intent intent = new Intent(ChekoutActivity.this, OrderSuccess_Activity.class);
                                     intent.putExtra("OrderId", response.getOrderId().toString());
                                     startActivity(intent);
@@ -1577,7 +1701,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
     private void OpenDialogDelivery(Context activity, String string, final Integer addrId, String save_delivery_address_successful, String ok) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setTitle("");
-        alertDialogBuilder.setMessage(Html.fromHtml("Save Billing Address Successful"));
+        alertDialogBuilder.setMessage(Html.fromHtml(save_delivery_address_successful));
         alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setPositiveButton(ok, new DialogInterface.OnClickListener() {
             @Override
@@ -1800,8 +1924,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
                                 AddressModelList = response.getAddresses();
                                 for (int i = 0; i < response.getAddresses().size(); i++) {
-                                    AddressName.add(response.getAddresses().get(i).getFirstname() + " " + response.getAddresses().get(i).getLastname() + " " +
-                                            response.getAddresses().get(i).getAddress1() + " " + response.getAddresses().get(i).getAddress2()
+                                    AddressName.add( response.getAddresses().get(i).getAddress1() + " " + response.getAddresses().get(i).getAddress2()
                                             + " " + response.getAddresses().get(i).getCity() + " " + response.getAddresses().get(i).getZoneCode()
                                             + " " + response.getAddresses().get(i).getCountry() + " " + response.getAddresses().get(i).getPostcode());
                                 }
@@ -1811,8 +1934,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                                 //delivery spin
                                 AddressDeliveryList = response.getAddresses();
                                 for (int i = 0; i < response.getAddresses().size(); i++) {
-                                    AddressDeliveryName.add(response.getAddresses().get(i).getFirstname() + " " + response.getAddresses().get(i).getLastname() + " " +
-                                            response.getAddresses().get(i).getAddress1() + " " +
+                                    AddressDeliveryName.add(response.getAddresses().get(i).getAddress1() + " " +
                                             response.getAddresses().get(i).getAddress2()
                                             + " " + response.getAddresses().get(i).getCity() + " " + response.getAddresses().get(i).getZoneCode()
                                             + " " + response.getAddresses().get(i).getCountry() + " " + response.getAddresses().get(i).getPostcode());
@@ -1899,7 +2021,7 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
         Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
 
-        apiInterface.UpdateOrderStatus(Customer_Id, Order_status_id, Order_Id, razorpayPaymentID,WalletDeductAmount,wk_wallet_payment)
+        apiInterface.UpdateOrderStatus(Customer_Id, Order_status_id, Order_Id, razorpayPaymentID, WalletDeductAmount, wk_wallet_payment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<SimpleResultModel>() {
@@ -1972,4 +2094,105 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
             Log.e("OnPaymentError", "Exception in onPaymentError", e);
         }
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                .setListener(new WorkaroundMapFragment.OnTouchListener() {
+                    @Override
+                    public void onTouch()
+                    {
+                        binding.nestedScroll.requestDisallowInterceptTouchEvent(true);
+                    }
+                });
+
+        ((WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.map1))
+                .setListener(new WorkaroundMapFragment.OnTouchListener() {
+                    @Override
+                    public void onTouch()
+                    {
+                        binding.nestedScroll.requestDisallowInterceptTouchEvent(true);
+                    }
+                });
+
+        LatLng posisiabsen = new LatLng(lat, lng); ////your lat lng
+      marker=  mMap.addMarker(new MarkerOptions().position(posisiabsen).title("Marker"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(posisiabsen));
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+
+        binding.tvMapLocBil.setText(address);
+        binding.tvMapLocDel.setText(address);
+        getAddressOnMap(lat,lng);//default current location
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng point) {
+                //save current location
+                latLng = point;
+                lat=point.latitude;
+                lng=point.longitude;
+
+                getAddressOnMap(point.latitude, point.longitude);
+
+                //remove previously placed Marker
+                if (marker != null) {
+                    marker.remove();
+                }
+                //place marker where user just clicked
+                marker = mMap.addMarker(new MarkerOptions().position(point).title("Marker")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+            }
+        });
+
+
+    }
+
+    private void getAddressOnMap(double latitude, double longitude) {
+        Geocoder geocoder;
+        List<Address> addresses = null;
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+
+            address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            city = addresses.get(0).getLocality();
+            state_loc = addresses.get(0).getAdminArea();
+            country_loc = addresses.get(0).getCountryName();
+            postalCode = addresses.get(0).getPostalCode();
+            knownName = addresses.get(0).getFeatureName();
+
+            if (!map_show_biling){
+                binding.tvMapLocDel.setText(address);
+            }else {
+                binding.tvMapLocBil.setText(address);
+            }
+
+            Log.e("address_OnMap", "" + address);
+
+            if (country_loc!=null){
+                for (int i = 0; i < CountryModelList.size(); i++) {
+                    if (country_loc.equalsIgnoreCase(CountryModelList.get(i).getName())) {
+                        country_id = CountryModelList.get(i).getCountryId();
+                        getCountryWiseState(country_id);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+
+        }
+    }
+
+
 }

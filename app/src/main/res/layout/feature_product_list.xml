@@ -24,9 +24,8 @@
         <ImageView
             android:id="@+id/iv_image"
             app:postImage="@{model.image}"
-            android:src="@drawable/placeholder_image"
+            android:src="@drawable/logo_transparent"
             android:layout_width="match_parent"
-            android:scaleType="center"
             android:layout_height="@dimen/_120sdp"
             >
         </ImageView>

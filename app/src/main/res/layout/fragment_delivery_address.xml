@@ -27,6 +27,7 @@
     </include>
 
   <androidx.core.widget.NestedScrollView
+      android:id="@+id/nested_scroll"
       android:scrollbars="none"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -66,7 +67,6 @@
                   android:layout_height="wrap_content"
                   android:orientation="vertical">
 
-
                   <View
                       android:background="@color/light_white"
                       android:layout_width="match_parent"
@@ -79,6 +79,49 @@
                   android:layout_height="wrap_content"
                   android:layout_marginTop="@dimen/_10sdp"
                   android:orientation="vertical">
+
+                  <RadioButton
+                      android:id="@+id/radio_map_biling"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="Select address on map">
+
+                  </RadioButton>
+
+                  <LinearLayout
+                      android:visibility="gone"
+                      android:orientation="vertical"
+                      android:id="@+id/ll_map_biling"
+                      android:background="@drawable/rectangle_bg_border"
+                      android:layout_width="match_parent"
+                      android:layout_height="@dimen/_200sdp"
+                      >
+
+                      <TextView
+                          android:layout_marginBottom="@dimen/_5sdp"
+                          android:id="@+id/tv_map_loc_bil"
+                          style="@style/text_12_black"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:gravity="start"
+                          android:paddingStart="@dimen/_10sdp"
+                          android:text=" "
+                          android:textAlignment="textStart"
+                          >
+
+                      </TextView>
+
+                      <fragment
+                          xmlns:android="http://schemas.android.com/apk/res/android"
+                          xmlns:map="http://schemas.android.com/apk/res-auto"
+                          xmlns:tools="http://schemas.android.com/tools"
+                          android:id="@+id/map"
+                          class="com.grocery.gtohome.utils.WorkaroundMapFragment"
+                          android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          />
+
+                  </LinearLayout>
 
                   <RadioButton
                       android:id="@+id/radio_current_loc"
@@ -479,6 +522,51 @@
                       android:layout_height="wrap_content"
                       android:layout_marginTop="@dimen/_10sdp"
                       android:orientation="vertical">
+
+
+                      <RadioButton
+                          android:id="@+id/radio_map_delivery"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:text="Select address on map">
+
+                      </RadioButton>
+
+                      <LinearLayout
+                          android:visibility="gone"
+                          android:orientation="vertical"
+                          android:id="@+id/ll_map_delivery"
+                          android:background="@drawable/rectangle_bg_border"
+                          android:layout_width="match_parent"
+                          android:layout_height="@dimen/_200sdp"
+                          >
+
+                          <TextView
+                              android:layout_marginBottom="@dimen/_5sdp"
+                              android:id="@+id/tv_map_loc_del"
+                              style="@style/text_12_black"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:gravity="start"
+                              android:paddingStart="@dimen/_10sdp"
+                              android:text=" "
+                              android:textAlignment="textStart"
+                              >
+
+                          </TextView>
+
+                          <fragment
+                              xmlns:android="http://schemas.android.com/apk/res/android"
+                              xmlns:map="http://schemas.android.com/apk/res-auto"
+                              xmlns:tools="http://schemas.android.com/tools"
+                              android:id="@+id/map1"
+                              class="com.grocery.gtohome.utils.WorkaroundMapFragment"
+                              android:layout_width="match_parent"
+                              android:layout_height="match_parent"
+                              />
+
+                      </LinearLayout>
+
 
                       <RadioButton
                           android:id="@+id/radio_current_loc1"

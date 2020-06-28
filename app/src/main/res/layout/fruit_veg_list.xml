@@ -36,9 +36,8 @@
 
         <ImageView
             app:postImage="@{model.imageFullPath}"
-            android:src="@drawable/placeholder_image"
+            android:src="@drawable/logo_transparent"
             android:layout_width="match_parent"
-            android:scaleType="center"
             android:layout_height="@dimen/_120sdp"
             >
         </ImageView>
