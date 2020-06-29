@@ -5,6 +5,10 @@ import com.grocery.gtohome.model.blog_model.BlogModel;
 import com.grocery.gtohome.model.company_info_model.Company_infoModel;
 import com.grocery.gtohome.model.confirm_order_model.Confirm_Order_Model;
 import com.grocery.gtohome.model.country_model.CountryModel;
+import com.grocery.gtohome.model.forgot_pw_model.EmailOtpStatus;
+import com.grocery.gtohome.model.forgot_pw_model.ForgetSuccessModel;
+import com.grocery.gtohome.model.forgot_pw_model.ForgotModel;
+import com.grocery.gtohome.model.forgot_pw_model.VerifyEmailOtp;
 import com.grocery.gtohome.model.state_model.StateModel;
 import com.grocery.gtohome.model.FilterByModel;
 import com.grocery.gtohome.model.SimpleResultModel;
@@ -32,6 +36,7 @@ import com.grocery.gtohome.model.wishlist_model.Wishlist_Model;
 
 import java.util.HashMap;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
@@ -359,4 +364,30 @@ public interface Api_Call {
 
     @GET("index.php?route=restapi/home/banners")
     Observable<Product_Slider_Model> ProductSlideApi();
+
+    @GET("index.php?route=restapi/auth/forget_password")
+    Observable<ForgotModel> ForgotAuth( @Query("username")  String et_email);
+
+    @GET("index.php?route=extension/module/aslogin/generateEmailOTP")
+    Observable<EmailOtpStatus> GenerateEmailOtp(
+            @Query("username")   String et_email,
+            @Query("checkstatus")  String checkstatus);
+
+    @GET("index.php?route=extension/module/aslogin/verifyEmailOTP")
+    Observable<VerifyEmailOtp> VerifyEmailOtp(
+            @Query("username")  String et_email,
+            @Query("otp")  String et_otp);
+
+    @FormUrlEncoded
+    @POST("index.php?route=extension/module/aslogin/forget&checkstatus=1")
+    Observable<ForgetSuccessModel> ForgotFinalOtp(
+            @Field("username")  String et_email,
+            @Field("password")  String et_pw,
+            @Field("forget_otp")  String forget_otp);
+
+    @GET("index.php?route=extension/module/aslogin/generateOTP")
+    Observable<VerifyEmailOtp> GenerateMobileOtp(
+            @Query("mobileno")  String et_email,
+            @Query("ccode")  String ccode,
+            @Query("status")  String status);
 }

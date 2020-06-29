@@ -577,11 +577,8 @@
 
                         </TextView>
 
-
                         <LinearLayout
-                            android:weightSum="5"
-                            android:layout_marginLeft="@dimen/_5sdp"
-                            android:layout_marginRight="@dimen/_5sdp"
+                            android:weightSum="7"
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:orientation="horizontal"
@@ -591,9 +588,9 @@
 
                             <ImageView
                                 android:weightSum="1"
-                                android:layout_marginRight="@dimen/_5sdp"
-                                android:src="@drawable/credit_card"
-                                android:layout_width="@dimen/_40sdp"
+                                android:layout_margin="@dimen/_2sdp"
+                                android:src="@drawable/upi_new"
+                                android:layout_width="@dimen/_35sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
                                 >
@@ -601,10 +598,9 @@
 
                             <ImageView
                                 android:weightSum="1"
-                                android:layout_marginLeft="@dimen/_5sdp"
-                                android:layout_marginRight="@dimen/_5sdp"
-                                android:src="@drawable/upi_icon"
-                                android:layout_width="@dimen/_40sdp"
+                                android:layout_margin="@dimen/_2sdp"
+                                android:src="@drawable/wallet_new"
+                                android:layout_width="@dimen/_35sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
                                 >
@@ -612,20 +608,9 @@
 
                             <ImageView
                                 android:weightSum="1"
-                                android:layout_marginLeft="@dimen/_5sdp"
-                                android:layout_marginRight="@dimen/_5sdp"
-                                android:src="@drawable/netbanking"
-                                android:layout_width="@dimen/_40sdp"
-                                android:layout_height="@dimen/_35sdp"
-                                android:scaleType="fitXY"
-                                >
-                            </ImageView>
-                            <ImageView
-                                android:weightSum="1"
-                                android:layout_marginLeft="@dimen/_5sdp"
-                                android:layout_marginRight="@dimen/_5sdp"
-                                android:src="@drawable/debit_card"
-                                android:layout_width="@dimen/_40sdp"
+                                android:layout_margin="@dimen/_2sdp"
+                                android:src="@drawable/bank_new"
+                                android:layout_width="@dimen/_35sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
                                 >
@@ -633,9 +618,39 @@
 
                             <ImageView
                                 android:weightSum="1"
-                                android:layout_marginLeft="@dimen/_5sdp"
-                                android:src="@drawable/cod1"
-                                android:layout_width="@dimen/_40sdp"
+                                android:layout_margin="@dimen/_2sdp"
+                                android:src="@drawable/cod_new"
+                                android:layout_width="@dimen/_35sdp"
+                                android:layout_height="@dimen/_35sdp"
+                                android:scaleType="fitXY"
+                                >
+                            </ImageView>
+
+                            <ImageView
+                                android:weightSum="1"
+                                android:layout_margin="@dimen/_2sdp"
+                                android:src="@drawable/credit_new"
+                                android:layout_width="@dimen/_35sdp"
+                                android:layout_height="@dimen/_35sdp"
+                                android:scaleType="fitXY"
+                                >
+                            </ImageView>
+
+                            <ImageView
+                                android:weightSum="1"
+                                android:layout_margin="@dimen/_2sdp"
+                                android:src="@drawable/debit_new"
+                                android:layout_width="@dimen/_35sdp"
+                                android:layout_height="@dimen/_35sdp"
+                                android:scaleType="fitXY"
+                                >
+                            </ImageView>
+
+                            <ImageView
+                                android:weightSum="1"
+                                android:layout_margin="@dimen/_2sdp"
+                                android:src="@drawable/netbanking_new"
+                                android:layout_width="@dimen/_35sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
                                 >
@@ -679,7 +694,7 @@
                                 android:layout_marginLeft="@dimen/_5sdp"
                                 android:layout_marginRight="@dimen/_5sdp"
                                 android:layout_weight="1"
-                                android:src="@drawable/fb_icon"
+                                android:src="@drawable/fb_new"
                                 android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
@@ -690,7 +705,7 @@
                                 android:layout_marginLeft="@dimen/_5sdp"
                                 android:layout_marginRight="@dimen/_5sdp"
                                 android:layout_weight="1"
-                                android:src="@drawable/twitter"
+                                android:src="@drawable/gmail_new"
                                 android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
@@ -700,7 +715,7 @@
                                 android:layout_marginLeft="@dimen/_5sdp"
                                 android:layout_marginRight="@dimen/_5sdp"
                                 android:layout_weight="1"
-                                android:src="@drawable/instagram"
+                                android:src="@drawable/instagram_new"
                                 android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
@@ -710,7 +725,7 @@
                                 android:layout_marginLeft="@dimen/_5sdp"
                                 android:layout_marginRight="@dimen/_5sdp"
                                 android:layout_weight="1"
-                                android:src="@drawable/gmail_icon"
+                                android:src="@drawable/twitter_new"
                                 android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
@@ -720,7 +735,7 @@
                                 android:layout_marginLeft="@dimen/_5sdp"
                                 android:layout_marginRight="@dimen/_5sdp"
                                 android:layout_weight="1"
-                                android:src="@drawable/youtube"
+                                android:src="@drawable/whats_app_new"
                                 android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
@@ -731,7 +746,7 @@
                                 android:layout_marginLeft="@dimen/_5sdp"
                                 android:layout_marginRight="@dimen/_5sdp"
                                 android:layout_weight="1"
-                                android:src="@drawable/whatsapp"
+                                android:src="@drawable/youtube_new"
                                 android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
