@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+//Jks Pw- 123456 jks save in project app folder.
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"

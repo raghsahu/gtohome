@@ -24,6 +24,7 @@
                 android:id="@+id/iv_image"
                 app:postImage="@{model.thumb}"
                 android:src="@drawable/logo_transparent"
+                android:scaleType="fitXY"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_120sdp"
                 >

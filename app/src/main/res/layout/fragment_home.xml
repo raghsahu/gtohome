@@ -578,7 +578,9 @@
                         </TextView>
 
                         <LinearLayout
-                            android:weightSum="7"
+                            android:weightSum="6"
+                            android:layout_marginLeft="@dimen/_5sdp"
+                            android:layout_marginRight="@dimen/_5sdp"
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:orientation="horizontal"
@@ -588,19 +590,10 @@
 
                             <ImageView
                                 android:weightSum="1"
-                                android:layout_margin="@dimen/_2sdp"
-                                android:src="@drawable/upi_new"
-                                android:layout_width="@dimen/_35sdp"
-                                android:layout_height="@dimen/_35sdp"
-                                android:scaleType="fitXY"
-                                >
-                            </ImageView>
-
-                            <ImageView
-                                android:weightSum="1"
-                                android:layout_margin="@dimen/_2sdp"
+                                android:layout_marginLeft="@dimen/_5sdp"
+                                android:layout_marginRight="@dimen/_5sdp"
                                 android:src="@drawable/wallet_new"
-                                android:layout_width="@dimen/_35sdp"
+                                android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
                                 >
@@ -608,29 +601,10 @@
 
                             <ImageView
                                 android:weightSum="1"
-                                android:layout_margin="@dimen/_2sdp"
-                                android:src="@drawable/bank_new"
-                                android:layout_width="@dimen/_35sdp"
-                                android:layout_height="@dimen/_35sdp"
-                                android:scaleType="fitXY"
-                                >
-                            </ImageView>
-
-                            <ImageView
-                                android:weightSum="1"
-                                android:layout_margin="@dimen/_2sdp"
-                                android:src="@drawable/cod_new"
-                                android:layout_width="@dimen/_35sdp"
-                                android:layout_height="@dimen/_35sdp"
-                                android:scaleType="fitXY"
-                                >
-                            </ImageView>
-
-                            <ImageView
-                                android:weightSum="1"
-                                android:layout_margin="@dimen/_2sdp"
+                                android:layout_marginLeft="@dimen/_5sdp"
+                                android:layout_marginRight="@dimen/_5sdp"
                                 android:src="@drawable/credit_new"
-                                android:layout_width="@dimen/_35sdp"
+                                android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
                                 >
@@ -638,9 +612,32 @@
 
                             <ImageView
                                 android:weightSum="1"
-                                android:layout_margin="@dimen/_2sdp"
+                                android:layout_marginLeft="@dimen/_5sdp"
+                                android:layout_marginRight="@dimen/_5sdp"
+                                android:src="@drawable/cod_new"
+                                android:layout_width="@dimen/_40sdp"
+                                android:layout_height="@dimen/_35sdp"
+                                android:scaleType="fitXY"
+                                >
+                            </ImageView>
+
+                            <ImageView
+                                android:weightSum="1"
+                                android:layout_marginLeft="@dimen/_5sdp"
+                                android:layout_marginRight="@dimen/_5sdp"
+                                android:src="@drawable/upi_new"
+                                android:layout_width="@dimen/_40sdp"
+                                android:layout_height="@dimen/_35sdp"
+                                android:scaleType="fitXY"
+                                >
+                            </ImageView>
+
+                            <ImageView
+                                android:weightSum="1"
+                                android:layout_marginLeft="@dimen/_5sdp"
+                                android:layout_marginRight="@dimen/_5sdp"
                                 android:src="@drawable/debit_new"
-                                android:layout_width="@dimen/_35sdp"
+                                android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
                                 >
@@ -648,9 +645,10 @@
 
                             <ImageView
                                 android:weightSum="1"
-                                android:layout_margin="@dimen/_2sdp"
+                                android:layout_marginLeft="@dimen/_5sdp"
+                                android:layout_marginRight="@dimen/_5sdp"
                                 android:src="@drawable/netbanking_new"
-                                android:layout_width="@dimen/_35sdp"
+                                android:layout_width="@dimen/_40sdp"
                                 android:layout_height="@dimen/_35sdp"
                                 android:scaleType="fitXY"
                                 >
@@ -665,7 +663,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-
 
                         <TextView
                             style="@style/text_16_black"
