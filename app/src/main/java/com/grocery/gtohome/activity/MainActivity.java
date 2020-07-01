@@ -153,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         session = new SessionManager(MainActivity.this);
         Customer_Id = session.getUser().getCustomerId();
+        session.setCurrent_Position(0);
         //open default fragmentframe
         setHomeFragment();
         navView.getMenu().findItem(R.id.navigation_home).setChecked(true);
@@ -213,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nav_tv_offer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                session.setCurrent_Position(0);
                 All_Product_Fragment fragment2 = new All_Product_Fragment();
                 Bundle bundle = new Bundle();
                 // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
@@ -223,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 FragmentManager manager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = manager.beginTransaction();
                 fragmentTransaction.replace(R.id.frame, fragment2);
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 fragment2.setArguments(bundle);
@@ -560,20 +562,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String selectedID = mExpandableListData.get(mExpandableListTitle.get(groupPosition))
                         .get(childPosition).getCategory_id();
 
+                session.setCurrent_Position(0);
                 mNavigationManager.showFragmentAction(selectedID);
-//                if (items[0].equals(mExpandableListTitle.get(groupPosition))) {
-//                     mNavigationManager.showFragmentAction(selectedItem);
-//                } else if (items[1].equals(mExpandableListTitle.get(groupPosition))) {
-//                    //  mNavigationManager.showFragmentComedy(selectedItem);
-//                } else if (items[2].equals(mExpandableListTitle.get(groupPosition))) {
-//                    // mNavigationManager.showFragmentDrama(selectedItem);
-//                } else if (items[3].equals(mExpandableListTitle.get(groupPosition))) {
-//                    //  mNavigationManager.showFragmentMusical(selectedItem);
-//                } else if (items[4].equals(mExpandableListTitle.get(groupPosition))) {
-//                    //mNavigationManager.showFragmentThriller(selectedItem);
-//                } else {
-//                    throw new IllegalArgumentException("Not supported fragment type");
-//                }
 
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 return false;

@@ -21,6 +21,7 @@ import com.grocery.gtohome.R;
 import com.grocery.gtohome.fragment.All_Product_Fragment;
 import com.grocery.gtohome.model.SliderModel;
 import com.grocery.gtohome.model.popular_brand.PopularBanner;
+import com.grocery.gtohome.session.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +30,12 @@ public class SlidePopularAdapter extends PagerAdapter {
     private Context context;
     private LayoutInflater layoutInflater;
     List<PopularBanner> listarray;
+    private SessionManager sessionManager;
 
     public SlidePopularAdapter(Context context, List<PopularBanner> listarray1) {
         this.context = context;
         this.listarray = listarray1;
+        sessionManager=new SessionManager(context);
     }
 
 
@@ -67,7 +70,7 @@ public class SlidePopularAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 if (listarray.get(position).getCategoryId()!=null && !listarray.get(position).getCategoryId().equalsIgnoreCase("")){
-
+                    sessionManager.setCurrent_Position(0);
                     All_Product_Fragment fragment2 = new All_Product_Fragment();
                     Bundle bundle = new Bundle();
                     // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));

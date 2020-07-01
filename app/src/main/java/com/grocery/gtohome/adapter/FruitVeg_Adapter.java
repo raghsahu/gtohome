@@ -17,6 +17,7 @@ import com.grocery.gtohome.R;
 import com.grocery.gtohome.databinding.FruitVegListBinding;
 import com.grocery.gtohome.fragment.All_Product_Fragment;
 import com.grocery.gtohome.model.category_model.CategoryChild;
+import com.grocery.gtohome.session.SessionManager;
 
 import java.util.List;
 
@@ -27,11 +28,13 @@ public class FruitVeg_Adapter extends RecyclerView.Adapter<FruitVeg_Adapter.View
 
     private List<CategoryChild> dataModelList;
     Context context;
+    private SessionManager sessionManager;
 
 
     public FruitVeg_Adapter(List<CategoryChild> dataModelList, Context ctx) {
         this.dataModelList = dataModelList;
         context = ctx;
+        sessionManager=new SessionManager(context);
 
     }
 
@@ -55,7 +58,7 @@ public class FruitVeg_Adapter extends RecyclerView.Adapter<FruitVeg_Adapter.View
         holder.itemRowBinding.llVeg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                sessionManager.setCurrent_Position(0);
                 All_Product_Fragment fragment2 = new All_Product_Fragment();
                 Bundle bundle = new Bundle();
                 // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));

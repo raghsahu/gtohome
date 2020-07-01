@@ -19,6 +19,7 @@ import com.grocery.gtohome.databinding.PopularBrandListBinding;
 import com.grocery.gtohome.fragment.All_Product_Fragment;
 import com.grocery.gtohome.model.SampleModel;
 import com.grocery.gtohome.model.popular_brand.PopularBanner;
+import com.grocery.gtohome.session.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +31,13 @@ public class PopularBrand_Adapter extends RecyclerView.Adapter<PopularBrand_Adap
 
     private List<PopularBanner> dataModelList;
     Context context;
+    private SessionManager sessionManager;
 
 
     public PopularBrand_Adapter(List<PopularBanner> dataModelList, Context ctx) {
         this.dataModelList = dataModelList;
         context = ctx;
+        sessionManager=new SessionManager(context);
 
     }
 
@@ -59,7 +62,7 @@ public class PopularBrand_Adapter extends RecyclerView.Adapter<PopularBrand_Adap
             @Override
             public void onClick(View v) {
                 if (dataModel.getCategoryId()!=null && !dataModel.getCategoryId().equalsIgnoreCase("")){
-
+                    sessionManager.setCurrent_Position(0);
                     All_Product_Fragment fragment2 = new All_Product_Fragment();
                     Bundle bundle = new Bundle();
                     // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));

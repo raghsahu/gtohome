@@ -245,6 +245,7 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         binding.tvAllGrocery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                session.setCurrent_Position(0);
                 All_Product_Fragment fragment2 = new All_Product_Fragment();
                 Bundle bundle = new Bundle();
                 // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
@@ -262,6 +263,7 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         binding.tvViewAllFeature.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                session.setCurrent_Position(0);
                 All_Product_Fragment fragment2 = new All_Product_Fragment();
                 Bundle bundle = new Bundle();
                 // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));

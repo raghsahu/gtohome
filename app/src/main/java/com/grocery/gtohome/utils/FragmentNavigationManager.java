@@ -9,6 +9,7 @@ import com.grocery.gtohome.BuildConfig;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.fragment.All_Product_Fragment;
+import com.grocery.gtohome.session.SessionManager;
 
 /**
  * Created by Raghvendra Sahu on 10-Apr-20.
@@ -19,6 +20,7 @@ public class FragmentNavigationManager implements NavigationManager {
 
     private FragmentManager mFragmentManager;
     private MainActivity mActivity;
+    SessionManager sessionManager;
 
     public static FragmentNavigationManager obtain(MainActivity activity) {
         if (sInstance == null) {
@@ -31,11 +33,12 @@ public class FragmentNavigationManager implements NavigationManager {
     private void configure(MainActivity activity) {
         mActivity = activity;
         mFragmentManager = mActivity.getSupportFragmentManager();
+        sessionManager=new SessionManager(mActivity);
     }
 
     @Override
     public void showFragmentAction(String title) {
-        showFragment(All_Product_Fragment.newInstance(title), false);
+        showFragment(All_Product_Fragment.newInstance(title,0), false);
     }
 
 

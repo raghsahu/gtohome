@@ -3,7 +3,9 @@ package com.grocery.gtohome.fragment;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.grocery.gtohome.R;
@@ -28,6 +31,7 @@ import com.grocery.gtohome.databinding.FragmentAllProductsBinding;
 import com.grocery.gtohome.model.FilterBy;
 import com.grocery.gtohome.model.FilterByModel;
 import com.grocery.gtohome.model.category_product_model.CategoryProductModel;
+import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;
 import com.grocery.gtohome.utils.Utilities;
 import java.util.ArrayList;
@@ -51,12 +55,15 @@ public class All_Product_Fragment extends Fragment implements SwipeRefreshLayout
     List<FilterBy> filterByModelList = new ArrayList<>();
     ArrayList<String> filterName = new ArrayList<>();
     String sort, order;
+    private int mCurrentIndex;
+    SessionManager sessionManager;
 
-    public static All_Product_Fragment newInstance(String SubCategory_Id) {
+    public static All_Product_Fragment newInstance(String SubCategory_Id, int curent_pos) {
         All_Product_Fragment fragmentAction = new All_Product_Fragment();
         Bundle args = new Bundle();
         args.putString("SubCategory_Id", SubCategory_Id);
         args.putString("manufacturer_id", "");
+        args.putInt("curent_pos", curent_pos);
         fragmentAction.setArguments(args);
 
         return fragmentAction;
@@ -70,6 +77,7 @@ public class All_Product_Fragment extends Fragment implements SwipeRefreshLayout
         utilities = Utilities.getInstance(getActivity());
          binding.swipeToRefresh.setColorSchemeResources(R.color.colorPrimaryDark);
          binding.swipeToRefresh.setOnRefreshListener(this);
+         sessionManager=new SessionManager(getActivity());
         try {
             ((MainActivity) getActivity()).Update_header(getString(R.string.all_products));
         } catch (Exception e) {
@@ -79,6 +87,7 @@ public class All_Product_Fragment extends Fragment implements SwipeRefreshLayout
             SubCategory_Id = getArguments().getString("SubCategory_Id");
             manufacturer_id = getArguments().getString("manufacturer_id");
             GH_Offer = getArguments().getString("GH_Offer");
+            mCurrentIndex = getArguments().getInt("curent_pos");
             Log.e("selectedID",SubCategory_Id);
         }
 
@@ -373,5 +382,19 @@ public class All_Product_Fragment extends Fragment implements SwipeRefreshLayout
         } else {
             Toast.makeText(getActivity(), "Please check Internet", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        mCurrentIndex = ((LinearLayoutManager) binding.recyclerAllPro.getLayoutManager()).findFirstVisibleItemPosition();
+        sessionManager.setCurrent_Position(mCurrentIndex);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        mCurrentIndex = sessionManager.getCurrent_Position();
+        binding.recyclerAllPro.getLayoutManager().scrollToPosition(mCurrentIndex);
     }
 }

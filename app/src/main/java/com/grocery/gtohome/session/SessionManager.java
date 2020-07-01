@@ -37,6 +37,7 @@ public class SessionManager extends Object {
     private static final String Gender = "gender";
     private static final String Token_Id = "token";
     private static final String Device_Id = "deviceId";
+    private static final String Current_Position = "current_position";
     private Context _context;
     private SharedPreferences mypref;
     private SharedPreferences.Editor editor;
@@ -84,7 +85,17 @@ public class SessionManager extends Object {
         return arrayList;
     }
 
-    public void setName(String name) {
+    public void setCurrent_Position(Integer name) {
+        editor.putInt(Current_Position, name);
+        editor.apply();
+        editor.commit();
+    }
+
+    public Integer getCurrent_Position() {
+        return mypref.getInt(Current_Position, 0);
+
+    }
+public void setName(String name) {
         editor.putString(Name, name);
         editor.apply();
         editor.commit();
