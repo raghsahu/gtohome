@@ -15,7 +15,7 @@
 
     <LinearLayout
         android:id="@+id/ll_veg"
-        android:layout_margin="@dimen/_3sdp"
+        android:layout_margin="@dimen/_5sdp"
         android:background="@drawable/rectangle_bg_border"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
             android:src="@drawable/logo_transparent"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_120sdp"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             >
         </ImageView>
 
