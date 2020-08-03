@@ -46,6 +46,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 import static com.grocery.gtohome.api_client.Base_Url.Register;
+import static com.grocery.gtohome.api_client.Base_Url.customer_logout;
 import static com.grocery.gtohome.api_client.Base_Url.loginapi;
 
 /**
@@ -55,7 +56,7 @@ public interface Api_Call {
 
     @GET(Register)
     Observable<LoginModel> EmailRegistrationUser(
-           // @Query("route") String path,
+            // @Query("route") String path,
             @Query("firstname") String first_name,
             @Query("lastname") String last_name,
             @Query("password") String et_pw,
@@ -64,15 +65,22 @@ public interface Api_Call {
             @Query("email") String et_email,
             @Query("agree") String agree,
             @Query("newsletter") String newsletter,
-            @Query("customer_group_id") String customer_group_id);
+            @Query("customer_group_id") String customer_group_id,
+            @Query("device_token")  String tokenId,
+            @Query("device_id")  String deviceId);
 
 
     @GET(loginapi)
     Observable<LoginModel> LoginUser(
-           // @Query("route") String loginapi,
             @Query("email") String et_email,
-            @Query("password") String et_pw);
+            @Query("password") String et_pw,
+            @Query("device_token") String tokenId,
+            @Query("device_id")  String deviceId);
 
+
+    @GET(customer_logout)
+    Observable<SimpleResultModel> LogoutUser(
+            @Query("customer_id") String customerId);
 
     @GET("index.php?")
     Observable<SimpleResultModel> ForgotUser(
@@ -311,7 +319,9 @@ public interface Api_Call {
             @Query("lastname") String lastname,
             @Query("email") String social_email,
             @Query("oauthid") String social_id,
-            @Query("oauth_provider")  String gplus);
+            @Query("oauth_provider") String gplus,
+            @Query("device_token") String tokenId,
+            @Query("device_id")  String deviceId);
 
 
     @GET("index.php?route=restapi/information/send_contact")
@@ -390,4 +400,6 @@ public interface Api_Call {
             @Query("mobileno")  String et_email,
             @Query("ccode")  String ccode,
             @Query("status")  String status);
+
+
 }

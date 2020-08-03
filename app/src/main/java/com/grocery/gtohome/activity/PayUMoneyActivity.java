@@ -1,11 +1,14 @@
 package com.grocery.gtohome.activity;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.http.SslCertificate;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,10 +36,12 @@ import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
@@ -141,68 +146,90 @@ public class PayUMoneyActivity extends AppCompatActivity {
         action1 = base_url.concat("/_payment");
 
         //**************************************************************
-        webView.setWebViewClient(new WebViewClient() {
-
-            @Override
-            public void onReceivedError(WebView view, int errorCode,
-                                        String description, String failingUrl) {
-                // TODO Auto-generated method stub
-                Toast.makeText(PayUMoneyActivity.this, "Oh no!"+description,Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onReceivedSslError(WebView view,
-                                           SslErrorHandler handler, SslError error) {
-                // TODO Auto-generated method stub
-               // Toast.makeText(PayUMoneyActivity.this, "SslError! " + error,
-                //        Toast.LENGTH_SHORT).show();
-                handler.proceed();
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Toast.makeText(PayUMoneyActivity.this, "Page Started! " + url,Toast.LENGTH_SHORT).show();
-                if (url.equals(SUCCESS_URL)) {
-                    Toast.makeText(PayUMoneyActivity.this, "Success! " + url, Toast.LENGTH_SHORT).show();
-                } else {
-                  //  Toast.makeText(PayUMoneyActivity.this, "Failure! " + url, Toast.LENGTH_SHORT).show();
-                }
-                return super.shouldOverrideUrlLoading(view, url);
-            }
-
-             @Override
-             public void onPageFinished(WebView view, String url) {
-             super.onPageFinished(view, url);
-
-          //   Toast.makeText(PayMentGateWay.this, "" + url, Toast.LENGTH_SHORT).show();
-
-                     if (url.equals(SUCCESS_URL)) {
-                         if (PaymentType.equalsIgnoreCase("Wallet")){
-                             UpdatePaymentStatus("PayU: "+txnid);
-                         }else {
-                             UpdateOrderStatus("PayU: "+txnid);
-                         }
-
-
-                     } else if (url.equals(Failer_URL)) {
-                         Toast.makeText(PayUMoneyActivity.this, "Fail: " + url, Toast.LENGTH_SHORT).show();
-                     }
-                     super.onPageFinished(view, url);
-                 }
-
-
-        });
-
+        webView.getSettings().setJavaScriptEnabled(true);
         webView.setVisibility(View.VISIBLE);
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setCacheMode(2);
         webView.getSettings().setDomStorageEnabled(true);
         webView.clearHistory();
         webView.clearCache(true);
-        webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setSupportZoom(true);
         webView.getSettings().setUseWideViewPort(false);
         webView.getSettings().setLoadWithOverviewMode(false);
+
+
+        webView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode,
+                                        String description, String failingUrl) {
+                // TODO Auto-generated method stub
+                Toast.makeText(PayUMoneyActivity.this, "Oh no!" + description, Toast.LENGTH_SHORT).show();
+            }
+
+//            @Override
+//            public void onReceivedSslError(WebView view,
+//                                           SslErrorHandler handler, SslError error) {
+//                // TODO Auto-generated method stub
+//               // Toast.makeText(PayUMoneyActivity.this, "SslError! " + error,
+//                //        Toast.LENGTH_SHORT).show();
+//                handler.proceed();
+//            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+              //  Toast.makeText(PayUMoneyActivity.this, "Page Started! " + url, Toast.LENGTH_SHORT).show();
+                if (url.equals(SUCCESS_URL)) {
+                  //  Toast.makeText(PayUMoneyActivity.this, "Success! " + url, Toast.LENGTH_SHORT).show();
+                } else {
+                    //  Toast.makeText(PayUMoneyActivity.this, "Failure! " + url, Toast.LENGTH_SHORT).show();
+                }
+                return super.shouldOverrideUrlLoading(view, url);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+
+                //   Toast.makeText(PayMentGateWay.this, "" + url, Toast.LENGTH_SHORT).show();
+
+                if (url.equals(SUCCESS_URL)) {
+                    if (PaymentType.equalsIgnoreCase("Wallet")) {
+                        UpdatePaymentStatus("PayU: " + txnid);
+                    } else {
+                        UpdateOrderStatus("PayU: " + txnid);
+                    }
+
+
+                } else if (url.equals(Failer_URL)) {
+                    Toast.makeText(PayUMoneyActivity.this, "Fail: " + url, Toast.LENGTH_SHORT).show();
+                }
+                super.onPageFinished(view, url);
+            }
+
+            @Override
+            public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(PayUMoneyActivity.this);
+                builder.setMessage(R.string.notification_error_ssl_cert_invalid);
+                builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.proceed();
+                    }
+                });
+                builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.cancel();
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+
+
+        });
+
 
         webView.addJavascriptInterface(new PayUJavaScriptInterface(PayUMoneyActivity.this),
                 "PayUMoney");
@@ -489,4 +516,7 @@ public class PayUMoneyActivity extends AppCompatActivity {
             }
         }
     }
+
+
+
 }

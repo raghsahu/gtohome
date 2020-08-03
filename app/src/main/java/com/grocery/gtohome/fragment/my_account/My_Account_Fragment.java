@@ -1,9 +1,12 @@
 package com.grocery.gtohome.fragment.my_account;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +35,10 @@ import com.google.android.gms.common.api.Status;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.activity.Splash_Activity;
+import com.grocery.gtohome.activity.login_signup.Login_Activity;
+import com.grocery.gtohome.api_client.Api_Call;
+import com.grocery.gtohome.api_client.Base_Url;
+import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.FragmentHomeBinding;
 import com.grocery.gtohome.databinding.FragmentMyAccountBinding;
 import com.grocery.gtohome.fragment.Information_Fragment;
@@ -41,7 +48,15 @@ import com.grocery.gtohome.fragment.my_orders.ReturnProduct_Fragment;
 import com.grocery.gtohome.fragment.my_orders.ReturnRequest_Fragment;
 import com.grocery.gtohome.fragment.my_orders.RewardPoint_Fragment;
 import com.grocery.gtohome.fragment.my_orders.Transaction_Fragment;
+import com.grocery.gtohome.model.SimpleResultModel;
+import com.grocery.gtohome.model.login_model.LoginModel;
 import com.grocery.gtohome.session.SessionManager;
+import com.grocery.gtohome.utils.Connectivity;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.adapter.rxjava2.HttpException;
 
 /**
  * Created by Raghvendra Sahu on 08-Apr-20.
@@ -336,18 +351,11 @@ public class My_Account_Fragment extends Fragment  implements GoogleApiClient.On
         dialog.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
-
-                if (googleApiClient != null && googleApiClient.isConnected()) {
-                    // signed in. Show the "sign out" button and explanation.
-                    google_logout();
-                    disconnectFromFacebook();
-                } else{
-                    Log.e("logout_app", "local login logout");
-                    // not signed in. Show the "sign in" button and explanation.
-                    disconnectFromFacebook();
-
-                    sessionManager.logout();
-
+                
+                if (Connectivity.isConnected(getActivity())){
+                    LogoutUser();
+                }else {
+                    Toast.makeText(getActivity(), "Please check Internet", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -355,6 +363,87 @@ public class My_Account_Fragment extends Fragment  implements GoogleApiClient.On
         });
         final AlertDialog alert = dialog.create();
         alert.show();
+    }
+
+
+    @SuppressLint("CheckResult")
+    private void LogoutUser() {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.show();
+
+        Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
+
+        apiInterface.LogoutUser(sessionManager.getUser().getCustomerId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<SimpleResultModel>() {
+                    @Override
+                    public void onNext(SimpleResultModel response) {
+                        //Handle logic
+                        try {
+                            progressDialog.dismiss();
+                            Log.e("result_my_test", "" + response.getMsg());
+                            //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (response.getStatus()) {
+
+                                if (googleApiClient != null && googleApiClient.isConnected()) {
+                                    // signed in. Show the "sign out" button and explanation.
+                                    google_logout();
+                                    disconnectFromFacebook();
+                                } else{
+                                    Log.e("logout_app", "local login logout");
+                                    // not signed in. Show the "sign in" button and explanation.
+                                    disconnectFromFacebook();
+                                    sessionManager.logout();
+
+                                }
+
+                            } else {
+                                Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (Exception e) {
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //Handle error
+                        progressDialog.dismiss();
+                        Log.e("mr_product_error", e.toString());
+
+                        if (e instanceof HttpException) {
+                            int code = ((HttpException) e).code();
+                            switch (code) {
+                                case 403:
+                                    break;
+                                case 404:
+                                    //Toast.makeText(EmailSignupActivity.this, R.string.email_already_use, Toast.LENGTH_SHORT).show();
+                                    break;
+                                case 409:
+                                    break;
+                                default:
+                                    // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(e.getMessage())) {
+                                // Toast.makeText(EmailSignupActivity.this, R.string.network_failure, Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Toast.makeText(EmailSignupActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        progressDialog.dismiss();
+                    }
+                });
+
     }
 
     private void disconnectFromFacebook() {

@@ -4,12 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
@@ -17,6 +19,9 @@ import android.widget.Toast;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.github.florent37.viewanimator.ViewAnimator;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.login_signup.Login_Activity;
 import com.grocery.gtohome.session.SessionManager;
@@ -25,8 +30,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Splash_Activity extends AppCompatActivity {
-    private ImageView splash_logo_image;
+    ImageView splash_logo_image;
     private SessionManager session;
+    String android_id;
     private static final int REQUEST_CODE_PERMISSION = 2;
     String[] mPermission = {
             Manifest.permission.INTERNET,
@@ -47,6 +53,8 @@ public class Splash_Activity extends AppCompatActivity {
         session = new SessionManager(this);
         splash_logo_image = findViewById(R.id.splash_logo_image);
 
+        displayFirebaseRegId();
+        Device_id();
        /* Glide.with(this)
                 .load(R.drawable.splash_logo)
                 .centerCrop()
@@ -104,6 +112,27 @@ public class Splash_Activity extends AppCompatActivity {
             e.printStackTrace();
             Log.e("exception", "" + e);
         }
+    }
+
+    @SuppressLint("HardwareIds")
+    private void Device_id() {
+        android_id = Settings.Secure.getString(getContentResolver(),Settings.Secure.ANDROID_ID);
+        session.saveDeviceId(android_id);
+       // Log.e("device_id", android_id);
+    }
+
+    private void displayFirebaseRegId() {
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String token = instanceIdResult.getToken();
+                // send it to server
+                session.saveToken(token);
+              //  Log.e("refresh_tokentoken", token);
+            }
+        });
+      //  Log.e("save_token",session.getTokenId());
     }
 
 
@@ -198,9 +227,7 @@ public class Splash_Activity extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(),Base64.encodeToString(md.digest(), Base64.DEFAULT), Toast.LENGTH_LONG).show(); //will give app key hash or release key hash
 
             }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
 
         }
     }

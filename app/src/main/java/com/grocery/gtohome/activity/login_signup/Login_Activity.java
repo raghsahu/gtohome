@@ -140,11 +140,16 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
                                             //  Log.e("fb_email",social_email + "");
 
                                               if (social_email!=null && !social_email.isEmpty()){
-                                                  if (Connectivity.isConnected(Login_Activity.this)) {
-                                                      SocialLoginApi(social_email, social_id, first_name,last_name, "facebook");
-                                                  } else {
-                                                      Toast.makeText(Login_Activity.this, "Please check Internet", Toast.LENGTH_SHORT).show();
+                                                  if (session.getTokenId()!=null && !session.getTokenId().equalsIgnoreCase("")){
+                                                      if (Connectivity.isConnected(Login_Activity.this)) {
+                                                          SocialLoginApi(social_email, social_id, first_name,last_name, "facebook");
+                                                      } else {
+                                                          Toast.makeText(Login_Activity.this, "Please check Internet", Toast.LENGTH_SHORT).show();
+                                                      }
+                                                  }else {
+                                                      Toast.makeText(Login_Activity.this, "Firebase token not get yet, Please restart the app.", Toast.LENGTH_SHORT).show();
                                                   }
+
                                               }else {
                                                   utilities.dialogOK(context, getString(R.string.validation_title), "Email id not found, Please try other Facebook login", getString(R.string.ok), false);
                                                   LoginManager.getInstance().logOut();
@@ -202,11 +207,16 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
                 Et_Pw = binding.etPw.getText().toString();
 
                 if (isValid()) {
-                    if (Connectivity.isConnected(context)) {
-                        CallLoginApi();
-                    } else {
-                        // Toast.makeText(context, getString(R.string.please_check_internet), Toast.LENGTH_SHORT).show();
-                        utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+
+                    if (session.getTokenId()!=null && !session.getTokenId().equalsIgnoreCase("")){
+                        if (Connectivity.isConnected(context)) {
+                            CallLoginApi();
+                        } else {
+                            // Toast.makeText(context, getString(R.string.please_check_internet), Toast.LENGTH_SHORT).show();
+                            utilities.dialogOK(context, getString(R.string.validation_title), getString(R.string.please_check_internet), getString(R.string.ok), false);
+                        }
+                    }else {
+                        Toast.makeText(Login_Activity.this, "Firebase token not get yet, Please restart the app.", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -229,7 +239,7 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
 
         Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
 
-        apiInterface.LoginUser(Et_Email, Et_Pw)
+        apiInterface.LoginUser(Et_Email, Et_Pw, session.getTokenId(),session.getDeviceId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<LoginModel>() {
@@ -375,13 +385,17 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
             if (!Patterns.EMAIL_ADDRESS.matcher(social_email).matches()) {
                 Toast.makeText(Login_Activity.this, "Email not valid", Toast.LENGTH_SHORT).show();
             } else {
+                if (session.getTokenId()!=null && !session.getTokenId().equalsIgnoreCase("")){
+                    if (Connectivity.isConnected(Login_Activity.this)) {
+                        SocialLoginApi(social_email, social_id, firstname,lastname, "gplus");
 
-                if (Connectivity.isConnected(Login_Activity.this)) {
-                  SocialLoginApi(social_email, social_id, firstname,lastname, "gplus");
-
-                } else {
-                    Toast.makeText(Login_Activity.this, "Please check internet", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(Login_Activity.this, "Please check internet", Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    Toast.makeText(Login_Activity.this, "Firebase token not get yet, Please restart the app.", Toast.LENGTH_SHORT).show();
                 }
+
             }
         } else {
             Toast.makeText(Login_Activity.this, "Please try again", Toast.LENGTH_SHORT).show();
@@ -397,7 +411,7 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
 
         Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
 
-        apiInterface.LoginSocialUser(firstname,lastname,social_email,social_id,social_type)
+        apiInterface.LoginSocialUser(firstname,lastname,social_email,social_id,social_type,session.getTokenId(),session.getDeviceId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<LoginModel>() {

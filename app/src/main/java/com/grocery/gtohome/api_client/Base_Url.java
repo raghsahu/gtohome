@@ -10,6 +10,7 @@ public interface Base_Url {
 
     String Register="index.php?route=restapi/auth/register";
     String loginapi="index.php?route=restapi/auth/login";
+    String customer_logout="index.php?route=restapi/auth/customer_logout";
     String forgottenapi="account/forgottenapi";
     String categoriesapi="restapi/category";
     String category_product="restapi/product/category_product";

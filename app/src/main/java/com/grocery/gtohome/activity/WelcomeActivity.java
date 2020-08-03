@@ -119,7 +119,7 @@ public class WelcomeActivity extends AppCompatActivity {
         public void onPageSelected(int position) {
 
             for (int i = 0; i < dotsCount; i++) {
-                dotes[i].setImageDrawable(getResources().getDrawable(R.drawable.circle_inactive));
+                dotes[i].setImageResource(R.drawable.circle_inactive);
             }
 
             dotes[position].setImageResource(R.drawable.circle_active);

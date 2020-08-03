@@ -333,6 +333,7 @@
     <string name="cancel">Cancel</string>
     <string name="fail">Fail</string>
     <string name="addmoney">Add money</string>
+    <string name="notification_error_ssl_cert_invalid">notification_error_ssl_cert_invalid</string>
 
 
 </resources>
