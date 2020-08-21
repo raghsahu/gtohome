@@ -183,12 +183,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // View headerview = mExpandableListView.getHeaderView(0);
         TextView tv_nav_name = findViewById(R.id.tv_nav_name);
+        TextView tv_nav_area = findViewById(R.id.tv_nav_area);
         tv_nav_name.setText(session.getUser().getFirstname());
+        tv_nav_area.setText(session.getArea());
 
         TextView nav_tv_blog = findViewById(R.id.tv_blog);
         TextView nav_tv_offer = findViewById(R.id.tv_offer);
         TextView nav_tv_ghprime = findViewById(R.id.tv_prime);
         TextView nav_tv_wallet = findViewById(R.id.tv_wallet);
+
         nav_tv_blog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

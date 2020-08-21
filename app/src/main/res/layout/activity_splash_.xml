@@ -15,6 +15,7 @@
         android:id="@+id/splash_logo_image"
         android:layout_width="@dimen/_100sdp"
         android:layout_height="@dimen/_100sdp"
-        android:src="@drawable/logo_circle" />
+        android:src="@drawable/logo_circle"
+        tools:ignore="ContentDescription" />
 
 </LinearLayout>

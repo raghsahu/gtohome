@@ -44,8 +44,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="left|start"
-        android:padding="@dimen/layout_padding_default"
+        android:paddingTop="@dimen/layout_padding_default"
         android:text="gtohome.in"
+        android:textColor="@color/white"
+        android:textSize="@dimen/header_font_size"/>
+
+    <TextView
+        android:layout_gravity="center"
+        android:id="@+id/tv_nav_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left|start"
+        android:paddingBottom="@dimen/layout_padding_default"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="@dimen/header_font_size"/>
 

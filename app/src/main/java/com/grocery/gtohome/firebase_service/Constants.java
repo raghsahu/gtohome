@@ -4,7 +4,7 @@ package com.grocery.gtohome.firebase_service;
  * Created by Raghvendra sahu on 03-03-2020.
  */
 public class Constants {
-    public static final String CHANNEL_ID = "my_channel_01";
+    public static final String CHANNEL_ID = "my_channel";
     public static final String CHANNEL_NAME = "GtoHome";
     public static final String CHANNEL_DESCRIPTION = "https://gtohome.in";
 

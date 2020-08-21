@@ -51,7 +51,7 @@ public class Splash_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_);
 
         session = new SessionManager(this);
-        splash_logo_image = findViewById(R.id.splash_logo_image);
+      //  splash_logo_image = findViewById(R.id.splash_logo_image);
 
         displayFirebaseRegId();
         Device_id();
@@ -60,7 +60,7 @@ public class Splash_Activity extends AppCompatActivity {
                 .centerCrop()
                 .placeholder(R.drawable.splash_logo)
                 .into(splash_logo_image);*/
-        printHashKey();
+      //  printHashKey();
 
 
         try {
@@ -110,14 +110,19 @@ public class Splash_Activity extends AppCompatActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("exception", "" + e);
+            //Log.e("exception", "" + e);
         }
     }
 
     @SuppressLint("HardwareIds")
     private void Device_id() {
-        android_id = Settings.Secure.getString(getContentResolver(),Settings.Secure.ANDROID_ID);
-        session.saveDeviceId(android_id);
+        try {
+            android_id = Settings.Secure.getString(getContentResolver(),Settings.Secure.ANDROID_ID);
+            session.saveDeviceId(android_id);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
        // Log.e("device_id", android_id);
     }
 
@@ -139,7 +144,7 @@ public class Splash_Activity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.e("Req Code", "" + requestCode);
+      //  Log.e("Req Code", "" + requestCode);
         System.out.println(grantResults[0] == PackageManager.PERMISSION_GRANTED);
         System.out.println(grantResults[1] == PackageManager.PERMISSION_GRANTED);
         System.out.println(grantResults[2] == PackageManager.PERMISSION_GRANTED);
@@ -196,39 +201,19 @@ public class Splash_Activity extends AppCompatActivity {
 
     public void printHashKey() {
         // Add code to print out the key hash
-//        try {
-//            PackageInfo info = getPackageManager().getPackageInfo(
-//                    "com.grocery.gtohome",
-//                    PackageManager.GET_SIGNATURES);
-//            for (Signature signature : info.signatures) {
-//                MessageDigest md = MessageDigest.getInstance("SHA");
-//                md.update(signature.toByteArray());
-//                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-//                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-//
-//            }
-//        } catch (PackageManager.NameNotFoundException e) {
-//
-//        } catch (NoSuchAlgorithmException e) {
-//
-//        }
-
-        try
-        {
-
-            PackageInfo info = getPackageManager().getPackageInfo( "com.grocery.gtohome",
+        try {
+            @SuppressLint("PackageManagerGetSignatures")
+            PackageInfo info = getPackageManager().getPackageInfo("com.grocery.gtohome",
                     PackageManager.GET_SIGNATURES);
-
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
-
                 md.update(signature.toByteArray());
-                Log.i("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));//will give developer key hash
-                //Toast.makeText(getApplicationContext(),Base64.encodeToString(md.digest(), Base64.DEFAULT), Toast.LENGTH_LONG).show(); //will give app key hash or release key hash
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
 
             }
         } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
-
+            e.printStackTrace();
         }
     }
 }

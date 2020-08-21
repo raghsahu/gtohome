@@ -30,6 +30,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.grocery.gtohome.R;
+import com.grocery.gtohome.activity.DeliveryAreaActivity;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.Base_Url;
@@ -254,8 +255,9 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
                                 Log.e("result_my_test", "" + response.getCustomerInfo().getCustomerId());
                                 session.createSession(response.getCustomerInfo());
                                 Toast.makeText(context, response.getMsg(), Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(Login_Activity.this, MainActivity.class);
+                                Intent intent = new Intent(Login_Activity.this, DeliveryAreaActivity.class);
                                 startActivity(intent);
+                                finish();
 
                             } else {
                                 Toast.makeText(context, response.getMsg(), Toast.LENGTH_SHORT).show();
@@ -423,10 +425,12 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
                             Log.e("result_my_test", "" + response.getStatus());
                             Toast.makeText(Login_Activity.this, "" + response.getMsg(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
-                                session.createSession(response.getCustomerInfo());
                                 Toast.makeText(context, response.getMsg(), Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(Login_Activity.this, MainActivity.class);
+
+                                session.createSession(response.getCustomerInfo());
+                                Intent intent = new Intent(Login_Activity.this, DeliveryAreaActivity.class);
                                 startActivity(intent);
+                                finish();
                             }else {
 
                                 if (response.getError().getApproved()!=null){

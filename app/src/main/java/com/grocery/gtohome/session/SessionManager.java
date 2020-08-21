@@ -28,7 +28,7 @@ public class SessionManager extends Object {
     private static final String Date = "date";
     private static final String City = "city";
     private static final String Zip = "Zip";
-    private static final String State = "state";
+    private static final String Area = "Area";
     private static final String Age = "Age";
     private static final String ProfileUrl = "ProfileUrl";
     private static final String Image = "image";
@@ -152,14 +152,14 @@ public void setName(String name) {
     }
 
 
-    public void setState(String state) {
-        editor.putString(State, state);
+    public void setArea(String area) {
+        editor.putString(Area, area);
         editor.apply();
         editor.commit();
     }
 
-    public String getState() {
-        return mypref.getString(State, "");
+    public String getArea() {
+        return mypref.getString(Area, "");
     }
 
 

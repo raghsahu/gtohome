@@ -32,6 +32,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import static android.app.Notification.DEFAULT_SOUND;
+import static android.app.Notification.DEFAULT_VIBRATE;
+
 
 /**
  * Created by Raghvendra sahu on 03-03-2020.
@@ -147,7 +150,7 @@ public class NotificationUtils {
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         // NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_HIGH);
             // Configure the notification channel.
             notificationChannel.setDescription("Channel description");
             notificationChannel.enableLights(true);
@@ -163,8 +166,9 @@ public class NotificationUtils {
                 .setSmallIcon(R.drawable.logo)
                 .setContentTitle(title)
                 .setOnlyAlertOnce(true)
-                .setPriority(Notification.PRIORITY_MAX)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setDefaults(Notification.DEFAULT_ALL)
+                .setDefaults(DEFAULT_SOUND | DEFAULT_VIBRATE)
                 .setStyle(inboxStyle)
                 .setAutoCancel(true)
                 .setWhen(getTimeMilliSec(timeStamp))

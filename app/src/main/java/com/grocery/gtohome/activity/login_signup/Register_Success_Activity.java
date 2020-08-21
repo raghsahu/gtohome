@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.grocery.gtohome.R;
+import com.grocery.gtohome.activity.DeliveryAreaActivity;
 import com.grocery.gtohome.activity.MainActivity;
 import com.grocery.gtohome.databinding.ActivityRegisterSuccessBinding;
 import com.grocery.gtohome.model.login_model.CustomerInfo;
@@ -39,7 +40,7 @@ public class Register_Success_Activity extends AppCompatActivity {
             public void onClick(View v) {
                 session.createSession(RegistrationData);
 
-                Intent intent=new Intent(Register_Success_Activity.this, MainActivity.class);
+                Intent intent=new Intent(Register_Success_Activity.this, DeliveryAreaActivity.class);
                 startActivity(intent);
                 finish();
             }

@@ -25,6 +25,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="q">
+        <activity android:name=".activity.DeliveryAreaActivity" />
         <activity android:name=".activity.WelcomeActivity" />
         <activity android:name=".activity.PayUMoneyActivity" />
         <activity android:name=".fragment.my_basket.ChekoutActivity" />
@@ -71,9 +72,7 @@
                     android:scheme="@string/fb_login_protocol_scheme"
                     tools:ignore="ManifestResource" />
             </intent-filter>
-        </activity>
-
-        <!-- firebase setup ; -->
+        </activity> <!-- firebase setup ; -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/logo" />
@@ -84,12 +83,14 @@
         <service
             android:name=".firebase_service.MyFirebaseMessagingService"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
+        <receiver android:name=".utils.MyBroadcastReceiver"></receiver>
     </application>
 
 </manifest>
