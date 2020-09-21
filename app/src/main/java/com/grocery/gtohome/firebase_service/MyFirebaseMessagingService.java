@@ -106,7 +106,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             //   Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("NOTIFICATION", "NOTIFICATION");
+            intent.putExtra("NOTIFICATION", title);
             PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             SimpleDateFormat s = new SimpleDateFormat("ddMMyyyyhhmmss");
@@ -115,7 +115,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
                 Log.e("Q_foreground_noti", "fore_notiii");
 
-                scheduleNotification(getNotification( title , body ));
+               // scheduleNotification(getNotification( title , body ));
+
+                // // app is in foreground, broadcast the push message
+                Intent pushNotification = new Intent(Constants.PUSH_NOTIFICATION);
+                pushNotification.putExtra("message", body);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
+
+                Log.d("BroadcastReceiver::", "BroadcastReceiver");
+                // play notification sound
+                NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+                notificationUtils.showNotificationMessage(title, body, format, intent);
+                notificationUtils.playNotificationSound();
 
             } else {
                 Log.e("Q_background_noti", "pppp");
@@ -125,7 +136,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }else {
             Log.e("below_Q", "notiiii");
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("NOTIFICATION", "NOTIFICATION");
+            intent.putExtra("NOTIFICATION", title);
             PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             NotificationCompat.Builder b = new NotificationCompat.Builder(this);
@@ -142,7 +153,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             b.setDefaults(DEFAULT_SOUND | DEFAULT_VIBRATE);
             b.setContentIntent(contentIntent);
             // b.setContentInfo("Info");
-
 
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -167,6 +177,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE) ;
         assert alarmManager != null;
         alarmManager.set(AlarmManager.RTC_WAKEUP , 1 , pendingIntent) ;
+
     }
 
     private Notification getNotification(String title, String body) {
@@ -183,10 +194,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         return b.build() ;
     }
 
-
     private void createChannel(NotificationManager notificationManager) {
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.app_name);
             String description = getString(R.string.app_name);
@@ -211,7 +219,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void sendNoti(String title, String body) {
 
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("NOTIFICATION", "NOTIFICATION");
+        intent.putExtra("NOTIFICATION", title);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder b = new NotificationCompat.Builder(this);

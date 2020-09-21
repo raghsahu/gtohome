@@ -48,7 +48,7 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (currentPage+1==dotsCount){
-                    Intent intent = new Intent(WelcomeActivity.this, Login_Activity.class);
+                    Intent intent = new Intent(WelcomeActivity.this, DeliveryAreaActivity.class);
                     startActivity(intent);
                     finish();
                 }else {
@@ -61,7 +61,7 @@ public class WelcomeActivity extends AppCompatActivity {
         tv_skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(WelcomeActivity.this, Login_Activity.class);
+                Intent intent = new Intent(WelcomeActivity.this, DeliveryAreaActivity.class);
                 startActivity(intent);
                 finish();
             }

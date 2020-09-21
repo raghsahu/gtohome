@@ -31,6 +31,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.grocery.gtohome.adapter.CustomExpandableListAdapter;
+import com.grocery.gtohome.fragment.my_orders.OrderHistory_Fragment;
 import com.grocery.gtohome.fragment.nav_fragment.Wallet_Fragment;
 import com.grocery.gtohome.utils.FragmentNavigationManager;
 import com.grocery.gtohome.utils.NavigationManager;
@@ -155,8 +156,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Customer_Id = session.getUser().getCustomerId();
         session.setCurrent_Position(0);
         //open default fragmentframe
-        setHomeFragment();
-        navView.getMenu().findItem(R.id.navigation_home).setChecked(true);
+
+        try {
+            if (getIntent()!=null){
+                String Notification = getIntent().getStringExtra("NOTIFICATION");
+
+                if (Notification.equalsIgnoreCase("Order")){
+                    OrderHistory_Fragment fragment2 = new OrderHistory_Fragment();
+                    Bundle bundle = new Bundle();
+                    // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                    //   bundle.putString("Title",dataModel.getCategory_name());
+                    FragmentManager manager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frame, fragment2);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                    fragment2.setArguments(bundle);
+
+                }else if (Notification.equalsIgnoreCase("Wallet")){
+                    Wallet_Fragment fragment2 = new Wallet_Fragment();
+                    Bundle bundle = new Bundle();
+                    // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                    // bundle.putString("SubCategory_Id","");
+                    FragmentManager manager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frame, fragment2);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                    fragment2.setArguments(bundle);
+                }else {
+
+                    setHomeFragment();
+                }
+
+            }else {
+                setHomeFragment();
+            }
+        }catch (Exception e){
+
+            setHomeFragment();
+        }
 
         //*****************************
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -469,6 +508,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void setHomeFragment() {
+        navView.getMenu().findItem(R.id.navigation_home).setChecked(true);
+
         Home_Fragment homefragment = new Home_Fragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();

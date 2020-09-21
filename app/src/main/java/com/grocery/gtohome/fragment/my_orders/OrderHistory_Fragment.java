@@ -63,6 +63,7 @@ public class OrderHistory_Fragment extends Fragment implements SwipeRefreshLayou
         binding.swipeToRefresh.setOnRefreshListener(this);
         try {
             ((MainActivity) getActivity()).Update_header(getString(R.string.order_history));
+            ((MainActivity) getActivity()).CheckBottom(3);
         } catch (Exception e) {
         }
         //onback press call

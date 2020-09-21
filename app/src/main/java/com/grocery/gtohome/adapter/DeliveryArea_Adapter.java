@@ -65,7 +65,7 @@ public class DeliveryArea_Adapter extends RecyclerView.Adapter<DeliveryArea_Adap
                 session.setArea(dataModel.getDelivery_area());
 
                // session.createSession(response.getCustomerInfo());
-                Intent intent = new Intent(context, MainActivity.class);
+                Intent intent = new Intent(context, Login_Activity.class);
                 context.startActivity(intent);
                 ((AppCompatActivity)context).finish();
 

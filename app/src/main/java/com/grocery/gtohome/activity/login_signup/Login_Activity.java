@@ -255,7 +255,7 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
                                 Log.e("result_my_test", "" + response.getCustomerInfo().getCustomerId());
                                 session.createSession(response.getCustomerInfo());
                                 Toast.makeText(context, response.getMsg(), Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(Login_Activity.this, DeliveryAreaActivity.class);
+                                Intent intent = new Intent(Login_Activity.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();
 
@@ -428,7 +428,7 @@ public class Login_Activity extends AppCompatActivity implements GoogleApiClient
                                 Toast.makeText(context, response.getMsg(), Toast.LENGTH_SHORT).show();
 
                                 session.createSession(response.getCustomerInfo());
-                                Intent intent = new Intent(Login_Activity.this, DeliveryAreaActivity.class);
+                                Intent intent = new Intent(Login_Activity.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();
                             }else {

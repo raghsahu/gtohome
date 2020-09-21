@@ -40,7 +40,7 @@ public class Register_Success_Activity extends AppCompatActivity {
             public void onClick(View v) {
                 session.createSession(RegistrationData);
 
-                Intent intent=new Intent(Register_Success_Activity.this, DeliveryAreaActivity.class);
+                Intent intent=new Intent(Register_Success_Activity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }
