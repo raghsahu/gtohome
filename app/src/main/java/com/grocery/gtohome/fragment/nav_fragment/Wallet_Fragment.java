@@ -2,6 +2,7 @@ package com.grocery.gtohome.fragment.nav_fragment;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -83,16 +84,20 @@ public class Wallet_Fragment extends Fragment implements SwipeRefreshLayout.OnRe
         binding.tvAddMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddMoneyFragment fragment2 = new AddMoneyFragment();
-                Bundle bundle = new Bundle();
-                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
-                // bundle.putString("SubCategory_Id","");
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = manager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame, fragment2);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                fragment2.setArguments(bundle);
+//                AddMoneyFragment fragment2 = new AddMoneyFragment();
+//                Bundle bundle = new Bundle();
+//                // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+//                // bundle.putString("SubCategory_Id","");
+//                FragmentManager manager = getActivity().getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = manager.beginTransaction();
+//                fragmentTransaction.replace(R.id.frame, fragment2);
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.commit();
+//                fragment2.setArguments(bundle);
+
+                Intent intent= new Intent(getActivity(), AddMoneyFragment.class);
+                startActivity(intent);
+
             }
         });
 

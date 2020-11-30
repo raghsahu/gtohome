@@ -32,7 +32,7 @@
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="@dimen/_100sdp"
                     android:layout_margin="@dimen/_5sdp"
-                    android:src="@drawable/logo_transparent"/>
+                    android:src="@drawable/gtohome_logo_only"/>
 
                 <LinearLayout
                     android:layout_gravity="center"

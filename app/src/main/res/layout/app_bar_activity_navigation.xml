@@ -62,7 +62,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_width="@dimen/_80sdp"
                 android:layout_height="@dimen/_35sdp"
-                android:src="@drawable/gtohome_top_logo"  />
+                android:src="@drawable/gtohome_logo_name"  />
 
         </RelativeLayout>
 

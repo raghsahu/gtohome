@@ -95,9 +95,19 @@ public class Splash_Activity extends AppCompatActivity {
 
                         if (session.isLoggedIn()) {
 
-                            Intent mainIntent = new Intent(Splash_Activity.this, MainActivity.class);
-                            startActivity(mainIntent);
+                            Intent intent = new Intent(Splash_Activity.this, MainActivity.class);
+                            if (getIntent() != null) {
+                                String Notification = getIntent().getStringExtra("NOTIFICATION");
+                                intent.putExtra("NOTIFICATION", Notification);
+
+                                Log.e("notific_splash_act",""+Notification);
+                            }
+                            startActivity(intent);
                             finish();
+
+                           // Intent mainIntent = new Intent(Splash_Activity.this, MainActivity.class);
+                          //  startActivity(mainIntent);
+                           // finish();
                         } else {
                             Intent mainIntent = new Intent(Splash_Activity.this, WelcomeActivity.class);
                             startActivity(mainIntent);
@@ -176,6 +186,10 @@ public class Splash_Activity extends AppCompatActivity {
                         if (session.isLoggedIn()) {
 
                             Intent intent1 = new Intent(Splash_Activity.this, MainActivity.class);
+                            if (getIntent() != null) {
+                                String Notification = getIntent().getStringExtra("NOTIFICATION");
+                                intent1.putExtra("NOTIFICATION", Notification);
+                            }
                             startActivity(intent1);
                             finish();
 

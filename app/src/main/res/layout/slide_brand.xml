@@ -19,7 +19,7 @@
 
         <ImageView
             android:id="@+id/popular_image"
-            android:src="@drawable/logo_transparent"
+            android:src="@drawable/gtohome_logo_only"
             android:layout_width="@dimen/_150sdp"
             android:layout_height="@dimen/_150sdp"
             >

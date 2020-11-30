@@ -24,7 +24,7 @@
 
             <ImageView
                 app:postImage="@{model.image}"
-                android:src="@drawable/logo_transparent"
+                android:src="@drawable/gtohome_logo_only"
                 android:layout_width="@dimen/_120sdp"
                 android:layout_height="@dimen/_120sdp"
                 >

@@ -61,7 +61,7 @@
     <string name="product_meet_search_criteria">Products Meeting The Search Criteria</string>
     <string name="gtohome_address">gtohome \nayanchery(po) \nvalliad \n673512 (pin)</string>
     <string name="view_google_map">View Google Map</string>
-    <string name="gtohome_telephone">9526300446</string>
+    <string name="gtohome_telephone">+91 896 3000 400</string>
     <string name="opening_time">9 am</string>
     <string name="contact_form">Contact Form</string>
     <string name="opening_time_text">Opening Time</string>
@@ -69,7 +69,7 @@
     <string name="enquiry">Enquiry</string>
     <string name="submit">Submit</string>
     <string name="contact">Contact</string>
-    <string name="contact_gtohome">GtoHOME \nonline supermarket \nayanchery(po)  \nvalliad  \n\ncontact@gtohome.in \nadmin@gtohome.in \nramshadcn@gmail.com \n(+91) 9526300446</string>
+    <string name="contact_gtohome">GtoHOME \nonline supermarket \nayanchery(po)  \nvalliad  \n\ncontact@gtohome.in \nadmin@gtohome.in \n+91 896 3000 400</string>
     <string name="edit_ac_info">Edit your account information</string>
     <string name="change_your_pw">Change your password</string>
     <string name="modify_address">Modify your address book entries</string>
@@ -334,6 +334,12 @@
     <string name="fail">Fail</string>
     <string name="addmoney">Add money</string>
     <string name="notification_error_ssl_cert_invalid">notification_error_ssl_cert_invalid</string>
+
+<!--    live key-->
+<!--    <string name="razor_pay_key_id">rzp_live_VwVCz9rSOgXgzc</string>-->
+    <!--    test key-->
+    <string name="razor_pay_key_id">rzp_test_8woNuC6gRgnclP</string>
+    <string name="razor_pay_key_secret">e1rRXA65vHjyoaYP9DNBvHyA</string>
 
 
 </resources>

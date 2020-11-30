@@ -95,7 +95,7 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private FloatingActionButton fab, fab_call, fab_sms;
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
 
-    List<PopularBanner>popularBannerList=new ArrayList<>();
+    List<PopularBanner> popularBannerList = new ArrayList<>();
     //********************
     int currentPage = 0;
     Timer timer;
@@ -153,14 +153,14 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         binding.homeImgSlider.setCustomAnimation(new DescriptionAnimation());
         binding.homeImgSlider.setDuration(3000);
         //slider image list
-        SliderListArray();
+        SliderListArray();//get banner image from api
 
         //side slide bar
         setHorizontalSliderItem();
-        setProductSlider();
+        setProductSlider();//using api
 
-        getPopularBrandList();//popular brand list
-        getFeatureProduct();
+        getPopularBrandList();//popular brand list from api
+        getFeatureProduct();// from api
 
         // Images left navigation
         binding.ivLeftArrow.setOnClickListener(new View.OnClickListener() {
@@ -179,7 +179,7 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         binding.ivRightArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentPage == popularBannerList.size()-1) {
+                if (currentPage == popularBannerList.size() - 1) {
                     currentPage = 0;
                 }
                 binding.sliderPopularBrand.setCurrentItem(currentPage++, true);
@@ -206,25 +206,40 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
             @Override
             public void onClick(View view) {
                 animateFAB();
-
             }
         });
 
         fab_sms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PackageManager pm = getActivity().getPackageManager();
-                try {
-                    String toNumber = "8848566995"; // Replace with mobile phone number without +Sign or leading zeros, but with country code.
-                    //Suppose your country is India and your phone number is “xxxxxxxxxx”, then you need to send “91xxxxxxxxxx”.
 
-                    Intent sendIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + "" + toNumber));
-                    sendIntent.setPackage("com.whatsapp");
-                    startActivity(sendIntent);
-                } catch (Exception e) {
+                String toNumber = "917504700500"; // Replace with mobile phone number without +Sign or leading zeros, but with country code.
+                   //Suppose your country is India and your phone number is “xxxxxxxxxx”, then you need to send “91xxxxxxxxxx”.
+
+//                try {
+//
+////                  Intent sendIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + toNumber));
+////                    sendIntent.setPackage("com.whatsapp");
+////                    startActivity(sendIntent);
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    Toast.makeText(getActivity(), "it may be you dont have whats app", Toast.LENGTH_LONG).show();
+//
+//                }
+                PackageManager packageManager = getActivity().getPackageManager();
+                Intent i = new Intent(Intent.ACTION_VIEW);
+
+                try {
+                    String url = "https://api.whatsapp.com/send?phone="+ toNumber;
+                    i.setPackage("com.whatsapp");
+                    i.setData(Uri.parse(url));
+                    if (i.resolveActivity(packageManager) != null) {
+                        getActivity().startActivity(i);
+                    }
+                } catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(getActivity(), "it may be you dont have whats app", Toast.LENGTH_LONG).show();
-
                 }
 
             }
@@ -234,7 +249,7 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         fab_call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String number = "8848566995";
+                String number = "8963000400";
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + number));
                 startActivity(callIntent);
@@ -301,11 +316,11 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @SuppressLint("CheckResult")
     private void setProductSlider() {
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
-        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-
+      //  final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+       // progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+       // progressDialog.setCancelable(false);
+       // progressDialog.show();
+        binding.progressProductSlider.setVisibility(View.VISIBLE);
         Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
 
         apiInterface.ProductSlideApi()
@@ -316,17 +331,17 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     public void onNext(Product_Slider_Model response) {
                         //Handle logic
                         try {
-                            progressDialog.dismiss();
-                            Log.e("result_my_test", "" + response.getMsg());
+                          //  progressDialog.dismiss();
+                            Log.e("result_my_proslider", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
-
-                                List<ProductBannerImage>productBannerImageslist=new ArrayList<>();
+                                binding.llProSlider.setVisibility(View.VISIBLE);
+                                List<ProductBannerImage> productBannerImageslist = new ArrayList<>();
 
                                 for (int i = 0; i < response.getResponse().size(); i++) {
-                                    for (int j=0; j<response.getResponse().get(i).getBannerImages().size(); j++){
+                                    for (int j = 0; j < response.getResponse().get(i).getBannerImages().size(); j++) {
                                         productBannerImageslist.add(new ProductBannerImage(response.getResponse().get(i).getBannerImages()
-                                        .get(j).getImage()));
+                                                .get(j).getImage()));
                                     }
                                 }
 
@@ -338,12 +353,13 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 dotesIndicater1();
 
                             } else {
-                                binding.productSliderPager.setVisibility(View.GONE);
+                                binding.progressProductSlider.setVisibility(View.GONE);
 
                             }
 
                         } catch (Exception e) {
-                            progressDialog.dismiss();
+                          //  progressDialog.dismiss();
+                            binding.progressProductSlider.setVisibility(View.GONE);
                         }
 
                     }
@@ -351,7 +367,8 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     @Override
                     public void onError(Throwable e) {
                         //Handle error
-                        progressDialog.dismiss();
+                      //  progressDialog.dismiss();
+                        binding.progressProductSlider.setVisibility(View.GONE);
                         Log.e("mr_product_error", e.toString());
 
                         if (e instanceof HttpException) {
@@ -379,7 +396,9 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                     @Override
                     public void onComplete() {
-                        progressDialog.dismiss();
+                       // progressDialog.dismiss();
+                        binding.progressProductSlider.setVisibility(View.GONE);
+
                     }
                 });
     }
@@ -520,10 +539,12 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @SuppressLint("CheckResult")
     private void getFeatureProduct() {
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
-        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        progressDialog.setCancelable(true);
-        progressDialog.show();
+      //  final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+      //  progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+       // progressDialog.setCancelable(true);
+       // progressDialog.show();
+
+        binding.progressFeatureAdapter.setVisibility(View.VISIBLE);
 
         Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
 
@@ -535,7 +556,8 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     public void onNext(CategoryProductModel response) {
                         //Handle logic
                         try {
-                            progressDialog.dismiss();
+                           // progressDialog.dismiss();
+                            binding.progressFeatureAdapter.setVisibility(View.GONE);
                             Log.e("result_my_test", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
@@ -550,7 +572,8 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             }
 
                         } catch (Exception e) {
-                            progressDialog.dismiss();
+                           // progressDialog.dismiss();
+                            binding.progressFeatureAdapter.setVisibility(View.GONE);
                         }
 
                     }
@@ -558,7 +581,8 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     @Override
                     public void onError(Throwable e) {
                         //Handle error
-                        progressDialog.dismiss();
+                       // progressDialog.dismiss();
+                        binding.progressFeatureAdapter.setVisibility(View.GONE);
                         Log.e("mr_product_error", e.toString());
 
                         if (e instanceof HttpException) {
@@ -586,7 +610,8 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                     @Override
                     public void onComplete() {
-                        progressDialog.dismiss();
+                      //  progressDialog.dismiss();
+                        binding.progressFeatureAdapter.setVisibility(View.GONE);
                     }
                 });
     }
@@ -669,10 +694,12 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @SuppressLint("CheckResult")
     private void getPopularBrandList() {
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
-        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+     //   final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+      //  progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+      //  progressDialog.setCancelable(false);
+      //  progressDialog.show();
+
+        binding.progressPopularBrand.setVisibility(View.VISIBLE);
 
         Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
 
@@ -684,28 +711,29 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     public void onNext(PopularBrandModel response) {
                         //Handle logic
                         try {
-                            progressDialog.dismiss();
+                          //  progressDialog.dismiss();
+                            binding.progressPopularBrand.setVisibility(View.GONE);
                             Log.e("result_my_test", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
-                                popularBannerList=response.getResponse().getBanners();
+                                popularBannerList = response.getResponse().getBanners();
 
 //                                friendsAdapter = new PopularBrand_Adapter(response.getResponse().getBanners(), getActivity());
 //                                 binding.setPopularBrandAdapter(friendsAdapter);//set databinding adapter
 //                                binding.recyclerPopularBrand.setAdapter(friendsAdapter);
                                 //********************
-                                SlidePopularAdapter slidePopularAdapter = new SlidePopularAdapter(getActivity(),popularBannerList);
-                                    binding.sliderPopularBrand.setAdapter(slidePopularAdapter);
-                                    binding.sliderPopularBrand.setPageTransformer(true, new ZoomOutSlideTransformer());
-                                    binding.sliderPopularBrand.setCurrentItem(0);
-                                    binding.sliderPopularBrand.addOnPageChangeListener(pageChangeListener_brand);
+                                SlidePopularAdapter slidePopularAdapter = new SlidePopularAdapter(getActivity(), popularBannerList);
+                                binding.sliderPopularBrand.setAdapter(slidePopularAdapter);
+                                binding.sliderPopularBrand.setPageTransformer(true, new ZoomOutSlideTransformer());
+                                binding.sliderPopularBrand.setCurrentItem(0);
+                                binding.sliderPopularBrand.addOnPageChangeListener(pageChangeListener_brand);
 
-                                    ///*********************
+                                ///*********************
                                 /*After setting the adapter use the timer */
                                 final Handler handler = new Handler();
                                 final Runnable Update = new Runnable() {
                                     public void run() {
-                                        if (currentPage == popularBannerList.size()-1) {
+                                        if (currentPage == popularBannerList.size() - 1) {
                                             currentPage = 0;
                                         }
                                         binding.sliderPopularBrand.setCurrentItem(currentPage++, true);
@@ -724,7 +752,8 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             }
 
                         } catch (Exception e) {
-                            progressDialog.dismiss();
+                          //  progressDialog.dismiss();
+                            binding.progressPopularBrand.setVisibility(View.GONE);
                         }
 
                     }
@@ -732,7 +761,8 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     @Override
                     public void onError(Throwable e) {
                         //Handle error
-                        progressDialog.dismiss();
+                      //  progressDialog.dismiss();
+                        binding.progressPopularBrand.setVisibility(View.GONE);
                         Log.e("mr_product_error", e.toString());
 
                         if (e instanceof HttpException) {
@@ -760,7 +790,8 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                     @Override
                     public void onComplete() {
-                        progressDialog.dismiss();
+                       // progressDialog.dismiss();
+                        binding.progressPopularBrand.setVisibility(View.GONE);
                     }
                 });
 
@@ -771,11 +802,12 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @SuppressLint("CheckResult")
     private void SliderListArray() {
 
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
-        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        // final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+        // progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        //  progressDialog.setCancelable(false);
+        // progressDialog.show();
 
+        binding.progressSliderTop.setVisibility(View.VISIBLE);
         Api_Call apiInterface = RxApiClient.getClient(Base_Url.BaseUrl).create(Api_Call.class);
 
         apiInterface.HomeHorizontalSlideApi()
@@ -786,7 +818,8 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     public void onNext(HomeSliderBanner response) {
                         //Handle logic
                         try {
-                            progressDialog.dismiss();
+                            //progressDialog.dismiss();
+                            binding.progressSliderTop.setVisibility(View.GONE);
                             Log.e("result_my_test", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
@@ -808,7 +841,8 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             }
 
                         } catch (Exception e) {
-                            progressDialog.dismiss();
+                            // progressDialog.dismiss();
+                            binding.progressSliderTop.setVisibility(View.GONE);
                         }
 
                     }
@@ -816,7 +850,8 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     @Override
                     public void onError(Throwable e) {
                         //Handle error
-                        progressDialog.dismiss();
+                        //  progressDialog.dismiss();
+                        binding.progressSliderTop.setVisibility(View.GONE);
                         Log.e("mr_product_error", e.toString());
 
                         if (e instanceof HttpException) {
@@ -844,7 +879,8 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                     @Override
                     public void onComplete() {
-                        progressDialog.dismiss();
+                        //  progressDialog.dismiss();
+                        binding.progressSliderTop.setVisibility(View.GONE);
                     }
                 });
 

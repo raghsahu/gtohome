@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:gravity="center"
-    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".activity.Splash_Activity">
 
 
@@ -15,7 +16,15 @@
         android:id="@+id/splash_logo_image"
         android:layout_width="@dimen/_100sdp"
         android:layout_height="@dimen/_100sdp"
-        android:src="@drawable/logo_circle"
+        android:src="@drawable/gtohome_logo_only"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_gravity="center"
+        android:id="@+id/splash_name"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:src="@drawable/gtohome_name"
         tools:ignore="ContentDescription" />
 
 </LinearLayout>

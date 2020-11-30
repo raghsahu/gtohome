@@ -27,6 +27,7 @@ import com.grocery.gtohome.adapter.Shopping_List_Adapter;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.RxApiClient;
 import com.grocery.gtohome.databinding.FragmentMyBasketBinding;
+import com.grocery.gtohome.fragment.Home_Fragment;
 import com.grocery.gtohome.model.SimpleResultModel;
 import com.grocery.gtohome.model.cart_model.CartModel;
 import com.grocery.gtohome.session.SessionManager;
@@ -120,6 +121,20 @@ public class MyBasket_Fragment extends Fragment implements SwipeRefreshLayout.On
             }
         });
 
+        binding.tvCartEmpty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Home_Fragment homefragment = new Home_Fragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.replace(R.id.frame, homefragment, "HOME_FRAGMENT");
+                ft.addToBackStack(null);
+                ft.commit();
+
+            }
+        });
+
         return root;
 
     }
@@ -177,8 +192,9 @@ public class MyBasket_Fragment extends Fragment implements SwipeRefreshLayout.On
                                 binding.setCartlistAdapter(null);//set databinding adapter
                                 friendsAdapter.notifyDataSetChanged();
 
-                                utilities.dialogOK(getActivity(), getString(R.string.validation_title),
-                                        response.getMsg(), getString(R.string.ok), false);
+                              //  utilities.dialogOK(getActivity(), getString(R.string.validation_title),response.getMsg(), getString(R.string.ok), false);
+                                binding.relEmpty.setVisibility(View.VISIBLE);
+                                binding.relCart.setVisibility(View.GONE);
 
                             } else {
                                 utilities.dialogOK(getActivity(), getString(R.string.validation_title),
@@ -295,8 +311,10 @@ public class MyBasket_Fragment extends Fragment implements SwipeRefreshLayout.On
                             } else {
                                 tv_budge.setText("0");
                                 binding.swipeToRefresh.setVisibility(View.GONE);
-                                //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
-                                utilities.dialogOK(getActivity(), getString(R.string.validation_title), response.getMsg(), getString(R.string.ok), false);
+                              //  utilities.dialogOK(getActivity(), getString(R.string.validation_title), response.getMsg(), getString(R.string.ok), false);
+
+                                binding.relEmpty.setVisibility(View.VISIBLE);
+                                binding.relCart.setVisibility(View.GONE);
                             }
 
                         } catch (Exception e) {

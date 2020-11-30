@@ -56,8 +56,10 @@ import com.grocery.gtohome.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
@@ -147,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         utilities = Utilities.getInstance(this);
         navView = findViewById(R.id.nav_view);
         tv_main_header = findViewById(R.id.tv_main_header);
@@ -157,10 +160,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         session.setCurrent_Position(0);
         //open default fragmentframe
 
+        onNewIntent(getIntent());
+
         try {
             if (getIntent()!=null){
                 String Notification = getIntent().getStringExtra("NOTIFICATION");
 
+                Log.e("notific_main_act",""+Notification);
+
+            //    assert Notification != null;
                 if (Notification.equalsIgnoreCase("Order")){
                     OrderHistory_Fragment fragment2 = new OrderHistory_Fragment();
                     Bundle bundle = new Bundle();
@@ -184,8 +192,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                     fragment2.setArguments(bundle);
-                }else {
+                }else if (Notification.equalsIgnoreCase("New Offer")){
+                    All_Product_Fragment fragment2 = new All_Product_Fragment();
+                    Bundle bundle = new Bundle();
+                    // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                    bundle.putString("SubCategory_Id","");
+                    bundle.putString("GH_Offer","Special");
+                    bundle.putString("manufacturer_id","");
+                    FragmentManager manager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frame, fragment2);
+                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                    fragment2.setArguments(bundle);
 
+                }else {
                     setHomeFragment();
                 }
 
@@ -339,10 +361,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @SuppressLint("CheckResult")
     private void getCartCount() {
-        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this, R.style.MyGravity);
-        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+       // final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this, R.style.MyGravity);
+      //  progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         // progressDialog.setCancelable(false);
-        progressDialog.show();
+      //  progressDialog.show();
 
         Api_Call apiInterface = RxApiClient.getClient(BaseUrl).create(Api_Call.class);
 
@@ -358,7 +380,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onNext(SimpleResultModel response) {
                         //Handle logic
                         try {
-                            progressDialog.dismiss();
+                          //  progressDialog.dismiss();
                             Log.e("result_add_cart", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
@@ -369,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
 
                         } catch (Exception e) {
-                            progressDialog.dismiss();
+                          //  progressDialog.dismiss();
                         }
 
                     }
@@ -377,7 +399,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onError(Throwable e) {
                         //Handle error
-                        progressDialog.dismiss();
+                      //  progressDialog.dismiss();
                         Log.e("product_details_error", e.toString());
 
                         if (e instanceof HttpException) {
@@ -405,7 +427,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     @Override
                     public void onComplete() {
-                        progressDialog.dismiss();
+                       // progressDialog.dismiss();
                     }
                 });
 
@@ -538,7 +560,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void Exit() {
         new AlertDialog.Builder(this).setTitle(getString(R.string.app_name))
                 .setMessage("Are you sure you want to exit the app!")
-                .setIcon((int) R.drawable.logo)
+                .setIcon((int) R.drawable.gtohome_logo_only)
                 .setPositiveButton(getResources().getString(R.string.yes), new C03424())
                 .setNegativeButton(getResources().getString(R.string.no), new C03435()).show();
 
@@ -713,5 +735,89 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onClick(DialogInterface dialog, int which) {
 //            drawer.closeDrawer(GravityCompat.START);
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+        setIntent(intent);
+
+        Bundle extras = intent.getExtras();
+        if(extras != null){
+            Log.e("EXTRAS_msg",""+extras.toString());
+            for (String key : extras.keySet()) {
+                Log.e("rssdddd", key + " : " + (extras.get(key) != null ? extras.get(key) : "NULL"));
+            }
+
+            Set<String> keys = extras.keySet();
+            Iterator<String> it = keys.iterator();
+            Log.e("LOG_TAG","Dumping Intent start");
+            while (it.hasNext()) {
+                String key1 = it.next();
+                Log.e("pprrtttt","[" + key1 + "=" + extras.get(key1)+"]");
+            }
+            Log.e("pppffff","Dumping Intent end");
+        }
+
+
+        //code
+        try {
+            if (intent!=null){
+                String Notification = intent.getStringExtra("NOTIFICATION");
+
+                Log.e("notific_main_",""+Notification);
+
+              //  assert Notification != null;
+                if (Notification.equalsIgnoreCase("Order")){
+                    OrderHistory_Fragment fragment2 = new OrderHistory_Fragment();
+                    Bundle bundle = new Bundle();
+                    // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                    //   bundle.putString("Title",dataModel.getCategory_name());
+                    FragmentManager manager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frame, fragment2);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                    fragment2.setArguments(bundle);
+
+                }else if (Notification.equalsIgnoreCase("Wallet")){
+                    Wallet_Fragment fragment2 = new Wallet_Fragment();
+                    Bundle bundle = new Bundle();
+                    // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                    // bundle.putString("SubCategory_Id","");
+                    FragmentManager manager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frame, fragment2);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                    fragment2.setArguments(bundle);
+                }else if (Notification.equalsIgnoreCase("New Offer")){
+                    All_Product_Fragment fragment2 = new All_Product_Fragment();
+                    Bundle bundle = new Bundle();
+                    // bundle.putSerializable("MyPhotoModelResponse", dataModelList.get(position));
+                    bundle.putString("SubCategory_Id","");
+                    bundle.putString("GH_Offer","Special");
+                    bundle.putString("manufacturer_id","");
+                    FragmentManager manager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = manager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frame, fragment2);
+                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                    fragment2.setArguments(bundle);
+
+                }else {
+                    setHomeFragment();
+                }
+
+            }else {
+                setHomeFragment();
+            }
+        }catch (Exception e){
+
+            setHomeFragment();
+        }
+
     }
 }

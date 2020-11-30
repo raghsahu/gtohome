@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import android.util.Patterns;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.grocery.gtohome.R;
 
@@ -31,6 +33,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import static android.app.Notification.DEFAULT_SOUND;
 import static android.app.Notification.DEFAULT_VIBRATE;
@@ -48,30 +51,25 @@ public class NotificationUtils {
         this.mContext = mContext;
     }
 
-    public void showNotificationMessage(String title, String message, String timeStamp, Intent intent) {
+    public void showNotificationMessage(String title, String message, String timeStamp, PendingIntent intent) {
         showNotificationMessage(title, message, timeStamp, intent, null);
     }
 
-    public void showNotificationMessage(final String title, final String message, final String timeStamp, Intent intent, String imageUrl) {
+    public void showNotificationMessage(final String title, final String message, final String timeStamp, PendingIntent intent,
+                                        String imageUrl) {
         // Check for empty push message
         if (TextUtils.isEmpty(message))
             return;
 
 
         // notification icon
-        final int icon = R.drawable.logo;
+        final int icon = R.drawable.gtohome_logo_only;
+        Bitmap myLogo = ((BitmapDrawable) ResourcesCompat.getDrawable(mContext.getResources(), R.drawable.gtohome_logo_only, null)).getBitmap();
 
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        final PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(
-                        mContext,
-                        0,
-                        intent,
-                        PendingIntent.FLAG_CANCEL_CURRENT
-                );
+       // intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+      //  final PendingIntent resultPendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-                mContext);
+        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext);
 
         final Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
                 + "://" + mContext.getPackageName() + "/raw/notification");
@@ -83,14 +81,16 @@ public class NotificationUtils {
                 Bitmap bitmap = getBitmapFromURL(imageUrl);
 
                 if (bitmap != null) {
-                    showBigNotification(bitmap, mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
+                    showBigNotification(bitmap, mBuilder, icon, title, message, timeStamp, intent, alarmSound);//if img avail
                 } else {
-                    showSmallNotification2(mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
+                    //showSmallNotification2(mBuilder, icon, title, message, timeStamp, intent, alarmSound);
+                    showBigNotification(myLogo, mBuilder, icon, title, message, timeStamp, intent, alarmSound);
                 }
             }
         } else {
-            showSmallNotification2(mBuilder, icon, title, message, timeStamp, resultPendingIntent, alarmSound);
-            playNotificationSound();
+            showBigNotification(myLogo, mBuilder, icon, title, message, timeStamp, intent, alarmSound);
+           // showSmallNotification2(mBuilder, icon, title, message, timeStamp, intent, alarmSound);
+           // playNotificationSound();
         }
     }
 
@@ -109,7 +109,7 @@ public class NotificationUtils {
                 .setSound(alarmSound)
                 .setStyle(inboxStyle)
                 .setWhen(getTimeMilliSec(timeStamp))
-                .setSmallIcon(R.drawable.logo)
+                .setSmallIcon(R.drawable.gtohome_logo_only)
                 .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
                 .setContentText(message)
                 .build();
@@ -131,7 +131,7 @@ public class NotificationUtils {
                 .setSound(alarmSound)
                 .setStyle(bigPictureStyle)
                 .setWhen(getTimeMilliSec(timeStamp))
-                .setSmallIcon(R.drawable.logo)
+                .setSmallIcon(R.drawable.gtohome_logo_only)
                 .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
                 .setContentText(message)
                 .build();
@@ -145,7 +145,9 @@ public class NotificationUtils {
         playNotificationSound();
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         inboxStyle.addLine(message);
-        final int NOTIFICATION_ID = 1;
+        Random rand = new Random();
+        Bitmap Righticon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.gtohome_logo_only);
+        final int NOTIFICATION_ID = rand.nextInt(10000);
         final String NOTIFICATION_CHANNEL_ID = "my_notification_channel";
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         // NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -163,14 +165,15 @@ public class NotificationUtils {
                 .setVibrate(new long[]{0, 100, 100, 100, 100, 100})
                 //.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setSmallIcon(icon).setTicker(title).setWhen(0)
-                .setSmallIcon(R.drawable.logo)
+                .setSmallIcon(R.drawable.gtohome_logo_only)
+                 .setLargeIcon(Righticon)
                 .setContentTitle(title)
                 .setOnlyAlertOnce(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setDefaults(DEFAULT_SOUND | DEFAULT_VIBRATE)
                 .setStyle(inboxStyle)
-                .setAutoCancel(true)
+                .setAutoCancel(false)
                 .setWhen(getTimeMilliSec(timeStamp))
                 .setContentIntent(resultPendingIntent)
                 .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))

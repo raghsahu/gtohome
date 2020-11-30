@@ -82,8 +82,8 @@ public class CategoryChild extends BaseObservable {
     public static void loadImage(ImageView view, String imageUrl) {
         Glide.with(view.getContext())
                 .load(imageUrl)
-                 .placeholder(R.drawable.logo_transparent)
-                //.error(android.R.drawable.logo_transparent)
+                 .placeholder(R.drawable.gtohome_logo_only)
+                //.error(android.R.drawable.gtohome_logo_only)
                 .apply(new RequestOptions())
                 .into(view);
     }

@@ -1,7 +1,6 @@
 package com.grocery.gtohome.fragment.my_basket;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,12 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.grocery.gtohome.R;
+import com.grocery.gtohome.activity.ChekoutActivity;
 import com.grocery.gtohome.activity.MainActivity;
-import com.grocery.gtohome.adapter.Shopping_List_Adapter;
 import com.grocery.gtohome.adapter.TotalAmount_Adapter;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.RxApiClient;
@@ -43,7 +40,6 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.adapter.rxjava2.HttpException;
 
-import static com.grocery.gtohome.activity.MainActivity.tv_budge;
 import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
 
 /**

@@ -3,6 +3,7 @@ package com.grocery.gtohome.fragment.nav_fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import com.grocery.gtohome.R;
@@ -37,39 +39,54 @@ import retrofit2.adapter.rxjava2.HttpException;
 
 import static com.grocery.gtohome.api_client.Base_Url.BaseUrl;
 
-public class AddMoneyFragment extends Fragment implements PaymentResultListener {
+public class AddMoneyFragment extends AppCompatActivity implements PaymentResultListener {
     FragmentAddMoneyBinding binding;
     private Utilities utilities;
     SessionManager session;
     private String CustomerId;
     private String amount;
+    Context context;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_money, container, false);
-        View root = binding.getRoot();
-        utilities = Utilities.getInstance(getActivity());
-        session = new SessionManager(getActivity());
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_pyment_method);
+        binding = DataBindingUtil.setContentView(this, R.layout.fragment_add_money);
+        context=AddMoneyFragment.this;
+
+        utilities = Utilities.getInstance(context);
+        session = new SessionManager(context);
         CustomerId=session.getUser().getCustomerId();
 
-        try {
-            ((MainActivity) getActivity()).Update_header(getString(R.string.addmoney));
+        binding.toolbar.tvToolbar.setText(getString(R.string.addmoney));
 
-        } catch (Exception e) {
-        }
+        binding.toolbar.imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        Checkout.preload(context);
+
+//        try {
+//            ((MainActivity) getActivity()).Update_header(getString(R.string.addmoney));
+//
+//        } catch (Exception e) {
+//        }
         //onback press call
-        View view = getActivity().findViewById(R.id.img_back);
-        if (view instanceof ImageView) {
-            ImageView imageView = (ImageView) view;
-            //Do your stuff
-            imageView.setVisibility(View.GONE);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((MainActivity) getActivity()).onBackPressed();
-                }
-            });
-        }
+//        View view = getActivity().findViewById(R.id.img_back);
+//        if (view instanceof ImageView) {
+//            ImageView imageView = (ImageView) view;
+//            //Do your stuff
+//            imageView.setVisibility(View.GONE);
+//            imageView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    ((MainActivity) getActivity()).onBackPressed();
+//                }
+//            });
+//        }
 
         binding.tvAddMoney.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,11 +95,11 @@ public class AddMoneyFragment extends Fragment implements PaymentResultListener 
 
                if (!amount.isEmpty()){
                    if (!binding.radioPayu.isChecked() && !binding.radioRozarpay.isChecked()){
-                       utilities.dialogOK(getActivity(), getString(R.string.validation_title),
+                       utilities.dialogOK(context, getString(R.string.validation_title),
                                "Please select payment method", getString(R.string.ok), false);
                    }else {
                        if (binding.radioPayu.isChecked()){
-                           Intent intent = new Intent(getActivity(), PayUMoneyActivity.class);
+                           Intent intent = new Intent(context, PayUMoneyActivity.class);
                            intent.putExtra("OrderId","");
                            intent.putExtra("amount",amount);
                            intent.putExtra("Order_status_id","");
@@ -95,7 +112,7 @@ public class AddMoneyFragment extends Fragment implements PaymentResultListener 
                    }
 
                }else {
-                   utilities.dialogOK(getActivity(), getString(R.string.validation_title),
+                   utilities.dialogOK(context, getString(R.string.validation_title),
                            "Please enter amount", getString(R.string.ok), false);
                }
 
@@ -103,7 +120,7 @@ public class AddMoneyFragment extends Fragment implements PaymentResultListener 
         });
 
 
-        return root;
+       // return root;
 
     }
 
@@ -113,7 +130,7 @@ public class AddMoneyFragment extends Fragment implements PaymentResultListener 
         try {
             JSONObject options = new JSONObject();
             options.put("name", "Razorpay Corp");
-            options.put("description", "Product Charges");
+            options.put("description", "GtoHome Products");
             //You can omit the image option to fetch the image from dashboard
             options.put("image", "https://rzp-mobile.s3.amazonaws.com/images/rzp.png");
             options.put("currency", "INR");
@@ -130,9 +147,9 @@ public class AddMoneyFragment extends Fragment implements PaymentResultListener 
 
             options.put("prefill", preFill);
 
-            co.open(getActivity(), options);
+            co.open(AddMoneyFragment.this, options);
         } catch (Exception e) {
-            Toast.makeText(getActivity(), "Error in payment: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Error in payment: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
@@ -140,14 +157,19 @@ public class AddMoneyFragment extends Fragment implements PaymentResultListener 
     @Override
     public void onPaymentSuccess(String razorpayPaymentID) {
         // Toast.makeText(this, "Payment successfully done! " + razorpayPaymentID, Toast.LENGTH_SHORT).show();
-        UpdatePaymentStatus("RazorPay: "+razorpayPaymentID);
+        try {
+            Toast.makeText(context,"sucess",Toast.LENGTH_LONG).show();
+            UpdatePaymentStatus("RazorPay: "+razorpayPaymentID);
+        }catch (Exception e){
+            Log.e("OnPaymentSuccess_error", "Exception in onPaymentSuccess", e);
+        }
 
     }
 
     @Override
     public void onPaymentError(int code, String response) {
         try {
-            Toast.makeText(getActivity(), "Payment error please try again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Payment error please try again", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e("OnPaymentError", "Exception in onPaymentError", e);
         }
@@ -155,7 +177,7 @@ public class AddMoneyFragment extends Fragment implements PaymentResultListener 
 
     @SuppressLint("CheckResult")
     private void UpdatePaymentStatus(String razorpayPaymentID) {
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.MyGravity);
+        final ProgressDialog progressDialog = new ProgressDialog(context, R.style.MyGravity);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         // progressDialog.setCancelable(false);
         progressDialog.show();
@@ -174,12 +196,12 @@ public class AddMoneyFragment extends Fragment implements PaymentResultListener 
                             Log.e("result_", "" + response.getMsg());
                             //Toast.makeText(EmailSignupActivity.this, "" + response.getMessage(), Toast.LENGTH_SHORT).show();
                             if (response.getStatus()) {
-                                utilities.dialogOKOnBack(getActivity(), getString(R.string.validation_title),
+                                utilities.dialogOKOnBack(context, getString(R.string.validation_title),
                                         response.getMsg(), getString(R.string.ok), true);
 
                             } else {
                                 //Toast.makeText(getActivity(), response.getMsg(), Toast.LENGTH_SHORT).show();
-                                utilities.dialogOK(getActivity(), getString(R.string.validation_title),
+                                utilities.dialogOK(context, getString(R.string.validation_title),
                                         response.getMsg(), getString(R.string.ok), false);
                             }
 

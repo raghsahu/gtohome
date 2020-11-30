@@ -36,10 +36,26 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <com.daimajia.slider.library.SliderLayout
-                        android:id="@+id/home_img_slider"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="200dp" />
+                        android:layout_height="wrap_content">
+
+                        <com.daimajia.slider.library.SliderLayout
+                            android:id="@+id/home_img_slider"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp" />
+
+                        <ProgressBar
+                            android:layout_centerInParent="true"
+                            android:id="@+id/progress_slider_top"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                        </ProgressBar>
+
+                    </RelativeLayout>
+
+
 
                     <androidx.viewpager.widget.ViewPager
                         android:id="@+id/slider_pager"
@@ -354,19 +370,34 @@
                     </TextView>
 
                     <LinearLayout
+                        android:id="@+id/ll_pro_slider"
                         android:background="@drawable/rectangle_bg_border"
                         android:layout_margin="@dimen/_5sdp"
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <androidx.viewpager.widget.ViewPager
-                            android:layout_margin="@dimen/_10sdp"
-                            android:id="@+id/product_slider_pager"
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_120sdp"
-                            android:layout_gravity="center"
-                            android:visibility="visible" />
+                            android:layout_height="wrap_content">
+
+                            <androidx.viewpager.widget.ViewPager
+                                android:layout_margin="@dimen/_10sdp"
+                                android:id="@+id/product_slider_pager"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_120sdp"
+                                android:layout_gravity="center"
+                                android:visibility="visible" />
+
+                            <ProgressBar
+                                android:layout_centerInParent="true"
+                                android:id="@+id/progress_product_slider"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                            </ProgressBar>
+                        </RelativeLayout>
+
 
                         <LinearLayout
                             android:id="@+id/linear_layout1"
@@ -408,15 +439,30 @@
 
                     </LinearLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:adapter="@{featureAdapter}"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="none"
-                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                        app:spanCount="2"
-                        >
-                    </androidx.recyclerview.widget.RecyclerView>
+                        android:layout_height="wrap_content">
+
+                        <ProgressBar
+                            android:layout_centerInParent="true"
+                            android:id="@+id/progress_featureAdapter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                        </ProgressBar>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:adapter="@{featureAdapter}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:scrollbars="none"
+                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                            app:spanCount="2"
+                            >
+                        </androidx.recyclerview.widget.RecyclerView>
+
+
+                    </RelativeLayout>
 
                     <TextView
                         android:visibility="gone"
@@ -475,6 +521,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         >
+
                         <androidx.viewpager.widget.ViewPager
                             android:layout_marginTop="@dimen/_2sdp"
                             android:background="@color/transparent"
@@ -483,6 +530,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_150sdp"
                             android:visibility="visible" />
+
+                        <ProgressBar
+                            android:layout_centerInParent="true"
+                            android:id="@+id/progress_popular_brand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                        </ProgressBar>
 
                         <ImageView
                             android:visibility="gone"
@@ -810,7 +865,7 @@
                     android:layout_gravity="bottom|end"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
-                    app:srcCompat="@drawable/ic_sms"
+                    app:srcCompat="@drawable/whatsapp_icon"
                     android:visibility="invisible"
                     android:layout_above="@+id/fab_call"
                     app:backgroundTint="@color/white"

@@ -20,15 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.grocery.gtohome.R;
 import com.grocery.gtohome.activity.MainActivity;
-import com.grocery.gtohome.adapter.MyOrder_Adapter;
 import com.grocery.gtohome.adapter.ReturnReasonAdapter;
 import com.grocery.gtohome.api_client.Api_Call;
 import com.grocery.gtohome.api_client.RxApiClient;
-import com.grocery.gtohome.databinding.FragmentMyAccountBinding;
 import com.grocery.gtohome.databinding.FragmentReturnProductBinding;
-import com.grocery.gtohome.fragment.my_basket.ChekoutActivity;
 import com.grocery.gtohome.model.SimpleResultModel;
-import com.grocery.gtohome.model.order_history.OrderHistory;
 import com.grocery.gtohome.model.return_reason_model.ReturnReasonModel;
 import com.grocery.gtohome.session.SessionManager;
 import com.grocery.gtohome.utils.Connectivity;

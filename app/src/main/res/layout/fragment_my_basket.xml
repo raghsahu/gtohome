@@ -6,7 +6,7 @@
             type="com.grocery.gtohome.adapter.Shopping_List_Adapter" />
 
     </data>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -14,6 +14,7 @@
 
 
     <RelativeLayout
+       android:id="@+id/rel_cart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
@@ -97,7 +98,47 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/rel_empty"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-</LinearLayout>
+        <TextView
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:id="@+id/tv_empty"
+            android:textAlignment="center"
+            android:text="Your shopping cart is empty!"
+            android:textSize="@dimen/_16sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </TextView>
+
+        <TextView
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_below="@+id/tv_empty"
+            android:layout_centerInParent="true"
+            android:id="@+id/tv_cart_empty"
+            style="@style/textview12white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@drawable/rectangle_bg_primary"
+            android:gravity="center"
+            android:padding="@dimen/_10sdp"
+            android:layout_margin="@dimen/_5sdp"
+            android:text="Go to Home">
+        </TextView>
+
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>
 
 </layout>
