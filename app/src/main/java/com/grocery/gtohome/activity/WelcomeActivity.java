@@ -72,7 +72,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private void SetWelcomeContent() {
         ArrayList<WelcomeModel> welcome_array = new ArrayList<>();
 
-        welcome_array.add(new WelcomeModel("",R.drawable.welcome1));
+        welcome_array.add(new WelcomeModel("",R.drawable.welcome_1));
         welcome_array.add(new WelcomeModel("",R.drawable.welcome2));
         welcome_array.add(new WelcomeModel("",R.drawable.welcome3));
         welcome_array.add(new WelcomeModel("",R.drawable.welcome4));

@@ -129,8 +129,8 @@ public class AddMoneyFragment extends AppCompatActivity implements PaymentResult
 
         try {
             JSONObject options = new JSONObject();
-            options.put("name", "Razorpay Corp");
-            options.put("description", "GtoHome Products");
+            options.put("name", "GtoHome");
+            options.put("description", "Add Money");
             //You can omit the image option to fetch the image from dashboard
             options.put("image", "https://rzp-mobile.s3.amazonaws.com/images/rzp.png");
             options.put("currency", "INR");
@@ -146,6 +146,9 @@ public class AddMoneyFragment extends AppCompatActivity implements PaymentResult
             preFill.put("contact", session.getUser().getTelephone());
 
             options.put("prefill", preFill);
+
+            int image = R.drawable.gtohomelogo_jpg; // Can be any drawable
+            co.setImage(image);
 
             co.open(AddMoneyFragment.this, options);
         } catch (Exception e) {

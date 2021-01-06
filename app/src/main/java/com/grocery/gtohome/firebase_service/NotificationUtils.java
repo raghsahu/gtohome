@@ -56,7 +56,7 @@ public class NotificationUtils {
     }
 
     public void showNotificationMessage(final String title, final String message, final String timeStamp, PendingIntent intent,
-                                        String imageUrl) {
+                                        Bitmap bitmap_logo) {
         // Check for empty push message
         if (TextUtils.isEmpty(message))
             return;
@@ -74,24 +74,23 @@ public class NotificationUtils {
         final Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
                 + "://" + mContext.getPackageName() + "/raw/notification");
 
-        if (!TextUtils.isEmpty(imageUrl)) {
+       /// if (!TextUtils.isEmpty(imageUrl)) {
 
-            if (imageUrl != null && imageUrl.length() > 4 && Patterns.WEB_URL.matcher(imageUrl).matches()) {
+           // if (imageUrl != null && imageUrl.length() > 4 && Patterns.WEB_URL.matcher(imageUrl).matches()) {
 
-                Bitmap bitmap = getBitmapFromURL(imageUrl);
+              //  Bitmap bitmap = getBitmapFromURL(imageUrl);
 
-                if (bitmap != null) {
-                    showBigNotification(bitmap, mBuilder, icon, title, message, timeStamp, intent, alarmSound);//if img avail
+                if (bitmap_logo != null) {
+                    showBigNotification(bitmap_logo, mBuilder, icon, title, message, timeStamp, intent, alarmSound);//if img avail
                 } else {
-                    //showSmallNotification2(mBuilder, icon, title, message, timeStamp, intent, alarmSound);
-                    showBigNotification(myLogo, mBuilder, icon, title, message, timeStamp, intent, alarmSound);
+                    showSmallNotification2(mBuilder, icon, title, message, timeStamp, intent, alarmSound);
+
                 }
-            }
-        } else {
-            showBigNotification(myLogo, mBuilder, icon, title, message, timeStamp, intent, alarmSound);
-           // showSmallNotification2(mBuilder, icon, title, message, timeStamp, intent, alarmSound);
+          //  }
+      //  } else {
+       //     showSmallNotification2(mBuilder, icon, title, message, timeStamp, intent, alarmSound);
            // playNotificationSound();
-        }
+      //  }
     }
 
 
@@ -119,6 +118,9 @@ public class NotificationUtils {
     }
 
     private void showBigNotification(Bitmap bitmap, NotificationCompat.Builder mBuilder, int icon, String title, String message, String timeStamp, PendingIntent resultPendingIntent, Uri alarmSound) {
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        inboxStyle.addLine(message);
+
         NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
         bigPictureStyle.setBigContentTitle(title);
         bigPictureStyle.setSummaryText(Html.fromHtml(message).toString());
@@ -132,7 +134,9 @@ public class NotificationUtils {
                 .setStyle(bigPictureStyle)
                 .setWhen(getTimeMilliSec(timeStamp))
                 .setSmallIcon(R.drawable.gtohome_logo_only)
-                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
+              //  .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
+                .setStyle(inboxStyle)
+                .setLargeIcon(bitmap)
                 .setContentText(message)
                 .build();
 
@@ -176,7 +180,7 @@ public class NotificationUtils {
                 .setAutoCancel(false)
                 .setWhen(getTimeMilliSec(timeStamp))
                 .setContentIntent(resultPendingIntent)
-                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
+               // .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
                 .setContentText(message);
 
         notificationManager.notify(NOTIFICATION_ID, builder.build());

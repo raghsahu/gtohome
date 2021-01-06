@@ -210,10 +210,11 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         });
 
         fab_sms.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("QueryPermissionsNeeded")
             @Override
             public void onClick(View view) {
 
-                String toNumber = "917504700500"; // Replace with mobile phone number without +Sign or leading zeros, but with country code.
+                String toNumber = "919188841444"; // Replace with mobile phone number without +Sign or leading zeros, but with country code.
                    //Suppose your country is India and your phone number is “xxxxxxxxxx”, then you need to send “91xxxxxxxxxx”.
 
 //                try {
@@ -249,7 +250,7 @@ public class Home_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         fab_call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String number = "8963000400";
+                String number = "9188841333";
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + number));
                 startActivity(callIntent);

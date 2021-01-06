@@ -338,8 +338,13 @@
 <!--    live key-->
 <!--    <string name="razor_pay_key_id">rzp_live_VwVCz9rSOgXgzc</string>-->
     <!--    test key-->
-    <string name="razor_pay_key_id">rzp_test_8woNuC6gRgnclP</string>
-    <string name="razor_pay_key_secret">e1rRXA65vHjyoaYP9DNBvHyA</string>
+<!--    <string name="razor_pay_key_id">rzp_test_8woNuC6gRgnclP</string>-->
+<!--    <string name="razor_pay_key_secret">e1rRXA65vHjyoaYP9DNBvHyA</string>-->
+
+
+<!--    //new id-->
+    <string name="razor_pay_key_id">rzp_live_rQnz0lfo66oMLX</string>
+    <string name="razor_pay_key_secret">kntasHX1NeVutsJAWoqkmfmY</string>
 
 
 </resources>

@@ -885,14 +885,23 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
 
         //*******************bradio button time slot***********************
         binding.radioGroupSlot.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @SuppressLint("NonConstantResourceId")
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.radio_slot_1:
-                        timeslot_name = "1";
+                        timeslot_name = "19";
                         break;
                     case R.id.radio_slot_2:
-                        timeslot_name = "2";
+                        timeslot_name = "18";
+                        break;
+
+                    case R.id.radio_slot_3:
+                        timeslot_name = "17";
+                        break;
+
+                    case R.id.radio_slot_4:
+                        timeslot_name = "16";
                         break;
                 }
             }
@@ -1355,9 +1364,10 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
         final Activity activity = this;
         final Checkout co = new Checkout();
 
+
         try {
             JSONObject options = new JSONObject();
-            options.put("name", "Razorpay Corp");
+            options.put("name", "GtoHome");
             options.put("description", "Product Charges");
             //You can omit the image option to fetch the image from dashboard
             options.put("image", "https://rzp-mobile.s3.amazonaws.com/images/rzp.png");
@@ -1374,6 +1384,9 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
             preFill.put("contact", sessionManager.getUser().getTelephone());
 
             options.put("prefill", preFill);
+
+            int image = R.drawable.gtohomelogo_jpg; // Can be any drawable
+            co.setImage(image);
 
             co.open(activity, options);
         } catch (Exception e) {
@@ -1441,10 +1454,36 @@ public class ChekoutActivity extends AppCompatActivity implements ShippingMethod
                                 //set time slot in radio button
                                 binding.radioGroupSlot.setVisibility(View.VISIBLE);
                                 if (response.getModulePincodedays().getPincodedaysTimeslot() == 0) {
-                                    binding.radioSlot1.setText(Html.fromHtml(response.getModulePincodedays().getTimeslots().get_0().get1() + " " +
-                                            response.getModulePincodedays().getIndividualslots().get1()));
-                                    binding.radioSlot2.setText(Html.fromHtml(response.getModulePincodedays().getTimeslots().get_0().get2() + " " +
-                                            response.getModulePincodedays().getIndividualslots().get2()));
+
+                                    if (response.getModulePincodedays().getTimeslots().get_0().get1() != null && response.getModulePincodedays().getIndividualslots().get1() !=null){
+                                        binding.radioSlot1.setText(Html.fromHtml(response.getModulePincodedays().getTimeslots().get_0().get1() + " " +
+                                                response.getModulePincodedays().getIndividualslots().get1()));
+                                    }else {
+                                        binding.radioSlot1.setVisibility(View.GONE);
+                                    }
+
+                                    if (response.getModulePincodedays().getTimeslots().get_0().get2() != null && response.getModulePincodedays().getIndividualslots().get2() !=null){
+                                        binding.radioSlot2.setText(Html.fromHtml(response.getModulePincodedays().getTimeslots().get_0().get2() + " " +
+                                                response.getModulePincodedays().getIndividualslots().get2()));
+                                    }else {
+                                        binding.radioSlot2.setVisibility(View.GONE);
+                                    }
+
+                                    if (response.getModulePincodedays().getTimeslots().get_0().get_5() != null && response.getModulePincodedays().getIndividualslots().get_5() !=null){
+                                        binding.radioSlot3.setText(Html.fromHtml(response.getModulePincodedays().getTimeslots().get_0().get_5() + " " +
+                                                response.getModulePincodedays().getIndividualslots().get_5()));
+                                    }else {
+                                        binding.radioSlot3.setVisibility(View.GONE);
+                                    }
+
+
+                                    if (response.getModulePincodedays().getTimeslots().get_0().get_6() != null && response.getModulePincodedays().getIndividualslots().get_6() !=null){
+                                        binding.radioSlot4.setText(Html.fromHtml(response.getModulePincodedays().getTimeslots().get_0().get_6() + " " +
+                                                response.getModulePincodedays().getIndividualslots().get_6()));
+                                    }else {
+                                        binding.radioSlot4.setVisibility(View.GONE);
+                                    }
+
 
                                 }//else if ()
 

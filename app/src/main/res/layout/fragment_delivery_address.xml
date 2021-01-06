@@ -1052,6 +1052,22 @@
                                   android:text="">
                               </RadioButton>
 
+                              <RadioButton
+                                  android:id="@+id/radio_slot_3"
+                                  android:layout_marginTop="@dimen/_10sdp"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:text="">
+                              </RadioButton>
+
+                              <RadioButton
+                                  android:id="@+id/radio_slot_4"
+                                  android:layout_marginTop="@dimen/_10sdp"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:text="">
+                              </RadioButton>
+
                           </RadioGroup>
 
 <!--                          <androidx.recyclerview.widget.RecyclerView-->
@@ -1231,10 +1247,11 @@
                                   android:id="@+id/radio_rozarpay"
                                   android:layout_width="match_parent"
                                   android:layout_height="wrap_content"
-                                  android:text="@string/razor_pay">
+                                  android:text="Online Payment">
                               </RadioButton>
 
                               <RadioButton
+                                  android:visibility="gone"
                                   android:id="@+id/radio_payu"
                                   android:layout_width="match_parent"
                                   android:layout_height="wrap_content"

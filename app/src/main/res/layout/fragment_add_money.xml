@@ -74,6 +74,7 @@
                         </RadioButton>
 
                         <RadioButton
+                            android:visibility="gone"
                             android:id="@+id/radio_payu"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

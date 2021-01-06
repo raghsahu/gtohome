@@ -87,11 +87,12 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+       // holder.setIsRecyclable(false);
         final CategoryProduct_List dataModel = dataModelList.get(position);
         holder.bind(dataModel);
         holder.itemRowBinding.setModel(dataModel);
 
-        if (GH_Offer!=null && !GH_Offer.equalsIgnoreCase("") && !GH_Offer.isEmpty()){
+        if (GH_Offer!=null && !GH_Offer.equalsIgnoreCase("") && !GH_Offer.isEmpty() && GH_Offer.equalsIgnoreCase("Special")){
             if (!dataModel.getSpecial().equalsIgnoreCase("false")){
                 holder.itemRowBinding.tvCountdown.setVisibility(View.VISIBLE);
                 try {
@@ -135,7 +136,7 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
         });
 
         //***********************set quantity in spinner*******************
-        if (dataModel.getOptions()!=null && !dataModel.getOptions().isEmpty()){
+        if (dataModel.getOptions()!=null && !dataModel.getOptions().isEmpty() && dataModel.getOptions().size()>0){
             holder.itemRowBinding.llSpin.setVisibility(View.VISIBLE);
             ArrayList<String> QtyNameList = new ArrayList<>();
             for (int i=0; i<dataModel.getOptions().size(); i++){
@@ -145,7 +146,7 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
                     String QtyOptionValueId=dataModel.getOptions().get(i).getProductOptionValue().get(j).getOptionValueId();
                     String QtyProductOptionValueId=dataModel.getOptions().get(i).getProductOptionValue().get(j).getProductOptionValueId();
 
-                      // productOptionValueList.add(new ProductOptionValue(QtyName,QtyPrice,QtyOptionValueId,QtyProductOptionValueId));
+                     //  productOptionValueList.add(new ProductOptionValue(QtyName,QtyPrice,QtyOptionValueId,QtyProductOptionValueId));
                     QtyNameList.add(QtyName);
                    // Log.e("grambu1",""+dataModel.getName()+" name-"+QtyName);
                 }
@@ -153,20 +154,23 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
                 holder.itemRowBinding.spinnerQty.setAdapter(adp);
 
             }
-        }else {
+        }
+        else {
            // Log.e("grambu",""+dataModel.getName());
           holder.itemRowBinding.llSpin.setVisibility(View.GONE);
-            if (!dataModel.getSpecial().equalsIgnoreCase("false")){
+            if (dataModel.getSpecial().equalsIgnoreCase("false")){
+                holder.itemRowBinding.tvPrice.setText(dataModel.getPrice());
+
+            }else {
                 holder.itemRowBinding.tvSpecialPrice.setVisibility(View.VISIBLE);
                 holder.itemRowBinding.tvSpecialPrice.setText(dataModel.getSpecial());
                 holder.itemRowBinding.tvPrice.setText(dataModel.getPrice());
                 holder.itemRowBinding.tvPrice.setTextColor(Color.RED);
                 holder.itemRowBinding.tvPrice.setPaintFlags(holder.itemRowBinding.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            }else {
-                holder.itemRowBinding.tvPrice.setText(dataModel.getPrice());
             }
         }
 
+        //spinner different weight size wise price
         holder.itemRowBinding.spinnerQty.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
@@ -190,14 +194,15 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
                             }
                         }else {
 
-                            if (!dataModel.getSpecial().equalsIgnoreCase("false")){
+                            if (dataModel.getSpecial().equalsIgnoreCase("false")){
+                                holder.itemRowBinding.tvPrice.setText(dataModel.getPrice());
+
+                            }else {
                                 holder.itemRowBinding.tvSpecialPrice.setVisibility(View.VISIBLE);
                                 holder.itemRowBinding.tvSpecialPrice.setText(dataModel.getSpecial());
                                 holder.itemRowBinding.tvPrice.setText(dataModel.getPrice());
                                 holder.itemRowBinding.tvPrice.setTextColor(Color.RED);
                                 holder.itemRowBinding.tvPrice.setPaintFlags(holder.itemRowBinding.tvPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                            }else {
-                                holder.itemRowBinding.tvPrice.setText(dataModel.getPrice());
                             }
                         }
 
@@ -420,6 +425,16 @@ public class CategoryProduct_Adapter extends RecyclerView.Adapter<CategoryProduc
     @Override
     public int getItemCount() {
         return dataModelList.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -107,8 +107,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void handleNotification(String title, String body) {
 
-        Bitmap icon = BitmapFactory.decodeResource(getResources(),
-                R.drawable.gtohome_logo_only);
+        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.gtohome_logo_only);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
@@ -119,21 +118,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 intent.putExtra("NOTIFICATION", title);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.setAction(title);
-                PendingIntent contentIntent = PendingIntent.getActivity(this, new Random().nextInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent contentIntent = PendingIntent.getActivity(
+                        this,
+                        new Random().nextInt(),
+                        intent,
+                        PendingIntent.FLAG_CANCEL_CURRENT);
 
                 SimpleDateFormat s = new SimpleDateFormat("ddMMyyyyhhmmss");
                 String format = s.format(new Date());
 
                 // // app is in foreground, broadcast the push message
-//                Intent pushNotification = new Intent(Constants.PUSH_NOTIFICATION);
-//                pushNotification.putExtra("message", body);
-//                LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
+                Intent pushNotification = new Intent(Constants.PUSH_NOTIFICATION);
+                pushNotification.putExtra("message", body);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
                 NotificationUtils notificationUtils = new NotificationUtils(this);
                 notificationUtils.showNotificationMessage(title, body, format, contentIntent);
                // notificationUtils.playNotificationSound();
 
-            } else {
+            }
+
+            else {
                 Log.e("Q_background_noti", "pppp");
                // sendNoti(title, body);
                 // If the app is in background, firebase itself handles the notification
@@ -141,7 +146,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 intent.putExtra("NOTIFICATION", title);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.setAction(title);
-                PendingIntent contentIntent = PendingIntent.getActivity(this, new Random().nextInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent contentIntent = PendingIntent.getActivity(
+                        this,
+                        new Random().nextInt(),
+                        intent,
+                        PendingIntent.FLAG_CANCEL_CURRENT);
 
                 SimpleDateFormat s = new SimpleDateFormat("ddMMyyyyhhmmss");
                 String format = s.format(new Date());
@@ -152,16 +161,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //                LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
                 NotificationUtils notificationUtils = new NotificationUtils(this);
-                notificationUtils.showNotificationMessage(title, body, format, contentIntent);
+                notificationUtils.showNotificationMessage( title, body, format, contentIntent);
             }
-        }else {
+        }
+
+        else {
             Log.e("below_Q", "notiiii");
             Log.e("title_click2", "" + title );
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("NOTIFICATION", title);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.setAction(title);
-            PendingIntent contentIntent = PendingIntent.getActivity(this, new Random().nextInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent contentIntent = PendingIntent.getActivity(
+                    this,
+                    new Random().nextInt(),
+                    intent,
+                    PendingIntent.FLAG_CANCEL_CURRENT);
 
             NotificationCompat.Builder b = new NotificationCompat.Builder(this);
             String channelId = "Default";
@@ -177,7 +192,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             b.setContentText(body);
             b.setPriority(NotificationCompat.PRIORITY_HIGH);
             b.setDefaults(DEFAULT_SOUND | DEFAULT_VIBRATE);
-             b.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.gtohome_logo_only));
+           //  b.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.gtohome_logo_only));
             b.setContentIntent(contentIntent);
             // b.setContentInfo("Info");
 
